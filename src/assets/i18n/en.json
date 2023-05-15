@@ -2743,5 +2743,31 @@
     "end_user_error_notification": "Notify me when a user reports an error",
     "billing_new_invoice": "Notify me when a new invoice is available",
     "admin_account_verification": "Notify me when new account creation needs to be verified"
+  },
+  "reservations": {
+    "title": "Reservations",
+    "general":{
+      "reserve_now": "Reserve Now",
+      "cancel_reservation": "Cancel reservation",
+      "tooltips":{
+        "reserve_now": "Reserve Now",
+        "cancel_reservation": "Cancel reservation"
+      }
+    },
+    "tabs":{
+      "reservations": "Reservations"
+    },
+    "dialog":{
+      "reserve_now_title": "Complete Reservation",
+      "reserve_now_details_title": "Reserve connector '{{connectorId}}' at chargepoint '{{chargeBoxID}}'",
+      "reserve_now_confirm": "Do you really want to reserve the connector '{{connectorID}}' for user '{{userName}}' on the charging station '{{chargeBoxID}}'?",
+      "reserve_now_success": "The reservation on the charging station '{{chargeBoxID}}' at connector '{{connectorID}}' was successfully",
+      "reserve_now_error": "Error occurred while trying to create a reservation, check the logs",
+      "expiry_date": "Choose a expiry date"
+    },
+    "action_error":{
+      "reserve_now_title": "Reserve now error",
+      "reserve_now_not_available": "Connector is not available, unable to reserve it"
+    }
   }
 }

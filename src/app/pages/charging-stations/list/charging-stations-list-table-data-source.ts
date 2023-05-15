@@ -5,6 +5,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { WindowService } from 'services/window.service';
 
+import { TableChargingStationsReserveNowAction, TableChargingStationsReserveNowActionDef } from 'shared/table/actions/charging-stations/table-charging-stations-reserve-now-action';
+import { TableChargingStationsCancelReservationAction } from 'shared/table/actions/charging-stations/table-charging-stations-cancel-reservation-action';
 import { CentralServerService } from '../../../services/central-server.service';
 import { ComponentService } from '../../../services/component.service';
 import { DialogService } from '../../../services/dialog.service';
@@ -35,7 +37,7 @@ import { SiteAreaTableFilter } from '../../../shared/table/filters/site-area-tab
 import { SiteTableFilter } from '../../../shared/table/filters/site-table-filter';
 import { TableDataSource } from '../../../shared/table/table-data-source';
 import { ChargingStationsAuthorizations } from '../../../types/Authorization';
-import { ChargingStation, ChargingStationButtonAction } from '../../../types/ChargingStation';
+import { ChargePointStatus, ChargingStation, ChargingStationButtonAction } from '../../../types/ChargingStation';
 import { ChargingStationDataResult } from '../../../types/DataResult';
 import { ButtonAction } from '../../../types/GlobalType';
 import { PricingButtonAction, PricingEntity } from '../../../types/Pricing';
@@ -50,6 +52,7 @@ import { ChargingStationsInstantPowerChargerProgressBarCellComponent } from '../
 import { ChargingStationConnectorsComponent } from '../charging-station-connectors/charging-station-connectors-component.component';
 import { ChargingStationLimitationDialogComponent } from '../charging-station-limitation/charging-station-limitation.dialog.component';
 import { ChargingStationDialogComponent } from '../charging-station/charging-station-dialog.component';
+import { ChargingStationsReserveNowDialogComponent } from '../charging-station-reserve-now/charging-stations-reserve-now-dialog-component';
 
 @Injectable()
 export class ChargingStationsListTableDataSource extends TableDataSource<ChargingStation> {
@@ -63,6 +66,7 @@ export class ChargingStationsListTableDataSource extends TableDataSource<Chargin
   private canExport = new TableExportChargingStationsAction().getActionDef();
   private maintainPricingDefinitionsAction = new TableViewPricingDefinitionsAction().getActionDef();
   private navigateToTransactionsAction = new TableNavigateToTransactionsAction().getActionDef();
+  private canReserveAction = new TableChargingStationsReserveNowAction().getActionDef();
 
   private issuerFilter: TableFilterDef;
   private siteFilter: TableFilterDef;
@@ -367,6 +371,13 @@ export class ChargingStationsListTableDataSource extends TableDataSource<Chargin
           (actionDef as TableOpenURLActionDef).action('transactions#history?ChargingStationID=' + chargingStation.id + '&Issuer=' + chargingStation.issuer, this.windowService);
         }
         break;
+        // TODO: Implement ReserveNowAction on Charging Station Level
+      // case ChargingStationButtonAction.RESERVE_NOW:
+      //   if (actionDef.action) {
+      //     (actionDef as TableChargingStationsReserveNowActionDef).action(ChargingStationsReserveNowDialogComponent, chargingStation,
+      //       this.dialogService, this.dialog, this.translateService, this.messageService, this.centralServerService, this.spinnerService,
+      //       this.router, this.refreshData.bind(this));
+      //   }
     }
   }
 
@@ -444,6 +455,14 @@ export class ChargingStationsListTableDataSource extends TableDataSource<Chargin
     // Delete
     if (chargingStation.canDelete) {
       moreActions.addActionInMoreActions(this.deleteAction);
+    }
+    if (chargingStation.canReserveNow) {
+      moreActions.addActionInMoreActions(this.canReserveAction);
+      for (const connector in chargingStation.connectors) {
+        if (chargingStation.connectors[connector].status === ChargePointStatus.RESERVED) {
+          moreActions.addActionInMoreActions(new TableChargingStationsCancelReservationAction().getActionDef());
+        }
+      }
     }
     // Add more action if array has more than one element
     if (moreActions.getActionsInMoreActions().length > 1) {

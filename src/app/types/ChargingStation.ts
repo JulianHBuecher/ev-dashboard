@@ -233,7 +233,9 @@ export enum ChargingStationButtonAction {
   SAVE_OCPP_PARAMETER = 'save_ocpp_parameter',
   NAVIGATE_TO_CHARGING_PLANS = 'navigate_to_charging_plans',
   GENERATE_QR_CODE = 'generate_qr_code',
-  NAVIGATE_TO_SITE_AREA = 'navigate_to_site_area'
+  NAVIGATE_TO_SITE_AREA = 'navigate_to_site_area',
+  RESERVE_NOW = 'reserve_now',
+  CANCEL_RESERVATION = 'cancel_reservation'
 }
 
 export enum ChargePointStatus {

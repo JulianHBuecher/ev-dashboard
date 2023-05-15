@@ -13,6 +13,8 @@ import { SpinnerService } from '../../../services/spinner.service';
 import { ConsumptionChartDetailComponent } from '../../../shared/component/consumption-chart/consumption-chart-detail.component';
 import { AppUnitPipe } from '../../../shared/formatters/app-unit.pipe';
 import { AppUserNamePipe } from '../../../shared/formatters/app-user-name.pipe';
+import { TableChargingStationsReserveNowAction, TableChargingStationsReserveNowActionDef } from '../../../shared/table/actions/charging-stations/table-charging-stations-reserve-now-action';
+import { TableChargingStationsCancelReservationAction } from '../../../shared/table/actions/charging-stations/table-charging-stations-cancel-reservation-action';
 import { TableChargingStationsStartTransactionAction, TableChargingStationsStartTransactionActionDef } from '../../../shared/table/actions/charging-stations/table-charging-stations-start-transaction-action';
 import { TableChargingStationsStopTransactionAction, TableChargingStationsStopTransactionActionDef } from '../../../shared/table/actions/charging-stations/table-charging-stations-stop-transaction-action';
 import { TableChargingStationsUnlockConnectorAction, TableChargingStationsUnlockConnectorActionDef } from '../../../shared/table/actions/charging-stations/table-charging-stations-unlock-connector-action';
@@ -21,7 +23,7 @@ import { TableNoAction } from '../../../shared/table/actions/table-no-action';
 import { TableRefreshAction } from '../../../shared/table/actions/table-refresh-action';
 import { TableViewTransactionAction, TableViewTransactionActionDef, TransactionDialogData } from '../../../shared/table/actions/transactions/table-view-transaction-action';
 import { TableDataSource } from '../../../shared/table/table-data-source';
-import { ChargingStation, ChargingStationButtonAction, Connector } from '../../../types/ChargingStation';
+import { ChargePointStatus, ChargingStation, ChargingStationButtonAction, Connector } from '../../../types/ChargingStation';
 import { DataResult } from '../../../types/DataResult';
 import { TableActionDef, TableColumnDef, TableDef } from '../../../types/Table';
 import { TransactionButtonAction } from '../../../types/Transaction';
@@ -31,11 +33,14 @@ import { ChargingStationsConnectorInactivityCellComponent } from '../cell-compon
 import { ChargingStationsConnectorStatusCellComponent } from '../cell-components/charging-stations-connector-status-cell.component';
 import { ChargingStationsInstantPowerConnectorProgressBarCellComponent } from '../cell-components/charging-stations-instant-power-connector-progress-bar-cell.component';
 import { ChargingStationsStartTransactionDialogComponent } from '../charging-station-start-transaction/charging-stations-start-transaction-dialog-component';
+import { ChargingStationsReserveNowDialogComponent } from '../charging-station-reserve-now/charging-stations-reserve-now-dialog-component';
 
 @Injectable()
 export class ChargingStationConnectorsTableDataSource extends TableDataSource<Connector> {
   public stopTransactionAction = new TableChargingStationsStopTransactionAction().getActionDef();
   public startTransactionAction = new TableChargingStationsStartTransactionAction().getActionDef();
+  public reserveNowAction = new TableChargingStationsReserveNowAction().getActionDef();
+  public cancelReservationAction = new TableChargingStationsCancelReservationAction().getActionDef();
   public unlockConnectorAction = new TableChargingStationsUnlockConnectorAction().getActionDef();
   public viewTransactionAction = new TableViewTransactionAction().getActionDef();
   public noAction = new TableNoAction().getActionDef();
@@ -194,6 +199,13 @@ export class ChargingStationConnectorsTableDataSource extends TableDataSource<Co
       if (connector.canUnlockConnector) {
         rowActions.push(this.unlockConnectorAction);
       }
+      if (this.chargingStation.canReserveNow) {
+        if (connector.status === ChargePointStatus.RESERVED) {
+          rowActions.push(this.cancelReservationAction);
+        } else {
+          rowActions.push(this.reserveNowAction);
+        }
+      }
     }
     if (!Utils.isEmptyArray(rowActions)) {
       return rowActions;
@@ -259,6 +271,13 @@ export class ChargingStationConnectorsTableDataSource extends TableDataSource<Co
             this.router, this.refreshData.bind(this));
         }
         break;
+      case ChargingStationButtonAction.RESERVE_NOW:
+        if (actionDef.action) {
+          (actionDef as TableChargingStationsReserveNowActionDef).action(
+            ChargingStationsReserveNowDialogComponent, this.chargingStation, connector, this.dialogService, this.dialog,
+            this.translateService, this.messageService, this.centralServerService, this.spinnerService,
+            this.router, this.refreshData.bind(this));
+        }
     }
   }
 }

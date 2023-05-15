@@ -11,6 +11,7 @@ import { Log } from './Log';
 import { OCPIEndpoint } from './ocpi/OCPIEndpoint';
 import PricingDefinition from './Pricing';
 import { RegistrationToken } from './RegistrationToken';
+import { Reservation } from './Reservation';
 import { Setting } from './Setting';
 import { Site, UserSite } from './Site';
 import { SiteArea } from './SiteArea';
@@ -218,4 +219,7 @@ export interface BillingOperationResult {
   succeeded: boolean;
   error?: Error;
   internalData?: unknown; // an object returned by the concrete implementation - e.g.: STRIPE
+}
+
+export interface ReservationDataResult extends DataResult<Reservation> {
 }

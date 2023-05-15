@@ -728,6 +728,10 @@ export enum RESTServerRoute {
 
   // PRICING URLs for Non-CRUD operations
   REST_PRICING_MODEL_RESOLVE = 'pricing-model/resolve',
+
+  // RESERVATION URLs for CRUD operations
+  REST_RESERVATIONS = 'reservations',
+  REST_RESERVATION = 'reservations/:id'
 }
 
 export enum OCPIServerRoute {

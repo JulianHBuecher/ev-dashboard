@@ -55,6 +55,7 @@ import { ChargingStationsRegistrationTokensComponent } from './registration-toke
 import { AppRegistrationTokenStatusPipe, ChargingStationsRegistrationTokenStatusComponent } from './registration-tokens/registration-token/charging-stations-registration-token-status.component';
 import { ChargingStationsRegistrationTokenComponent } from './registration-tokens/registration-token/charging-stations-registration-token.component';
 import { ChargingStationsRegistrationTokenDialogComponent } from './registration-tokens/registration-token/charging-stations-registration-token.dialog.component';
+import { ChargingStationsReserveNowDialogComponent } from './charging-station-reserve-now/charging-stations-reserve-now-dialog-component';
 
 @NgModule({
   imports: [
@@ -105,6 +106,7 @@ import { ChargingStationsRegistrationTokenDialogComponent } from './registration
     ChargingStationsComponent,
     ChargingStationConnectorsComponent,
     ChargingStationsStartTransactionDialogComponent,
+    ChargingStationsReserveNowDialogComponent,
     ChargingStationsListComponent,
     ChargingStationsInErrorComponent,
     ChargingStationsConnectorInactivityCellComponent,

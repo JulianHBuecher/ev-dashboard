@@ -1005,4 +1005,12 @@ export class Utils {
       console.log('Current format -  Date: ' + moment().format('LL') + '- time: ' + moment().format('LT'));
     }
   }
+
+  public static createDateWithDelay(days?: number, hours?: number, minutes?: number, seconds?: number): Date {
+    return new Date(Date.now() + (3600 * 1000 * 24) * days + (3600 * 1000) * hours + (3600) * minutes + seconds);
+  }
+
+  public static createRandomId(): number {
+    return Math.floor((Math.random() * 100) + 1);
+  }
 }

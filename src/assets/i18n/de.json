@@ -2743,5 +2743,36 @@
     "end_user_error_notification": "Benachrichtigen Sie mich, wenn ein Nutzer einen Fehler meldet",
     "billing_new_invoice": "Benachrichtigen Sie mich, wenn eine neue Rechnung verfügbar ist",
     "admin_account_verification": "Benachichtigen Sie mich, wenn ein neues Nutzerkonto verifiziert werden muss"
+  },
+  "reservations": {
+    "title": "Reservierungen",
+    "general":{
+      "reserve_now": "Jetzt Reservieren",
+      "cancel_reservation": "Reservierung stornieren",
+      "tooltips":{
+        "reserve_now": "Jetzt Reservieren",
+        "cancel_reservation": "Reservierung stornieren"
+      }
+    },
+    "tabs":{
+      "reservations": "Reservierungen"
+    },
+    "dialog":{
+      "reserve_now_title": "Reservierung abschließen",
+      "reserve_now_details_title": "Anschluss '{{connectorId}}' an Ladestation '{{chargeBoxID}}' reservieren",
+      "reserve_now_confirm": "Wollen Sie für den Nutzer '{{userName}}' an der Ladestation '{{chargeBoxID}}' an Anschluss '{{connectorId}}' eine Reservierung tätigen?",
+      "reserve_now_success": "Die Reservierung an Ladestation '{{chargeBoxID}}' für Anschluss '{{connectorId}}' wurde erfolgreich durchgeführt",
+      "reserve_now_error": "Beim Versuch eine Reservierung zu tätigen ist ein Fehler aufgetreten",
+      "expiry_date": "Ablaufdatum festlegen",
+      "cancel_reservation_title": "Reservierung stornieren",
+      "cancel_reservation_confirm": "Wollen Sie für den Nutzer '{{userName}}' an der Ladestation '{{chargeBoxID}}' die Reservierung '{{reservationID}} stornieren?'",
+      "cancel_reservation_error": "Beim Versuch die Reservierung mit der ID '{{reservationID}}' an der Ladestation '{{chargeBoxID}}' zu stornieren ist ein Fehler aufgetreten"
+    },
+    "action_error":{
+      "reserve_now_title": "Fehler beim Reservieren der Ladestation",
+      "reserve_now_not_available": "Anschluss ist nicht verfügbar, Ladestation kann nicht reserviert werden",
+      "cancel_reservation_title": "Fehler beim Stornieren der Reservierung mit der ID '{{reservationID}}'",
+      "cancel_reservation_not_available": "Anschluss ist nicht verfügbar, die Reservierung kann nicht storniert werden"
+    }
   }
 }
