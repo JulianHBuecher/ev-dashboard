@@ -24,9 +24,10 @@ import { TableAction } from '../table-action';
 
 export interface TableChargingStationsCancelReservationActionDef extends TableActionDef {
   action: (
-    chargingStationCancelReservationDialogComponent: ComponentType<unknown>,
+    // chargingStationCancelReservationDialogComponent: ComponentType<unknown>,
     chargingStation: ChargingStation,
     connector: Connector,
+    reservation: Reservation,
     dialogService: DialogService,
     translateService: TranslateService,
     messageService: MessageService,
@@ -53,7 +54,7 @@ export class TableChargingStationsCancelReservationAction implements TableAction
   }
 
   private cancelReservation(
-    chargingStationsCancelReservationDialogComponent: ComponentType<unknown>,
+    // chargingStationsCancelReservationDialogComponent: ComponentType<unknown>,
     chargingStation: ChargingStation,
     connector: Connector,
     reservation: Reservation,
@@ -80,26 +81,27 @@ export class TableChargingStationsCancelReservationAction implements TableAction
       return;
     }
 
-    let user: User;
-
     dialogService.createAndShowYesNoDialog(
       translateService.instant('reservations.dialog.cancel_reservation_title'),
       translateService.instant('reservations.dialog.cancel_reservation_confirm', {
-        userName: Utils.buildUserFullName(user),
-        chargeBoxID: chargingStation.id,
-        reservationID: reservation.id,
+        userName: reservation['user'].name,
+        chargingStationId: chargingStation.id,
+        reservationId: reservation.id,
       })
     ).subscribe((response) => {
       if (response === ButtonAction.YES) {
         spinnerService.show();
         centralServerService
-        // TODO: Get Reservation ID from Template
-          .cancelReservation(chargingStation.id,0)
+          .cancelReservation(chargingStation.id,reservation.id)
           .subscribe({
             next: (cancelReservationResponse: ActionResponse) => {
               spinnerService.hide();
               if (cancelReservationResponse.status === OCPPGeneralResponse.ACCEPTED) {
-                messageService.showSuccessMessage(translateService.instant('', { }));
+                messageService.showSuccessMessage(translateService.instant('reservations.dialog.cancel_reservation_success',
+                  {
+                    reservationId: reservation.id,
+                    chargingStationId: chargingStation.id
+                  }));
                 if (refresh) {
                   refresh().subscribe();
                 }
@@ -107,7 +109,11 @@ export class TableChargingStationsCancelReservationAction implements TableAction
                 Utils.handleError(
                   JSON.stringify(response),
                   messageService,
-                  translateService.instant('reservations.dialog.cancel_reservation_error')
+                  translateService.instant('reservations.dialog.cancel_reservation_error',
+                    {
+                      reservationId: reservation.id,
+                      chargingStationId: chargingStation.id
+                    })
                 );
               }
             },
@@ -118,7 +124,11 @@ export class TableChargingStationsCancelReservationAction implements TableAction
                 router,
                 messageService,
                 centralServerService,
-                'reservations.dialog.cancel_reservation_error'
+                translateService.instant('reservations.dialog.cancel_reservation_error',
+                  {
+                    reservationId: reservation.id,
+                    chargingStationId: chargingStation.id
+                  })
               );
             }
           });

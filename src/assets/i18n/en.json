@@ -2759,15 +2759,21 @@
     },
     "dialog":{
       "reserve_now_title": "Complete Reservation",
-      "reserve_now_details_title": "Reserve connector '{{connectorId}}' at chargepoint '{{chargeBoxID}}'",
-      "reserve_now_confirm": "Do you really want to reserve the connector '{{connectorID}}' for user '{{userName}}' on the charging station '{{chargeBoxID}}'?",
-      "reserve_now_success": "The reservation on the charging station '{{chargeBoxID}}' at connector '{{connectorID}}' was successfully",
+      "reserve_now_details_title": "Reserve connector '{{connectorId}}' at chargepoint '{{chargingStationId}}'",
+      "reserve_now_confirm": "Do you really want to reserve the connector '{{connectorId}}' for user '{{userName}}' on the charging station '{{chargingStationId}}'?",
+      "reserve_now_success": "The reservation on the charging station '{{chargingStationId}}' at connector '{{connectorId}}' was successfully",
       "reserve_now_error": "Error occurred while trying to create a reservation, check the logs",
-      "expiry_date": "Choose a expiry date"
+      "expiry_date": "Choose a expiry date",
+      "cancel_reservation_title": "Cancel reservation",
+      "cancel_reservation_confirm": "Do you really want to cancel the reservation '{{reservationId}}' for user '{{userName}}' at charging station '{{chargingStationId}}'?",
+      "cancel_reservation_success": "The reservation with ID '{{reservationId}}' at charging station '{{chargingStationId}}' is successfully canceled",
+      "cancel_reservation_error": "Error occured while trying to cancel the reservation with ID '{{reservationId}}' at charging station '{{chargingStationId}}'"
     },
     "action_error":{
       "reserve_now_title": "Reserve now error",
-      "reserve_now_not_available": "Connector is not available, unable to reserve it"
+      "reserve_now_not_available": "Connector is not available, unable to reserve it",
+      "cancel_reservation_title": "Error during cancelation of reservation with ID '{{reservationId}}'",
+      "cancel_reservation_not_available": "Connector is not available, reservation could not be canceled"
     }
   }
 }

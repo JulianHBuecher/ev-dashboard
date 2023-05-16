@@ -95,7 +95,7 @@ export class TableChargingStationsReserveNowAction implements TableAction {
         chargingStation,
         connector,
         expiryDate: Utils.createDateWithDelay(0,1,0,0), // Provide a default expiration-date within 1 hour
-        reservationID: Utils.createRandomId() // Provide a default reservationID in form of a random UUID
+        reservationId: Utils.createRandomId() // Provide a default reservationID in form of a random UUID
       },
     };
     dialogConfig.data = dialogData;
@@ -143,8 +143,8 @@ export class TableChargingStationsReserveNowAction implements TableAction {
       .createAndShowYesNoDialog(
         translateService.instant('reservations.dialog.reserve_now_title'),
         translateService.instant('reservations.dialog.reserve_now_confirm', {
-          chargeBoxID: chargingStation.id,
-          connectorID: Utils.getConnectorLetterFromConnectorID(connector.connectorId),
+          chargingStationId: chargingStation.id,
+          connectorId: Utils.getConnectorLetterFromConnectorID(connector.connectorId),
           userName: Utils.buildUserFullName(user),
         })
       )
@@ -154,7 +154,7 @@ export class TableChargingStationsReserveNowAction implements TableAction {
           if (!tagId) {
             messageService.showErrorMessage(
               translateService.instant('chargers.start_transaction_missing_active_tag', {
-                chargeBoxID: chargingStation.id,
+                chargingStationId: chargingStation.id,
                 userName: user.fullName,
               })
             );
@@ -169,8 +169,8 @@ export class TableChargingStationsReserveNowAction implements TableAction {
                 if (reserveNowResponse.status === OCPPGeneralResponse.ACCEPTED) {
                   messageService.showSuccessMessage(
                     translateService.instant('reservations.dialog.reserve_now_success', {
-                      chargeBoxID: chargingStation.id,
-                      connectorID: connector.connectorId
+                      chargingStationId: chargingStation.id,
+                      connectorId: Utils.getConnectorLetterFromConnectorID(connector.connectorId)
                     })
                   );
                   if (refresh) {

@@ -22,8 +22,8 @@ import { Utils } from '../../../utils/Utils';
 })
 export class ChargingStationsReserveNowDialogComponent implements OnInit {
   public title = '';
-  public chargingStationID = '';
-  public connectorID = null;
+  public chargingStationId = '';
+  public connectorId = null;
   public selectedUser!: User;
   public selectedTag!: Tag;
   public providedExpiryDate: Date;
@@ -33,10 +33,10 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
   public user!: AbstractControl;
   public userID!: AbstractControl;
   public tag!: AbstractControl;
-  public visualTagID!: AbstractControl;
-  public parentTagID!: AbstractControl;
+  public visualTagId!: AbstractControl;
+  public parentTagId!: AbstractControl;
   public expiryDate!: AbstractControl;
-  public reservationID!: AbstractControl;
+  public reservationId!: AbstractControl;
 
   public errorMessage: string;
 
@@ -55,15 +55,15 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) data: DialogParamsWithAuth<ReserveNowDialogData, ChargingStationsAuthorizations> ) {
     // Set
     this.title = translateService.instant('reservations.dialog.reserve_now_details_title',
-      { chargeBoxID: data.dialogData.chargingStation.id,
+      { chargingStationId: data.dialogData.chargingStation.id,
         connectorId: Utils.getConnectorLetterFromConnectorID(data.dialogData.connector.connectorId)
       });
-    this.chargingStationID = data.dialogData.chargingStation.id;
-    this.connectorID = data.dialogData.connector.connectorId;
+    this.chargingStationId = data.dialogData.chargingStation.id;
+    this.connectorId = data.dialogData.connector.connectorId;
     this.loggedUser = this.centralServerService.getLoggedUser();
     this.canListUsers = data.dialogData.chargingStation.canListUsers;
     this.providedExpiryDate = data.dialogData.expiryDate;
-    this.providedReservationId = data.dialogData.reservationID;
+    this.providedReservationId = data.dialogData.reservationId;
     Utils.registerValidateCloseKeyEvents(this.dialogRef,
       this.reserveNow.bind(this), this.cancel.bind(this));
   }
@@ -71,7 +71,7 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
   public ngOnInit() {
     // Init the form
     this.formGroup = new UntypedFormGroup({
-      connector: new UntypedFormControl(Utils.getConnectorLetterFromConnectorID(this.connectorID) ?? '',
+      connector: new UntypedFormControl(Utils.getConnectorLetterFromConnectorID(this.connectorId) ?? '',
         Validators.compose([
           Validators.required
         ])),
@@ -109,10 +109,10 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
     this.user = this.formGroup.controls['user'];
     this.userID = this.formGroup.controls['userID'];
     this.tag = this.formGroup.controls['tag'];
-    this.visualTagID = this.formGroup.controls['visualTagID'];
+    this.visualTagId = this.formGroup.controls['visualTagID'];
     // this.parentIDTag = this.formGroup.controls['parentIDTag'];
     this.expiryDate = this.formGroup.controls['expiryDate'];
-    this.reservationID = this.formGroup.controls['reservationID'];
+    this.reservationId = this.formGroup.controls['reservationID'];
     this.user.setValue(Utils.buildUserFullName(this.loggedUser));
     this.userID.setValue(this.loggedUser.id);
     this.loadUserSessionContext();
@@ -121,13 +121,13 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
   public loadUserSessionContext() {
     if (this.userID.value) {
       this.spinnerService.show();
-      this.centralServerService.getUserSessionContext(this.userID.value, this.chargingStationID, this.connectorID).subscribe({
+      this.centralServerService.getUserSessionContext(this.userID.value, this.chargingStationId, this.connectorId).subscribe({
         next: (userSessionContext: UserSessionContext) => {
           this.spinnerService.hide();
           // Set Tag
           this.selectedTag = userSessionContext.tag;
           this.tag.setValue(userSessionContext.tag ? Utils.buildTagName(userSessionContext.tag) : '');
-          this.visualTagID.setValue(userSessionContext.tag?.visualID);
+          this.visualTagId.setValue(userSessionContext.tag?.visualID);
           // Update form
           this.formGroup.updateValueAndValidity();
           if (Utils.isEmptyArray(userSessionContext.errorCodes)) {
@@ -172,7 +172,7 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
       this.user.setValue(Utils.buildUserFullName(result[0].objectRef));
       this.userID.setValue(result[0].key);
       this.tag.setValue('');
-      this.visualTagID.setValue('');
+      this.visualTagId.setValue('');
       // this.expiryDate.setValue('');
       // this.reservationID.setValue('');
       this.loadUserSessionContext();
@@ -197,7 +197,7 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
       if (result) {
         this.selectedTag = result[0].objectRef;
         this.tag.setValue(Utils.buildTagName(result[0].objectRef));
-        this.visualTagID.setValue(result[0].key);
+        this.visualTagId.setValue(result[0].key);
       }
     });
   }
@@ -208,8 +208,8 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
         user: this.selectedUser,
         expiryDate: this.expiryDate.value,
         tagID: this.selectedTag.id,
-        reservationID: this.reservationID.value,
-        parentTagID: this.parentTagID === undefined ? '' : this.parentTagID.value
+        reservationID: this.reservationId.value,
+        parentTagID: this.parentTagId === undefined ? '' : this.parentTagId.value
       };
       this.dialogRef.close(reserveNow);
     }

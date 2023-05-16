@@ -46,7 +46,7 @@ export interface ReserveNowDialogData extends TableData {
   chargingStation: ChargingStation;
   connector: Connector;
   expiryDate: Date;
-  reservationID: number;
+  reservationId: number;
 }
 
 export interface CancelReservationDialogData extends TableData {

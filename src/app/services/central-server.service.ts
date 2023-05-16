@@ -3945,7 +3945,7 @@ export class CentralServerService {
 
   public cancelReservation(
     id: string,
-    reservationID: number
+    reservationId: number
   ): Observable<ActionResponse> {
     this.checkInit();
     if (!id) {
@@ -3953,7 +3953,7 @@ export class CentralServerService {
     }
     const body = `{
       "args": {
-        "reservationId": ${reservationID},
+        "reservationId": ${reservationId}
       }
     }`;
     return this.httpClient

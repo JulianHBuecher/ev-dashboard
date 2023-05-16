@@ -14,7 +14,7 @@ import { ConsumptionChartDetailComponent } from '../../../shared/component/consu
 import { AppUnitPipe } from '../../../shared/formatters/app-unit.pipe';
 import { AppUserNamePipe } from '../../../shared/formatters/app-user-name.pipe';
 import { TableChargingStationsReserveNowAction, TableChargingStationsReserveNowActionDef } from '../../../shared/table/actions/charging-stations/table-charging-stations-reserve-now-action';
-import { TableChargingStationsCancelReservationAction } from '../../../shared/table/actions/charging-stations/table-charging-stations-cancel-reservation-action';
+import { TableChargingStationsCancelReservationAction, TableChargingStationsCancelReservationActionDef } from '../../../shared/table/actions/charging-stations/table-charging-stations-cancel-reservation-action';
 import { TableChargingStationsStartTransactionAction, TableChargingStationsStartTransactionActionDef } from '../../../shared/table/actions/charging-stations/table-charging-stations-start-transaction-action';
 import { TableChargingStationsStopTransactionAction, TableChargingStationsStopTransactionActionDef } from '../../../shared/table/actions/charging-stations/table-charging-stations-stop-transaction-action';
 import { TableChargingStationsUnlockConnectorAction, TableChargingStationsUnlockConnectorActionDef } from '../../../shared/table/actions/charging-stations/table-charging-stations-unlock-connector-action';
@@ -199,7 +199,8 @@ export class ChargingStationConnectorsTableDataSource extends TableDataSource<Co
       if (connector.canUnlockConnector) {
         rowActions.push(this.unlockConnectorAction);
       }
-      if (this.chargingStation.canReserveNow) {
+      if (this.chargingStation.canReserveNow &&
+        connector.status !== ChargePointStatus.UNAVAILABLE) {
         if (connector.status === ChargePointStatus.RESERVED) {
           rowActions.push(this.cancelReservationAction);
         } else {
@@ -278,6 +279,24 @@ export class ChargingStationConnectorsTableDataSource extends TableDataSource<Co
             this.translateService, this.messageService, this.centralServerService, this.spinnerService,
             this.router, this.refreshData.bind(this));
         }
+        break;
+      case ChargingStationButtonAction.CANCEL_RESERVATION:
+        this.centralServerService.getReservations(
+          { chargingStationIds: [ this.chargingStation.id ], connectorIds: [ connector.connectorId.toString() ] }
+        ).subscribe({
+          next: (reservation) => {
+            if (actionDef.action) {
+              (actionDef as TableChargingStationsCancelReservationActionDef).action(
+                this.chargingStation, connector, reservation.result[0], this.dialogService, this.translateService,
+                this.messageService, this.centralServerService, this.spinnerService, this.router, this.refreshData.bind(this)
+              );
+            }
+          },
+          error: (error) => {
+            this.messageService.showErrorMessage('reservations.reservation_not_found');
+          }
+        });
+        break;
     }
   }
 }

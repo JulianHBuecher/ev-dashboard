@@ -461,6 +461,7 @@ export class ChargingStationsListTableDataSource extends TableDataSource<Chargin
       for (const connector in chargingStation.connectors) {
         if (chargingStation.connectors[connector].status === ChargePointStatus.RESERVED) {
           moreActions.addActionInMoreActions(new TableChargingStationsCancelReservationAction().getActionDef());
+          break;
         }
       }
     }
