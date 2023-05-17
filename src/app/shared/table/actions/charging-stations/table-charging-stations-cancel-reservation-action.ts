@@ -1,4 +1,3 @@
-import { ComponentType } from '@angular/cdk/portal';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
@@ -18,7 +17,6 @@ import {
 import { TableActionDef } from 'types/Table';
 import { ActionResponse } from 'types/DataResult';
 import { Utils } from 'utils/Utils';
-import { User } from 'types/User';
 import { Reservation } from 'types/Reservation';
 import { TableAction } from '../table-action';
 
@@ -84,7 +82,6 @@ export class TableChargingStationsCancelReservationAction implements TableAction
     dialogService.createAndShowYesNoDialog(
       translateService.instant('reservations.dialog.cancel_reservation_title'),
       translateService.instant('reservations.dialog.cancel_reservation_confirm', {
-        userName: reservation['user'].name,
         chargingStationId: chargingStation.id,
         reservationId: reservation.id,
       })

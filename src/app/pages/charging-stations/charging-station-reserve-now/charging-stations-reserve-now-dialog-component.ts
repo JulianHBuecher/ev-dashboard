@@ -71,10 +71,10 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
   public ngOnInit() {
     // Init the form
     this.formGroup = new UntypedFormGroup({
-      connector: new UntypedFormControl(Utils.getConnectorLetterFromConnectorID(this.connectorId) ?? '',
-        Validators.compose([
-          Validators.required
-        ])),
+      // connector: new UntypedFormControl(Utils.getConnectorLetterFromConnectorID(this.connectorId) ?? '',
+      //   Validators.compose([
+      //     Validators.required
+      //   ])),
       user: new UntypedFormControl('',
         Validators.compose([
           Validators.required,
@@ -207,9 +207,9 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
       const reserveNow: ReserveNow = {
         user: this.selectedUser,
         expiryDate: this.expiryDate.value,
-        tagID: this.selectedTag.id,
-        reservationID: this.reservationId.value,
-        parentTagID: this.parentTagId === undefined ? '' : this.parentTagId.value
+        tagId: this.selectedTag.id,
+        reservationId: this.reservationId.value,
+        parentTagId: this.parentTagId === undefined ? '' : this.parentTagId.value
       };
       this.dialogRef.close(reserveNow);
     }

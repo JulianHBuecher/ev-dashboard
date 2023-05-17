@@ -7,24 +7,25 @@ import { User } from './User';
 export interface Reservation extends TableData {
   id: number;
   timestamp: Date;
-  chargeBoxID: string;
-  connectorID: number;
+  chargingStationId: string;
+  connectorId: number;
   expiryDate: Date;
-  userID: string;
-  tagID: string;
+  userId: string;
+  tagId: string;
   status: string;
+  type?: string;
 }
 
 export interface ReserveNow {
   user: User;
   expiryDate: Date;
-  tagID: string;
-  parentTagID?: string;
-  reservationID: number;
+  tagId: string;
+  parentTagId?: string;
+  reservationId: number;
 }
 
 export interface CancelReservation {
-  reservationID: number;
+  reservationId: number;
 }
 
 export enum ReservationButtonAction {
@@ -53,4 +54,9 @@ export interface CancelReservationDialogData extends TableData {
   chargingStation: ChargingStation;
   connector: Connector;
   user: User;
+}
+
+export enum ReservationType {
+  PLANNED = 'planned_reservation',
+  NOW = 'reserve_now'
 }

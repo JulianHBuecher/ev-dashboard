@@ -2765,7 +2765,7 @@
       "reserve_now_error": "Beim Versuch eine Reservierung zu tätigen ist ein Fehler aufgetreten",
       "expiry_date": "Ablaufdatum festlegen",
       "cancel_reservation_title": "Reservierung stornieren",
-      "cancel_reservation_confirm": "Wollen Sie für den Nutzer '{{userName}}' an der Ladestation '{{chargingStationId}}' die Reservierung '{{reservationId}}' stornieren?'",
+      "cancel_reservation_confirm": "Wollen Sie an der Ladestation '{{chargingStationId}}' die Reservierung '{{reservationId}}' stornieren?'",
       "cancel_reservation_success": "Die Reservierung mit der ID '{{reservationId}}' an der Ladestation '{{chargingStationId}}' wurde erfolgreich storniert",
       "cancel_reservation_error": "Beim Versuch die Reservierung mit der ID '{{reservationId}}' an der Ladestation '{{chargingStationId}}' zu stornieren ist ein Fehler aufgetreten"
     },

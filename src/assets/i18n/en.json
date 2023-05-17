@@ -2765,7 +2765,7 @@
       "reserve_now_error": "Error occurred while trying to create a reservation, check the logs",
       "expiry_date": "Choose a expiry date",
       "cancel_reservation_title": "Cancel reservation",
-      "cancel_reservation_confirm": "Do you really want to cancel the reservation '{{reservationId}}' for user '{{userName}}' at charging station '{{chargingStationId}}'?",
+      "cancel_reservation_confirm": "Do you really want to cancel the reservation '{{reservationId}}' at charging station '{{chargingStationId}}'?",
       "cancel_reservation_success": "The reservation with ID '{{reservationId}}' at charging station '{{chargingStationId}}' is successfully canceled",
       "cancel_reservation_error": "Error occured while trying to cancel the reservation with ID '{{reservationId}}' at charging station '{{chargingStationId}}'"
     },
