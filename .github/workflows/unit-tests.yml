@@ -24,19 +24,19 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-        cache: npm
+        cache: pnpm
     - name: Install NodeJs Packages
-      run: npm ci --force
+      run: pnpm ci --force
     - name: Build sources
       run: |
         cp src/assets/configs-ci/config.json src/assets
-        npm run build:dev
+        pnpm build:dev
     - name: Start Dashboard
       run: |
-        npm run start & sleep 60
+        pnpm start & sleep 60
     - name: Initialize integration test configuration
       run: |
         if [ ! -d test/config ]; then mkdir -p test/config; fi
         cp src/assets/configs-ci/local-dashboard.json test/config/local.json
     - name: Run Integration Tests
-      run: npm run test
+      run: pnpm test

@@ -22,17 +22,17 @@ phases:
       - git branch --set-upstream-to origin/${branch_name}
       - git reset --hard origin/${branch_name}
       - git submodule update --init --recursive
-      - npm install --force
+      - pnpm install --force
   build:
     commands:
-      - npm run build:prod
+      - pnpm build:prod
 artifacts:
   type: zip
   files:
     - LICENSE
     - NOTICE
     - package.json
-    - package-lock.json
+    - pnpm-lock.json
     - appspec.yml
     - 'src/aws/*.sh'
     - 'dist/**/*'

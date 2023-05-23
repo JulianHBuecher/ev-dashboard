@@ -6,8 +6,8 @@ WORKDIR /usr/builder
 
 COPY package.json package-lock.json ./
 
-RUN npm set progress=false && npm config set depth 0 && npm cache clean --force
-RUN HUSKY_SKIP_INSTALL=1 npm install --force
+RUN pnpm set progress=false && pnpm config set depth 0 && pnpm cache clean --force
+RUN HUSKY_SKIP_INSTALL=1 pnpm install --force
 
 COPY NOTICE LICENSE ./
 COPY src ./src
@@ -15,7 +15,7 @@ COPY *.json ./
 COPY *.js ./
 COPY docker/config.json ./src/assets/config.json
 
-RUN npm run build:${build}
+RUN pnpm build:${build}
 
 FROM nginx:alpine
 

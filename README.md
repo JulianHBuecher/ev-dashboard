@@ -15,7 +15,7 @@ The application features:
 * Role management (ABAC)
 * Static Energy Management: Manually limit the charging station
 * Smart Charging with Assets, Fair Sharing, Peak Shaving, Cost Management and Phase Balancing
-* Realtime Asset Management (Building, Battery, Solar Panel) 
+* Realtime Asset Management (Building, Battery, Solar Panel)
 * Billing with Stripe
 * Complex Pricing
 * Roaming integration (Gire, Hubject)
@@ -29,7 +29,7 @@ The application features:
 
 * Install NodeJS: https://nodejs.org/ (install the LTS version)
 * Clone this GitHub project
-* Go into the **ev-dashboard** directory and run **npm install** or **yarn install** (use sudo in Linux)
+* Go into the **ev-dashboard** directory and run **pnpm install** or **yarn install** (use sudo in Linux)
 
 **NOTE**:
 
@@ -82,7 +82,7 @@ Once the key is created it must be enabled (from the Google Console) and the val
 ### Setup the reCaptcha API key
 In order to call REST endpoints of ev-server, a reCaptcha key is required. Refers to this link https://www.google.com/recaptcha/admin/create to create one then copy the client key in config.json, in User section:
 
-```json 
+```json
 	"User": {
 	  "maxPictureKb": 150,
 	  "captchaSiteKey": "<GOOGLE_RECAPTCHA_KEY_CLIENT>"
@@ -94,33 +94,33 @@ In order to call REST endpoints of ev-server, a reCaptcha key is required. Refer
 ### Development Mode
 
 ```shell
-npm start
+pnpm start
 ```
 
 ### Production Mode
 
 First build the sources with:
 ```shell
-npm run build:prod
+pnpm build:prod
 ```
 
 Next, start the server with:
 ```shell
-npm run start:prod
+pnpm start:prod
 ```
 
 ### Secured Production Mode (SSL)
 
 Build the sources as above and run it with:
 ```shell
-npm run start:prod:ssl
+pnpm start:prod:ssl
 ```
 
 ## Integration tests
 
 To run integration tests, you first need to start the UI and run the below command:
 ```shell
-npm run test
+pnpm test
 ```
 
 This will run all integraiton tests written with **Jest** framework.
