@@ -4,10 +4,21 @@ ARG build
 
 WORKDIR /usr/builder
 
-COPY package.json package-lock.json ./
+COPY package.json pnpm-lock.yaml ./
 
-RUN pnpm set progress=false && pnpm config set depth 0 && pnpm cache clean --force
-RUN HUSKY_SKIP_INSTALL=1 pnpm install --force
+RUN set -ex \
+  && apk add --no-cache --virtual .gyp build-base python3 git chromium \
+  && corepack enable \
+  && corepack prepare pnpm@latest --activate \
+  && pnpm set progress=false \
+  && pnpm config set depth 0 \
+
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+RUN set -ex \
+  && HUSKY_SKIP_INSTALL=1 pnpm install \
+  && apk del .gyp
 
 COPY NOTICE LICENSE ./
 COPY src ./src
