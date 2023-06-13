@@ -81,6 +81,7 @@ export enum Entity {
   PAYMENT_METHOD = 'PaymentMethod',
   SOURCE = 'Source',
   CHARGING_STATION_TEMPLATE = 'ChargingStationTemplate',
+  RESERVATION = 'Reservation',
 }
 
 export enum Action {
@@ -508,3 +509,16 @@ export interface BillingTransferAuthorizationActions extends AuthorizationAction
   canDownload?: boolean;
 }
 
+
+export interface ReservationsAuthorizationActions extends AuthorizationActions, DataResultAuthorizationActions {
+  canCancel?: boolean;
+  canExport?: boolean;
+  canListUsers?: boolean;
+  canListSites?: boolean;
+  canListSiteAreas?: boolean;
+  canListTags?: boolean;
+  canListChargingStations?: boolean;
+  canListCompanies?: boolean;
+}
+
+export interface ReservationsAuthorizations extends AuthorizationAttributes, ReservationsAuthorizationActions {}

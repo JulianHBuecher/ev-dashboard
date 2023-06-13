@@ -21,6 +21,7 @@ import { TagButtonAction } from './Tag';
 import { TenantButtonAction } from './Tenant';
 import { TransactionButtonAction } from './Transaction';
 import { UserButtonAction } from './User';
+import { ReservationButtonAction } from './Reservation';
 
 export interface TableData extends AuthorizationAttributes, AuthorizationActions {
   id: string | number;
@@ -105,7 +106,7 @@ export interface TableActionDef {
   id: ButtonAction | CompanyButtonAction | TenantButtonAction | SiteAreaButtonAction | ChargingStationButtonAction |
   UserButtonAction | TransactionButtonAction | SiteButtonAction | OCPIButtonAction | OicpButtonAction | AssetButtonAction |
   BillingButtonAction | CarButtonAction | LogButtonAction | RegistrationTokenButtonAction | TagButtonAction | PricingButtonAction | ChargingStationTemplateButtonAction |
-  TransferButtonAction;
+  TransferButtonAction | ReservationButtonAction;
   type: ActionType;
   currentValue?: any;
   name: string;

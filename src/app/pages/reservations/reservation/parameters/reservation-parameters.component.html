@@ -1,0 +1,80 @@
+<div class="reservation-param-component">
+  <form class="form" [formGroup]="formGroup">
+    <div class="row">
+      <div class="col-md-6 form-group" *ngIf="reservation?.ID">
+        <mat-form-field>
+          <input matInput type="text" placeholder="{{'reservations.id' | translate}}"
+            [formControl]="id" required [readOnly]="true" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 form-group" *ngIf="reservation?.chargingStationID">
+        <mat-form-field>
+          <input matInput type="text" placeholder="{{'reservations.chargingstation_id' | translate}}"
+            class="form-field-popup" [formControl]="chargingStationId" required [readOnly]="readOnly" (click)="assignChargingStation()" />
+        </mat-form-field>
+        <button mat-button matSuffix mat-icon-button aria-label="Assign" [hidden]="readOnly">
+          <mat-icon>assignment</mat-icon>
+        </button>
+        <mat-error *ngIf="chargingStationId?.errors?.required">{{'general.mandatory_field' | translate}}</mat-error>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 form-group" *ngIf="reservation?.connectorID">
+        <mat-form-field>
+          <input matInput type="text" placeholder="{{'reservations.connectorID' | translate}}"
+            class="form-field-popup" [formControl]="connectorId" required [readOnly]="readOnly" (click)="assignConnector()" />
+        </mat-form-field>
+        <button mat-button matSuffix mat-icon-button aria-label="Assign" [hidden]="readOnly">
+          <mat-icon>assignment</mat-icon>
+        </button>
+        <mat-error *ngIf="connectorId?.errors?.required">{{'general.mandatory_field' | translate}}</mat-error>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group form-group">
+          <mat-form-field>
+            <mat-hint>MM/DD/YYYY --:--</mat-hint>
+            <mat-datetimepicker-toggle matSuffix [for]="expiryDatePicker" [disabled]="false">
+            </mat-datetimepicker-toggle>
+            <mat-datetimepicker #expiryDatePicker
+              type="datetime"
+              [disabled]="false"
+              openOnFocus="true"
+              timeInterval="5"
+              touchUi="true">
+            </mat-datetimepicker>
+            <input matInput [formControl]="expiryDate"
+              placeholder="{{'reservations.dialog.expiry_date' | translate}}"
+              [matDatetimepicker]="expiryDatePicker"
+              [min]=""
+              autocomplete="false"
+              (click)="expiryDatePicker.open()" />
+            <mat-error *ngIf="expiryDate.value">
+              {{"general.mandatory_field" | translate}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 form-group">
+        <mat-form-field>
+          <input matInput type="text" readonly=true placeholder="{{'tags.title' | translate}}" class="form-field-popup"
+            (click)="assignTag()" [formControl]="tag" />
+          <button *ngIf="tag.enabled" mat-button matSuffix mat-icon-button aria-label="Add" (click)="assignTag()">
+            <mat-icon>create</mat-icon>
+          </button>
+          <mat-error *ngIf="tag.errors?.required">
+            {{"general.mandatory_field" | translate}}
+          </mat-error>
+          <mat-error *ngIf="tag.errors?.inactive">
+            {{"tags.not_active" | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>

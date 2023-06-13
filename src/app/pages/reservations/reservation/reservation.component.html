@@ -1,0 +1,44 @@
+<div class="main-content vm-90 vh-90">
+  <div class="card card-profile card-testimonial">
+    <mat-tab-group animationDuration="0ms" disableRipple="true" (selectedTabChange)="changeActivePane($event)"
+      class="mat-tab-info reservation-dialog-container"
+      [class]="dialogRef && !readOnly && activeTabIndex === 0 ? 'mat-tabs-with-actions' : 'mat-tabs-with-close-action'">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>book</mat-icon>
+          <span>{{reservation?.id}}</span>
+        </ng-template>
+        <div class="card-body mat-tab-dialog-body-content">
+          <div class="tab-content">
+            <!-- TODO: app-reservation-parameters -->
+            <h1>Hello World!</h1>
+          </div>
+        </div>
+      </mat-tab>
+      <ng-container *ngIf="reservation">
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon>info</mat-icon>
+            <span>{{'reservations.properties_title' | translate}}</span>
+          </ng-template>
+          <div class="card-body mat-tab-dialog-body-content">
+            <div class="tab-content">
+              <div>
+                <app-reservation-properties [reservation]='reservation' [reservationsAuthorizations]="reservationsAuthorizations"></app-reservation-properties>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </ng-container>
+    </mat-tab-group>
+    <div [class]="dialogRef ? 'tabs-actions' : 'tabs-actions-embedded'">
+      <button mat-icon-button *ngIf="!readOnly" (click)="saveReservation(formGroup.getRawValue())" title="{{'general.save' | translate}}"
+        [disabled]="!formGroup.valid || !formGroup.dirty">
+        <mat-icon>save</mat-icon>
+      </button>
+      <button mat-icon-button *ngIf="dialogRef" (click)="close()" title="{{'general.close' | translate}}">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

@@ -44,6 +44,24 @@ const routes: Routes = [
         },
       },
       {
+        path: 'reservations',
+        loadChildren: async () => (await import('./pages/reservations/reservations.module')).ReservationsModule,
+        data: {
+          menu: {
+            title: 'reservations',
+            type: 'link',
+            icon: 'book',
+            path: '/reservations',
+          },
+          auth: {
+            entity: Entity.RESERVATION,
+            action: Action.LIST
+          },
+          activeInSuperTenant: false,
+          displayInSuperTenant: false,
+        }
+      },
+      {
         path: 'transactions',
         loadChildren: async () => (await import('./pages/transactions/transactions.module')).TransactionsModule,
         data: {

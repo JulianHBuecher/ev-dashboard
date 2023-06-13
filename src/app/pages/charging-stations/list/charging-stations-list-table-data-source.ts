@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { WindowService } from 'services/window.service';
 
-import { TableChargingStationsReserveNowAction, TableChargingStationsReserveNowActionDef } from 'shared/table/actions/charging-stations/table-charging-stations-reserve-now-action';
+import { TableChargingStationsReserveNowAction } from 'shared/table/actions/charging-stations/table-charging-stations-reserve-now-action';
 import { TableChargingStationsCancelReservationAction } from 'shared/table/actions/charging-stations/table-charging-stations-cancel-reservation-action';
 import { CentralServerService } from '../../../services/central-server.service';
 import { ComponentService } from '../../../services/component.service';
@@ -52,7 +52,6 @@ import { ChargingStationsInstantPowerChargerProgressBarCellComponent } from '../
 import { ChargingStationConnectorsComponent } from '../charging-station-connectors/charging-station-connectors-component.component';
 import { ChargingStationLimitationDialogComponent } from '../charging-station-limitation/charging-station-limitation.dialog.component';
 import { ChargingStationDialogComponent } from '../charging-station/charging-station-dialog.component';
-import { ChargingStationsReserveNowDialogComponent } from '../charging-station-reserve-now/charging-stations-reserve-now-dialog-component';
 
 @Injectable()
 export class ChargingStationsListTableDataSource extends TableDataSource<ChargingStation> {

@@ -52,7 +52,6 @@ export class TableChargingStationsCancelReservationAction implements TableAction
   }
 
   private cancelReservation(
-    // chargingStationsCancelReservationDialogComponent: ComponentType<unknown>,
     chargingStation: ChargingStation,
     connector: Connector,
     reservation: Reservation,

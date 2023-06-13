@@ -1,46 +1,40 @@
-import { Car, CarCatalog } from './Car';
+import { ReservationsAuthorizationActions } from './Authorization';
 import { ChargingStation, Connector } from './ChargingStation';
 import { TableData } from './Table';
-import { Tag } from './Tag';
 import { User } from './User';
+import { OCPPReservationStatus } from './ocpp/OCPP';
 
-export interface Reservation extends TableData {
+export interface Reservation extends TableData, ReservationsAuthorizationActions {
   id: number;
-  timestamp: Date;
+  createdOn: Date;
   chargingStationId: string;
   connectorId: number;
   expiryDate: Date;
-  userId: string;
-  tagId: string;
-  status: string;
-  type?: string;
+  fromDate?: Date;
+  toDate?: Date;
+  userId?: string;
+  idTag: string;
+  parentIdTag?: string;
+  status: OCPPReservationStatus;
+  type?: ReservationType;
 }
 
 export interface ReserveNow {
-  user: User;
+  reservationId: number;
+  connectorId: number;
   expiryDate: Date;
-  tagId: string;
-  parentTagId?: string;
-  reservationId: number;
-}
-
-export interface CancelReservation {
-  reservationId: number;
+  idTag: string;
+  user: User;
+  parentIdTag?: string;
 }
 
 export enum ReservationButtonAction {
   VIEW_RESERVATION = 'view_reservation',
   EDIT_RESERVATION = 'edit_reservation',
   CREATE_RESERVATION = 'create_reservation',
-  CANCEL_RESERVATION = 'cancel_reservation'
-}
-
-export enum ReserveNowErrorCode {
-
-}
-
-export enum CancelReservationErrorCode {
-
+  CANCEL_RESERVATION = 'cancel_reservation',
+  EXPORT_RESERVATIONS = 'export_reservations',
+  DELETE_RESERVATION = 'delete_reservation'
 }
 
 export interface ReserveNowDialogData extends TableData {

@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { StatusCodes } from 'http-status-codes';
 import { BehaviorSubject, EMPTY, Observable, Observer, TimeoutError, of, throwError } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 import { Reservation } from 'types/Reservation';
 import { Asset, AssetConsumption } from '../types/Asset';
@@ -1454,6 +1454,17 @@ export class CentralServerService {
     this.checkInit();
     return this.httpClient
       .get(this.buildRestEndpointUrl(RESTServerRoute.REST_TAGS_EXPORT), {
+        headers: this.buildHttpHeaders(),
+        responseType: 'blob',
+        params,
+      })
+      .pipe(catchError(this.handleHttpError));
+  }
+
+  public exportReservations(params: FilterParams): Observable<Blob> {
+    this.checkInit();
+    return this.httpClient
+      .get(this.buildRestEndpointUrl(RESTServerRoute.REST_RESERVATIONS_EXPORT), {
         headers: this.buildHttpHeaders(),
         responseType: 'blob',
         params,
@@ -3913,11 +3924,11 @@ export class CentralServerService {
 
   public reserveNow(
     id: string,
-    connectorID: number,
+    connectorId: number,
     expiryDate: Date,
-    tagID: string,
-    reservationID: number,
-    parentIDTag?: string
+    idTag: string,
+    reservationId: number,
+    parentIdTag?: string
   ): Observable<ActionResponse> {
     this.checkInit();
     if (!id) {
@@ -3925,11 +3936,11 @@ export class CentralServerService {
     }
     const body = `{
       "args": {
-        "connectorId": ${connectorID},
+        "connectorId": ${connectorId},
         "expiryDate": "${expiryDate.toISOString()}",
-        "idTag": "${tagID}",
-        "reservationId": ${reservationID},
-        "parentIdTag": "${parentIDTag}"
+        "idTag": "${idTag}",
+        "reservationId": ${reservationId},
+        "parentIdTag": "${parentIdTag}"
       }
     }`;
     return this.httpClient
@@ -3967,7 +3978,7 @@ export class CentralServerService {
       .pipe(catchError(this.handleHttpError));
   }
 
-  public getReservation(id: string): Observable<Reservation> {
+  public getReservation(id: number): Observable<Reservation> {
     this.checkInit();
     if(!id) {
       return EMPTY;
@@ -3990,6 +4001,44 @@ export class CentralServerService {
         headers: this.buildHttpHeaders(),
         params,
       })
+      .pipe(
+        map((reservations) => {
+          reservations.result.forEach((reservation) => {
+            reservation.expiryDate = new Date(reservation.expiryDate);
+          });
+          return reservations;
+        }))
+      .pipe(catchError(this.handleHttpError));
+  }
+
+  public deleteReservation(id: number) {
+    // Verify init
+    this.checkInit();
+    // Execute the REST service
+    return this.httpClient
+      .delete<ActionResponse>(
+      this.buildRestEndpointUrl(RESTServerRoute.REST_RESERVATION, { id }),
+      {
+        headers: this.buildHttpHeaders(),
+      }
+    )
+      .pipe(catchError(this.handleHttpError));
+  }
+
+  public updateReservation(reservation: Reservation) {
+    // Verify init
+    this.checkInit();
+    // Execute
+    return this.httpClient
+      .put<ActionResponse>(
+      this.buildRestEndpointUrl(RESTServerRoute.REST_RESERVATION, {
+        id: reservation.id,
+      }),
+      reservation,
+      {
+        headers: this.buildHttpHeaders(this.windowService.getSubdomain()),
+      }
+    )
       .pipe(catchError(this.handleHttpError));
   }
 

@@ -1,5 +1,6 @@
 import { ChargingStationAuthorizationActions } from './Authorization';
 import { KeyValue } from './GlobalType';
+import { Reservation } from './Reservation';
 import { Site } from './Site';
 import { SiteArea } from './SiteArea';
 import { TableData } from './Table';
@@ -153,6 +154,7 @@ export interface Connector extends TableData {
   canRemoteStartTransaction: boolean;
   canUnlockConnector: boolean;
   canReadTransaction: boolean;
+  reservation?: Reservation;
 }
 
 export interface PhaseAssignmentToGrid {

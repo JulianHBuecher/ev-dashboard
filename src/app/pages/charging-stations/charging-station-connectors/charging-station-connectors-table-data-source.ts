@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { TransactionDialogComponent } from 'shared/dialogs/transaction/transaction-dialog.component';
 
+import { Constants } from 'utils/Constants';
 import { AuthorizationService } from '../../../services/authorization.service';
 import { CentralServerService } from '../../../services/central-server.service';
 import { DialogService } from '../../../services/dialog.service';
@@ -282,12 +283,15 @@ export class ChargingStationConnectorsTableDataSource extends TableDataSource<Co
         break;
       case ChargingStationButtonAction.CANCEL_RESERVATION:
         this.centralServerService.getReservations(
-          { chargingStationIds: [ this.chargingStation.id ], connectorIds: [ connector.connectorId.toString() ] }
+          { chargingStationIds: [ this.chargingStation.ID ],
+            connectorIds: [ connector.connectorId.toString() ] },
+          { limit: 1, skip: Constants.DEFAULT_SKIP },
+          [ Utils.createSortFieldParam('expiryDate', Constants.ORDERING.desc) ]
         ).subscribe({
           next: (reservation) => {
             if (actionDef.action) {
               (actionDef as TableChargingStationsCancelReservationActionDef).action(
-                this.chargingStation, connector, reservation.result[0], this.dialogService, this.translateService,
+                this.chargingStation, connector, reservation.result.pop(), this.dialogService, this.translateService,
                 this.messageService, this.centralServerService, this.spinnerService, this.router, this.refreshData.bind(this)
               );
             }

@@ -24,6 +24,7 @@ export class RouteGuardService implements CanActivate, CanActivateChild, CanLoad
   public static readonly CAR_ROUTE = '/cars';
   public static readonly LOGGING_ROUTE = '/logs';
   public static readonly BROWSER_NOT_SUPPORTED_ROUTE = '/browser-not-supported';
+  public static readonly RESERVATION_ROUTE = '/reservations';
 
   private userRole?: string;
 
@@ -163,6 +164,7 @@ export class RouteGuardService implements CanActivate, CanActivateChild, CanLoad
       { entity: Entity.CAR, route: RouteGuardService.CHARGING_STATION_ROUTE },
       { entity: Entity.CAR_CATALOG, route: RouteGuardService.CHARGING_STATION_ROUTE },
       { entity: Entity.LOGGING, route: RouteGuardService.LOGGING_ROUTE },
+      { entity: Entity.RESERVATION, route: RouteGuardService.RESERVATION_ROUTE }
     ];
     for (const entityRoute of entityRoutes) {
       if (this.authorizationService.canAccess(entityRoute.entity, Action.LIST)) {

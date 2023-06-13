@@ -1,5 +1,5 @@
 import { Asset } from './Asset';
-import { AssetsAuthorizations, BillingAccountsAuthorizations, BillingInvoicesAuthorizations, BillingPaymentMethodsAuthorizationActions, BillingTaxesAuthorizations, BillingTransfersAuthorizations, CarCatalogsAuthorizations, CarsAuthorizations, ChargingProfilesAuthorizations, ChargingStationTemplateAuthorizationActions, ChargingStationsAuthorizations, DataResultAuthorizations, LogsAuthorizationActions, OcpiEndpointsAuthorizationActions, SettingsAuthorizationActions, SiteUsersAuthorizations, SitesAuthorizationActions, StatisticsAuthorizations, TagsAuthorizations, TransactionsAuthorizations, UserSitesAuthorizations, UsersAuthorizations } from './Authorization';
+import { AssetsAuthorizations, BillingAccountsAuthorizations, BillingInvoicesAuthorizations, BillingPaymentMethodsAuthorizationActions, BillingTaxesAuthorizations, BillingTransfersAuthorizations, CarCatalogsAuthorizations, CarsAuthorizations, ChargingProfilesAuthorizations, ChargingStationTemplateAuthorizationActions, ChargingStationsAuthorizations, DataResultAuthorizations, LogsAuthorizationActions, OcpiEndpointsAuthorizationActions, ReservationsAuthorizationActions, SettingsAuthorizationActions, SiteUsersAuthorizations, SitesAuthorizationActions, StatisticsAuthorizations, TagsAuthorizations, TransactionsAuthorizations, UserSitesAuthorizations, UsersAuthorizations } from './Authorization';
 import { BillingAccount, BillingInvoice, BillingPaymentMethod, BillingTax, BillingTransfer } from './Billing';
 import { Car, CarCatalog } from './Car';
 import { ChargingProfile } from './ChargingProfile';
@@ -221,5 +221,5 @@ export interface BillingOperationResult {
   internalData?: unknown; // an object returned by the concrete implementation - e.g.: STRIPE
 }
 
-export interface ReservationDataResult extends DataResult<Reservation> {
+export interface ReservationDataResult extends DataResult<Reservation>, ReservationsAuthorizationActions {
 }

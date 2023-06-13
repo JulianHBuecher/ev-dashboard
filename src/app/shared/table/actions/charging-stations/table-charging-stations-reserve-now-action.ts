@@ -14,7 +14,6 @@ import { ActionResponse } from 'types/DataResult';
 import { ButtonAction, ButtonActionColor } from 'types/GlobalType';
 import { ReserveNow, ReserveNowDialogData } from 'types/Reservation';
 import { TableActionDef } from 'types/Table';
-import { User } from 'types/User';
 import { Utils } from 'utils/Utils';
 import { TableAction } from '../table-action';
 
@@ -106,11 +105,8 @@ export class TableChargingStationsReserveNowAction implements TableAction {
         this.reserveConnectorNowForUser(
           chargingStation,
           connector,
-          reserveNow.user,
-          reserveNow.expiryDate,
-          reserveNow.tagId,
-          reserveNow.reservationId,
-          reserveNow.parentTagId,
+          reserveNow,
+          Utils.buildUserFullName(reserveNow.user),
           dialogService,
           translateService,
           messageService,
@@ -126,11 +122,8 @@ export class TableChargingStationsReserveNowAction implements TableAction {
   private reserveConnectorNowForUser(
     chargingStation: ChargingStation,
     connector: Connector,
-    user: User,
-    expiryDate: Date,
-    tagId: string,
-    reservationID: number,
-    parentTagID: string,
+    reserveNow: ReserveNow,
+    userFullName: string,
     dialogService: DialogService,
     translateService: TranslateService,
     messageService: MessageService,
@@ -145,24 +138,25 @@ export class TableChargingStationsReserveNowAction implements TableAction {
         translateService.instant('reservations.dialog.reserve_now_confirm', {
           chargingStationId: chargingStation.id,
           connectorId: Utils.getConnectorLetterFromConnectorID(connector.connectorId),
-          userName: Utils.buildUserFullName(user),
+          userName: userFullName
         })
       )
       .subscribe((response) => {
         if (response === ButtonAction.YES) {
           // Check badge
-          if (!tagId) {
+          if (!reserveNow.idTag) {
             messageService.showErrorMessage(
               translateService.instant('chargers.start_transaction_missing_active_tag', {
                 chargingStationId: chargingStation.id,
-                userName: user.fullName,
+                userName: userFullName,
               })
             );
             return;
           }
           spinnerService.show();
           centralServerService
-            .reserveNow(chargingStation.id, connector.connectorId, expiryDate, tagId, reservationID, parentTagID)
+            .reserveNow(chargingStation.id, connector.connectorId, reserveNow.expiryDate, reserveNow.idTag,
+              reserveNow.reservationID, reserveNow?.parentIdTag)
             .subscribe({
               next: (reserveNowResponse: ActionResponse) => {
                 spinnerService.hide();

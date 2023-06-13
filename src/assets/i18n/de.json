@@ -191,7 +191,8 @@
       "cars": "Fahrzeuge",
       "invoices": "Rechnungen",
       "tags": "Badges",
-      "charging_station_templates": "Charging Station Templates"
+      "charging_station_templates": "Charging Station Templates",
+      "reservations": "Reservierungen"
     },
     "tooltips": {
       "push_cdr": "CDR senden",
@@ -2746,6 +2747,18 @@
   },
   "reservations": {
     "title": "Reservierungen",
+    "id": "ID",
+    "created_on": "Erstellungsdatum",
+    "chargingstation_id": "Ladestation-ID",
+    "connector_id": "Anschluss-ID",
+    "expiry_date": "Ablaufdatum",
+    "tag_id": "Tag ID",
+    "status": "Status",
+    "type": "Reservierungs-Typ",
+    "reservation_not_found": "Die Reservierung wurde nicht gefunden",
+    "change_reservation_success": "Die Reservierung '{{reservationId}}' wurde erfolgreich gespeichert",
+    "change_reservation_error": "Die Reservierung kann nicht verändert werden, siehe Log-Nachrichten für Details",
+    "update_reservation_error": "Aktualisieren von Reservierungen ist nicht unterstützt",
     "general":{
       "reserve_now": "Jetzt Reservieren",
       "cancel_reservation": "Reservierung stornieren",
@@ -2755,7 +2768,7 @@
       }
     },
     "tabs":{
-      "reservations": "Reservierungen"
+      "list": "Reservierungen"
     },
     "dialog":{
       "reserve_now_title": "Reservierung abschließen",

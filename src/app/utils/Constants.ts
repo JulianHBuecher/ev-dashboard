@@ -45,4 +45,8 @@ export class Constants {
   /* App Info for STRIPE */
   public static readonly STRIPE_APP_NAME = 'Open e-Mobility';
   public static readonly STRIPE_PARTNER_ID = 'TECH-000685';
+
+  public static readonly ASCENDING_ORDER = '1';
+  public static readonly DESCENDING_ORDER = '-1';
+  public static readonly ORDERING = {asc: Constants.ASCENDING_ORDER, desc: Constants.DESCENDING_ORDER};
 }

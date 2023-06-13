@@ -191,7 +191,8 @@
       "cars": "Cars",
       "invoices": "Invoices",
       "tags": "RFID Cards",
-      "charging_station_templates": "Charging Station Templates"
+      "charging_station_templates": "Charging Station Templates",
+      "reservations": "Reservations"
     },
     "tooltips": {
       "push_cdr": "Push CDR",
@@ -2746,6 +2747,18 @@
   },
   "reservations": {
     "title": "Reservations",
+    "id": "ID",
+    "created_on": "Creation Date",
+    "chargingstation_id": "Charging Station ID",
+    "connector_id": "Connector ID",
+    "expiry_date": "Expiration Date",
+    "tag_id": "Tag ID",
+    "status": "Status",
+    "type": "Reservation Type",
+    "reservation_not_found": "The reservation has not been found",
+    "change_reservation_success": "The reservation '{{reservationId}}' has been saved successfully",
+    "change_reservation_error": "Cannot change the reservation details, check the logs",
+    "update_reservation_error": "Updating a reservation is not supported",
     "general":{
       "reserve_now": "Reserve Now",
       "cancel_reservation": "Cancel reservation",
@@ -2755,7 +2768,7 @@
       }
     },
     "tabs":{
-      "reservations": "Reservations"
+      "list": "Reservations"
     },
     "dialog":{
       "reserve_now_title": "Complete Reservation",

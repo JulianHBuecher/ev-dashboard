@@ -173,8 +173,6 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
       this.userID.setValue(result[0].key);
       this.tag.setValue('');
       this.visualTagId.setValue('');
-      // this.expiryDate.setValue('');
-      // this.reservationID.setValue('');
       this.loadUserSessionContext();
     });
   }
@@ -204,14 +202,15 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
 
   public reserveNow() {
     if (this.formGroup.valid) {
-      const reserveNow: ReserveNow = {
-        user: this.selectedUser,
+      const reserveNowRequest: ReserveNow = {
         expiryDate: this.expiryDate.value,
-        tagId: this.selectedTag.id,
+        connectorId: this.connectorId,
+        idTag: this.selectedTag.id,
         reservationId: this.reservationId.value,
-        parentTagId: this.parentTagId === undefined ? '' : this.parentTagId.value
+        parentIdTag: this.parentTagId === undefined ? '' : this.parentTagId.value,
+        user: this.selectedUser,
       };
-      this.dialogRef.close(reserveNow);
+      this.dialogRef.close(reserveNowRequest);
     }
   }
 

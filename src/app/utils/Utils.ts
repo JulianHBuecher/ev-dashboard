@@ -9,6 +9,7 @@ import { HTTPError } from 'types/HTTPError';
 import { Tag } from 'types/Tag';
 import { User, UserToken } from 'types/User';
 
+import { Ordering } from 'types/DataResult';
 import { CentralServerService } from '../services/central-server.service';
 import { DialogService } from '../services/dialog.service';
 import { MessageService } from '../services/message.service';
@@ -1012,5 +1013,12 @@ export class Utils {
 
   public static createRandomId(): number {
     return Math.floor((Math.random() * 100) + 1);
+  }
+
+  public static createSortFieldParam(field: string, order: string = Constants.ORDERING.asc): Ordering {
+    if (order === Constants.ORDERING.desc) {
+      return { field: `-${field}` };
+    }
+    return { field: `${field}` };
   }
 }
