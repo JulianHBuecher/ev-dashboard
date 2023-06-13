@@ -283,7 +283,7 @@ export class ChargingStationConnectorsTableDataSource extends TableDataSource<Co
         break;
       case ChargingStationButtonAction.CANCEL_RESERVATION:
         this.centralServerService.getReservations(
-          { chargingStationIds: [ this.chargingStation.ID ],
+          { chargingStationIds: [ this.chargingStation.id ],
             connectorIds: [ connector.connectorId.toString() ] },
           { limit: 1, skip: Constants.DEFAULT_SKIP },
           [ Utils.createSortFieldParam('expiryDate', Constants.ORDERING.desc) ]

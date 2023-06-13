@@ -18,7 +18,7 @@ export class ReservationDialogComponent implements AfterViewInit {
   public constructor(
     public dialogRef: MatDialogRef<ReservationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) dialogParams: DialogParamsWithAuth<Reservation, ReservationsAuthorizations>) {
-    this.reservationId = dialogParams.dialogData?.ID;
+    this.reservationId = dialogParams.dialogData?.id;
     this.dialogMode = dialogParams.dialogMode;
     this.reservationsAuthorizations = dialogParams.authorizations;
   }

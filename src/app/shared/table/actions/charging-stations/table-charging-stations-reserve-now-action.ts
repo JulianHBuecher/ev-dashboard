@@ -156,7 +156,7 @@ export class TableChargingStationsReserveNowAction implements TableAction {
           spinnerService.show();
           centralServerService
             .reserveNow(chargingStation.id, connector.connectorId, reserveNow.expiryDate, reserveNow.idTag,
-              reserveNow.reservationID, reserveNow?.parentIdTag)
+              reserveNow.reservationId, reserveNow?.parentIdTag)
             .subscribe({
               next: (reserveNowResponse: ActionResponse) => {
                 spinnerService.hide();

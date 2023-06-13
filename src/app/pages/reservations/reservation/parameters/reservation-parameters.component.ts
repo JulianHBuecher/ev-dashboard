@@ -137,13 +137,13 @@ export class ReservationParametersComponent implements OnInit, OnChanges {
 
   public loadReservation() {
     if (this.initialized && this.reservation) {
-      this.id.setValue(this.reservation.ID);
-      this.chargingStationId.setValue(this.reservation.chargingStationID);
-      this.connectorId.setValue(this.reservation.connectorID);
+      this.id.setValue(this.reservation.id);
+      this.chargingStationId.setValue(this.reservation.chargingStationId);
+      this.connectorId.setValue(this.reservation.connectorId);
       this.expiryDate.setValue(this.reservation.expiryDate);
       this.fromDate.setValue(this.reservation.fromDate);
       this.toDate.setValue(this.reservation.toDate);
-      this.userId.setValue(this.reservation.userID);
+      this.userId.setValue(this.reservation.userId);
       this.idTag.setValue(this.reservation.idTag);
       this.parentIdTag.setValue(this.reservation.parentIdTag);
       this.status.setValue(this.reservation.status);

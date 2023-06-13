@@ -28,8 +28,8 @@ export class TableDeleteReservationAction extends TableDeleteAction {
     messageService: MessageService, centralServerService: CentralServerService, spinnerService: SpinnerService, router: Router,
     refresh?: () => Observable<void>) {
     super.delete(reservation, 'reservations.delete_title',
-      translateService.instant('reservations.delete_confirm', { reservationID: reservation.ID }),
-      translateService.instant('reservations.delete_success', { reservationID: reservation.ID }),
+      translateService.instant('reservations.delete_confirm', { reservationID: reservation.id }),
+      translateService.instant('reservations.delete_success', { reservationID: reservation.id }),
       'reservations.delete_error', centralServerService.deleteReservation.bind(centralServerService),
       dialogService, translateService, messageService, centralServerService, spinnerService, router, refresh);
   }

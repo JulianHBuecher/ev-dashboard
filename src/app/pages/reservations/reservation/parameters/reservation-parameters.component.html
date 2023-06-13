@@ -1,7 +1,7 @@
 <div class="reservation-param-component">
   <form class="form" [formGroup]="formGroup">
     <div class="row">
-      <div class="col-md-6 form-group" *ngIf="reservation?.ID">
+      <div class="col-md-6 form-group" *ngIf="reservation?.id">
         <mat-form-field>
           <input matInput type="text" placeholder="{{'reservations.id' | translate}}"
             [formControl]="id" required [readOnly]="true" />
@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-6 form-group" *ngIf="reservation?.chargingStationID">
+      <div class="col-md-6 form-group" *ngIf="reservation?.chargingStationId">
         <mat-form-field>
           <input matInput type="text" placeholder="{{'reservations.chargingstation_id' | translate}}"
             class="form-field-popup" [formControl]="chargingStationId" required [readOnly]="readOnly" (click)="assignChargingStation()" />
@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-6 form-group" *ngIf="reservation?.connectorID">
+      <div class="col-md-6 form-group" *ngIf="reservation?.connectorId">
         <mat-form-field>
           <input matInput type="text" placeholder="{{'reservations.connectorID' | translate}}"
             class="form-field-popup" [formControl]="connectorId" required [readOnly]="readOnly" (click)="assignConnector()" />
