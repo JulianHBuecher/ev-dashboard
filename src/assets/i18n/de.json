@@ -1923,6 +1923,16 @@
       "synchronize_car_catalogs_dialog_confirm": "Möchten Sie die Synchronisierung aller elektrischen Fahrzeuge wirklich starten?",
       "assign_user_to_car_dialog_title": "Nutzer zum Fahrzeug zuordnen",
       "assign_user_to_car_dialog_confirm": "Das Fahrzeug existiert bereits, möchten Sie es wirklich wiederverwenden?"
+    },
+    "reservations": {
+      "reserve_now": {
+        "title": "Unverzügliche Reservierungen",
+        "description": "Unverzügliches Reservieren von vorhandenen Ladestationen und den damit verbundenen Anschlüssen"
+      },
+      "planned_reservation": {
+        "title": "Planbare Reservierungen",
+        "description": "Erstellen von nicht unmittelbaren Reservierungen für noch anzutretende Reisen"
+      }
     }
   },
   "technical_settings": {
@@ -2747,6 +2757,8 @@
   },
   "reservations": {
     "title": "Reservierungen",
+    "description": "Erstellen von Reservierungen auf Ladestationen und den zugehörigen Anschlüssen",
+    "title_singular": "Reservierung",
     "id": "ID",
     "created_on": "Erstellungsdatum",
     "chargingstation_id": "Ladestation-ID",
@@ -2755,22 +2767,23 @@
     "tag_id": "Tag ID",
     "status": "Status",
     "type": "Reservierungs-Typ",
+    "properties_title": "Details",
     "reservation_not_found": "Die Reservierung wurde nicht gefunden",
     "change_reservation_success": "Die Reservierung '{{reservationId}}' wurde erfolgreich gespeichert",
     "change_reservation_error": "Die Reservierung kann nicht verändert werden, siehe Log-Nachrichten für Details",
     "update_reservation_error": "Aktualisieren von Reservierungen ist nicht unterstützt",
-    "general":{
+    "general": {
       "reserve_now": "Jetzt Reservieren",
       "cancel_reservation": "Reservierung stornieren",
-      "tooltips":{
+      "tooltips": {
         "reserve_now": "Jetzt Reservieren",
         "cancel_reservation": "Reservierung stornieren"
       }
     },
-    "tabs":{
+    "tabs": {
       "list": "Reservierungen"
     },
-    "dialog":{
+    "dialog": {
       "reserve_now_title": "Reservierung abschließen",
       "reserve_now_details_title": "Anschluss '{{connectorId}}' an Ladestation '{{chargingStationId}}' reservieren",
       "reserve_now_confirm": "Wollen Sie für den Nutzer '{{userName}}' an der Ladestation '{{chargingStationId}}' an Anschluss '{{connectorId}}' eine Reservierung tätigen?",
@@ -2782,7 +2795,7 @@
       "cancel_reservation_success": "Die Reservierung mit der ID '{{reservationId}}' an der Ladestation '{{chargingStationId}}' wurde erfolgreich storniert",
       "cancel_reservation_error": "Beim Versuch die Reservierung mit der ID '{{reservationId}}' an der Ladestation '{{chargingStationId}}' zu stornieren ist ein Fehler aufgetreten"
     },
-    "action_error":{
+    "action_error": {
       "reserve_now_title": "Fehler beim Reservieren der Ladestation",
       "reserve_now_not_available": "Anschluss ist nicht verfügbar, Ladestation kann nicht reserviert werden",
       "cancel_reservation_title": "Fehler beim Stornieren der Reservierung mit der ID '{{reservationId}}'",

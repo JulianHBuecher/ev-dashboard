@@ -34,7 +34,7 @@ import { ReservationParametersComponent } from './reservation/parameters/reserva
     MatProgressBarModule,
     FormattersModule,
     ComponentModule,
-    MomentModule
+    MomentModule,
   ],
   declarations: [
     ReservationsComponent,
@@ -42,12 +42,8 @@ import { ReservationParametersComponent } from './reservation/parameters/reserva
     ReservationComponent,
     ReservationDialogComponent,
     ReservationPropertiesComponent,
-    ReservationParametersComponent
+    ReservationParametersComponent,
   ],
-  providers: [
-    ReservationsListTableDataSource
-  ]
+  providers: [ReservationsListTableDataSource],
 })
-export class ReservationsModule {
-
-}
+export class ReservationsModule {}

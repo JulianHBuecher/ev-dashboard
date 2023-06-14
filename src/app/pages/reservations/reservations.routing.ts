@@ -5,11 +5,14 @@ import { ReservationsComponent } from './reservations.component';
 
 export const ReservationsRoutes: Routes = [
   {
-    path: '', component: ReservationsComponent, canActivate: [RouteGuardService], data: {
+    path: '',
+    component: ReservationsComponent,
+    canActivate: [RouteGuardService],
+    data: {
       auth: {
         entity: Entity.RESERVATION,
         action: Action.LIST,
       },
-    }
-  }
+    },
+  },
 ];

@@ -7,8 +7,12 @@ import { TableActionDef } from 'types/Table';
 import { TableViewAction } from '../table-view-action';
 
 export interface TableViewReservationActionDef extends TableActionDef {
-  action: (reservationDialogComponent: ComponentType<unknown>, dialog: MatDialog,
-    dialogParams: DialogParamsWithAuth<Reservation, ReservationsAuthorizations>, refresh?: () => Observable<void>) => void;
+  action: (
+    reservationDialogComponent: ComponentType<unknown>,
+    dialog: MatDialog,
+    dialogParams: DialogParamsWithAuth<Reservation, ReservationsAuthorizations>,
+    refresh?: () => Observable<void>
+  ) => void;
 }
 
 export class TableViewReservationAction extends TableViewAction {
@@ -20,8 +24,12 @@ export class TableViewReservationAction extends TableViewAction {
     };
   }
 
-  private viewReservation(reservationDialogComponent: ComponentType<unknown>, dialog: MatDialog,
-    dialogParams: DialogParamsWithAuth<Reservation, ReservationsAuthorizations>, refresh?: () => Observable<void>) {
+  private viewReservation(
+    reservationDialogComponent: ComponentType<unknown>,
+    dialog: MatDialog,
+    dialogParams: DialogParamsWithAuth<Reservation, ReservationsAuthorizations>,
+    refresh?: () => Observable<void>
+  ) {
     super.view(reservationDialogComponent, dialog, dialogParams, refresh);
   }
 }

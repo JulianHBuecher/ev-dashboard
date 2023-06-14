@@ -20,7 +20,7 @@ import { Utils } from 'utils/Utils';
 @Component({
   selector: 'app-reservation',
   templateUrl: 'reservation.component.html',
-  styleUrls: ['reservation.component.scss']
+  styleUrls: ['reservation.component.scss'],
 })
 export class ReservationComponent implements OnInit {
   @Input() public reservationId!: number;
@@ -82,10 +82,15 @@ export class ReservationComponent implements OnInit {
               this.messageService.showErrorMessage('reservations.reservation_not_found');
               break;
             default:
-              Utils.handleHttpError(error, this.router, this.messageService, this.centralServerService,
-                'reservations.reservation_not_found');
+              Utils.handleHttpError(
+                error,
+                this.router,
+                this.messageService,
+                this.centralServerService,
+                'reservations.reservation_not_found'
+              );
           }
-        }
+        },
       });
     }
   }
@@ -99,7 +104,9 @@ export class ReservationComponent implements OnInit {
       next: (response) => {
         this.spinnerService.hide();
         if (response.status === RestResponse.SUCCESS) {
-          this.messageService.showSuccessMessage('reservations.change_reservation_success', { reservationId: this.reservationId });
+          this.messageService.showSuccessMessage('reservations.change_reservation_success', {
+            reservationId: this.reservationId,
+          });
           this.closeDialog(true);
         } else {
           this.messageService.showErrorMessage('reservations.change_reservation_error');
@@ -115,10 +122,15 @@ export class ReservationComponent implements OnInit {
             this.messageService.showErrorMessage('reservations.update_reservation_error');
             break;
           default:
-            Utils.handleHttpError(error, this.router, this.messageService,
-              this.centralServerService, 'reservations.change_reservation_error');
+            Utils.handleHttpError(
+              error,
+              this.router,
+              this.messageService,
+              this.centralServerService,
+              'reservations.change_reservation_error'
+            );
         }
-      }
+      },
     });
   }
 
@@ -132,7 +144,12 @@ export class ReservationComponent implements OnInit {
     }
   }
   public close() {
-    Utils.checkAndSaveAndCloseDialog(this.formGroup, this.dialogService, this.translateService,
-      this.saveReservation.bind(this), this.closeDialog.bind(this));
+    Utils.checkAndSaveAndCloseDialog(
+      this.formGroup,
+      this.dialogService,
+      this.translateService,
+      this.saveReservation.bind(this),
+      this.closeDialog.bind(this)
+    );
   }
 }

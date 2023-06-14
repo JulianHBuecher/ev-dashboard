@@ -13,7 +13,7 @@ interface ComponentChange {
 
 @Component({
   templateUrl: 'release-notes.component.html',
-  styleUrls: ['release-notes.component.scss']
+  styleUrls: ['release-notes.component.scss'],
 })
 export class ReleaseNotesComponent {
   public releaseNotes: ReleaseNotes[] = [];
@@ -31,7 +31,7 @@ export class ReleaseNotesComponent {
             name: 'Dashboard',
             changes: [
               'OCPI - Roaming - Push CDRs only when the extra inactivity is known',
-              'Transactions - fix - Avoid closing transactions too early'
+              'Transactions - fix - Avoid closing transactions too early',
             ],
           },
         ],
@@ -45,7 +45,7 @@ export class ReleaseNotesComponent {
             changes: [
               'Rate Limiter - new settings to prevent DDOS',
               'Monitoring - new metrics on notifications',
-              'Smart Charging - fix - targetStateOfCharge can be null'
+              'Smart Charging - fix - targetStateOfCharge can be null',
             ],
           },
         ],
@@ -68,7 +68,7 @@ export class ReleaseNotesComponent {
               'Authorizations - Site owners can change the power limit of a site',
               'OCPP - Allow a distinct CPMS Domain Name per Tenant',
               'Performance - Fix - Partial index creation',
-              'Performance - some logs less verbose'
+              'Performance - some logs less verbose',
             ],
           },
         ],
@@ -83,7 +83,7 @@ export class ReleaseNotesComponent {
               'Charging Sessions - new endpoint "getUserSessionContext" replacing the former "getUserDefaultTagCar" (which is deprecated).',
               'Authorizations - Migrated Settings endpoints to the new authorization framework',
               'Authorizations - Migrated OCPI endpoints to the new authorization framework',
-              'MongoDB - K8S Configuration Flexibility - minimal pool size and maximal pool size can be defined per server'
+              'MongoDB - K8S Configuration Flexibility - minimal pool size and maximal pool size can be defined per server',
             ],
           },
         ],
@@ -102,7 +102,7 @@ export class ReleaseNotesComponent {
               'Authorizations - fix - Authorization check on start charging session has been fixed',
               'Authorizations - fix - Assignment of site admin and site owner roles',
               'Authorizations - fix - Admin can refund charging sessions when being site owner',
-              'Logging - improvement - minor change - application errors logged in their tenant'
+              'Logging - improvement - minor change - application errors logged in their tenant',
             ],
           },
         ],
@@ -140,7 +140,7 @@ export class ReleaseNotesComponent {
               'Car Connectors - Targa Telematics - New connector to get the SoC on AC Charging Stations',
               'Security - OCPI Tariff IDs not shown to basic users',
               'OCPI - The owner name can be set per site and sent to the GIREVE Roaming Platform',
-              'Car Catalog - Adaptation to version 29 of the ev-database API'
+              'Car Catalog - Adaptation to version 29 of the ev-database API',
             ],
           },
         ],
@@ -169,7 +169,7 @@ export class ReleaseNotesComponent {
             changes: [
               `Cosmetic changes and UI responsiveness improvements`,
               `Some fixes related to the authorizations and permissions`,
-              `Configuration and scalability improvements (Kubernetes)`
+              `Configuration and scalability improvements (Kubernetes)`,
             ],
           },
         ],
@@ -411,7 +411,7 @@ export class ReleaseNotesComponent {
               `Fixed Site Admin cannot create Cars for other Users`,
               `Fixed cannot edit Charging Station with Connector IDs starting at 11`,
               `Fixed cannot export OCPI CDRs with Swagger`,
-              `Fixed emails of eMSP in lower case in OCPI`
+              `Fixed emails of eMSP in lower case in OCPI`,
             ],
           },
         ],
@@ -643,7 +643,7 @@ export class ReleaseNotesComponent {
               `Enhanced hidding sensitive data in Logs`,
               `Sanitize data in export CSV`,
               `Added metadata to Authorization's fields`,
-              `Fixed authorization inheritance in dynamic filtering`
+              `Fixed authorization inheritance in dynamic filtering`,
             ],
           },
         ],
@@ -720,7 +720,7 @@ export class ReleaseNotesComponent {
               `Split OCPP Reset and Clear Cache commands in REST public API`,
               `Added Car connector in User's profile`,
               `Billing should not throw an error when no User is provided`,
-              `Fixed documentation CSV upload`
+              `Fixed documentation CSV upload`,
             ],
           },
         ],
@@ -797,7 +797,7 @@ export class ReleaseNotesComponent {
             name: 'Dashboard',
             changes: [
               `Improvement of the translation to Spanish`,
-              `Implicit log filtering for Site Administrators`
+              `Implicit log filtering for Site Administrators`,
             ],
           },
         ],
@@ -812,7 +812,7 @@ export class ReleaseNotesComponent {
               `Show asset's consumption/production in the Site Area charts`,
               `EVlink Smart Wallbox - new serial number added to the templates`,
               `Wall Box Chargers - new firmware added to the templates`,
-              `Fixed: Domestic connector for OCPI`
+              `Fixed: Domestic connector for OCPI`,
             ],
           },
         ],
@@ -838,9 +838,7 @@ export class ReleaseNotesComponent {
         componentChanges: [
           {
             name: 'Dashboard',
-            changes: [
-              `Fixed OCPI Register Endpoint not getting the IOP information`,
-            ],
+            changes: [`Fixed OCPI Register Endpoint not getting the IOP information`],
           },
         ],
       },
@@ -850,10 +848,7 @@ export class ReleaseNotesComponent {
         componentChanges: [
           {
             name: 'Dashboard',
-            changes: [
-              `Billing invoicing is now checked daily`,
-              `Enhancement of Logs`,
-            ],
+            changes: [`Billing invoicing is now checked daily`, `Enhancement of Logs`],
           },
         ],
       },
@@ -902,7 +897,7 @@ export class ReleaseNotesComponent {
               `Stop OCPI Transaction if receiving OCPP Meter Values with unknown Transaction ID`,
               `Do not create a Transaction before checking Roaming Authorization`,
               `Request OCPI Authorization Token also in OCPP Start Transaction in addition to OCPP Authorize`,
-              `Restrain OCPI Remote Authorization Token validity from 10 mins to 2 mins`
+              `Restrain OCPI Remote Authorization Token validity from 10 mins to 2 mins`,
             ],
           },
         ],
@@ -1163,7 +1158,7 @@ export class ReleaseNotesComponent {
               `Fix user site assignment`,
               `Server side german translation update`,
               `Fix assets consumption retrieval if empty`,
-              `Ensure the currently charging station active connection to the OCPP-J server is used to send commands`
+              `Ensure the currently charging station active connection to the OCPP-J server is used to send commands`,
             ],
           },
         ],
@@ -1355,7 +1350,7 @@ export class ReleaseNotesComponent {
             changes: [
               `Set Schneider minimum intensity to 6A in Charging Station's template`,
               `Fixed User with role Basic should be able to read settings`,
-              `Fixed Charging Profile Schema in RESTful endpoint`
+              `Fixed Charging Profile Schema in RESTful endpoint`,
             ],
           },
         ],
@@ -1391,7 +1386,7 @@ export class ReleaseNotesComponent {
               `Fixed Site Area limit in Smart Charging`,
               `Billing: refactor of User and Invoice synchronizations`,
               `Fixed Tenant creation issue with OICP`,
-              `Added REST Charging station QR-Code and Get OCPP Parameters JSon schema validations`
+              `Added REST Charging station QR-Code and Get OCPP Parameters JSon schema validations`,
             ],
           },
         ],
@@ -1505,7 +1500,7 @@ export class ReleaseNotesComponent {
               `Do not try to retrieve the Settings if Tenant's components are not active`,
               `Added Legrand model 059011 in Charging Station's template`,
               `Fixed Car's thumbnails not displayed`,
-              `Track backend server's performances in database`
+              `Track backend server's performances in database`,
             ],
           },
         ],
@@ -1568,9 +1563,7 @@ export class ReleaseNotesComponent {
         componentChanges: [
           {
             name: 'Dashboard',
-            changes: [
-              `Handle Assets consumptions and productions in Smart Charging`,
-            ],
+            changes: [`Handle Assets consumptions and productions in Smart Charging`],
           },
         ],
       },
@@ -1815,7 +1808,7 @@ export class ReleaseNotesComponent {
               `Fixed Demo users can display User in Session details`,
               `Registration Token Site Area is hidden when Organization is inactive`,
               `Keep track of unmatched template sections`,
-              `Do not add custom OCPP param if already exists in OCPP (Delta)`
+              `Do not add custom OCPP param if already exists in OCPP (Delta)`,
             ],
           },
         ],
@@ -1852,7 +1845,7 @@ export class ReleaseNotesComponent {
               `Added locks to all OCPI eMSP and CPO's actions`,
               `Fixed and optimized OCPI Pull Tokens`,
               `Enhanced OCPI logs`,
-              `Fixed Remote Start Transaction not working`
+              `Fixed Remote Start Transaction not working`,
             ],
           },
         ],
@@ -1929,7 +1922,7 @@ export class ReleaseNotesComponent {
               `Static Power limitation must not be provided by the Charging Station Template`,
               `Fixed ABB RFID Card reader configuration`,
               `Added Schneider model EV2S7P04 in Charging Station's Template`,
-              `Minor bug fixes`
+              `Minor bug fixes`,
             ],
           },
         ],
@@ -1994,7 +1987,7 @@ export class ReleaseNotesComponent {
               `Always try to get the User during Start Transaction when ACL is not active on Site Area`,
               `Ignore OCPP Status Notification on Connector ID '0'`,
               `Get OCPI public Locations with no Charging Station`,
-              `Push CDRs not pushed at the end of the Session every 15 mins`
+              `Push CDRs not pushed at the end of the Session every 15 mins`,
             ],
           },
         ],
@@ -2226,7 +2219,7 @@ export class ReleaseNotesComponent {
               `Removed timezone in templates for Schneider Charging Station`,
               `Renamed Charging Station 'private' property to 'public'`,
               `100% Completed the OCPI eMSP and CPO Gireve certification`,
-              `Integrated German and Spanish translation`
+              `Integrated German and Spanish translation`,
             ],
           },
         ],
@@ -2253,7 +2246,7 @@ export class ReleaseNotesComponent {
               `Unlock User when password has been reset successfully`,
               `Updated Shelly wallbox in templates`,
               `Charging Station's Geo Map dialog takes too much space in 720p`,
-              `Fixed Charging Plan list height in 720p`
+              `Fixed Charging Plan list height in 720p`,
             ],
           },
         ],
@@ -2364,7 +2357,7 @@ export class ReleaseNotesComponent {
               `Missing mandatory field flag in Site Area`,
               `Implement OCPI Check Sessions, CDRs and Locations`,
               `When Smart Charging is enabled, inform the user that this will take over the static limitation and the charging plans`,
-              `Added Locking on all Scheduler's tasks`
+              `Added Locking on all Scheduler's tasks`,
             ],
           },
         ],
@@ -2383,7 +2376,7 @@ export class ReleaseNotesComponent {
               `Enable Static Limitation and Charging Plan for Delta charger`,
               `Display price and date in Invoice list`,
               `Selection context not cleared in Asset, Site Area or Charging Station pop-ups`,
-              `Divide by 3 the power of the Charging Plan`
+              `Divide by 3 the power of the Charging Plan`,
             ],
           },
         ],
@@ -2410,7 +2403,7 @@ export class ReleaseNotesComponent {
               `Add a checkbox to display all the session chart's points (no optimization)`,
               `Refactored Cars to Cars Catalog`,
               `Add OCPI charging periods in update and stop sessions`,
-              `Fixed Smart Charging checkbox disabled Site Area's Max Power Limitation`
+              `Fixed Smart Charging checkbox disabled Site Area's Max Power Limitation`,
             ],
           },
         ],
@@ -2428,7 +2421,7 @@ export class ReleaseNotesComponent {
               `Fixed Charging Station's Connectors not aligned`,
               `Fixed SAP Smart Charging root fuses not correctly provided`,
               `Migrated Site/Site Area/User to Object IDs in Consumptions`,
-              `Multi-selection on Internal/External Organization filter`
+              `Multi-selection on Internal/External Organization filter`,
             ],
           },
         ],
@@ -3222,9 +3215,7 @@ export class ReleaseNotesComponent {
           },
           {
             name: 'Backend',
-            changes: [
-              `Validate charger's messages with JSon schemas`,
-            ],
+            changes: [`Validate charger's messages with JSon schemas`],
           },
         ],
       },
@@ -3249,16 +3240,15 @@ export class ReleaseNotesComponent {
         componentChanges: [
           {
             name: 'Front-end',
-            changes: [
-              `Productive use of the new e-Mobility front-end`,
-            ],
+            changes: [`Productive use of the new e-Mobility front-end`],
           },
           {
             name: 'Backend',
             changes: [
               `Concur: Add quick expense V4 implementation`,
               `Convergent Invoicing: Enhanced logs when an error occurred`,
-              `Ignored connector ID 0 for EBEE charger`],
+              `Ignored connector ID 0 for EBEE charger`,
+            ],
           },
         ],
       },

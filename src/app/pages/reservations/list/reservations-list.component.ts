@@ -10,8 +10,5 @@ import { ReservationsListTableDataSource } from './reservations-list-table-data-
 })
 export class ReservationsListComponent {
   // eslint-disable-next-line no-useless-constructor
-  public constructor(
-    public reservationsListTableDataSource: ReservationsListTableDataSource
-  ) {}
-
+  public constructor(public reservationsListTableDataSource: ReservationsListTableDataSource) {}
 }

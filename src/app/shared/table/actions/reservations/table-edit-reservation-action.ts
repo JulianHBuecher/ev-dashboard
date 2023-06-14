@@ -7,8 +7,12 @@ import { TableActionDef } from 'types/Table';
 import { TableEditAction } from '../table-edit-action';
 
 export interface TableEditReservationActionDef extends TableActionDef {
-  action: (reservationDialogComponent: ComponentType<unknown>, dialog: MatDialog,
-    dialogParams: DialogParamsWithAuth<Reservation, ReservationsAuthorizations>, refresh?: () => Observable<void>) => void;
+  action: (
+    reservationDialogComponent: ComponentType<unknown>,
+    dialog: MatDialog,
+    dialogParams: DialogParamsWithAuth<Reservation, ReservationsAuthorizations>,
+    refresh?: () => Observable<void>
+  ) => void;
 }
 
 export class TableEditReservationAction extends TableEditAction {
@@ -20,8 +24,12 @@ export class TableEditReservationAction extends TableEditAction {
     };
   }
 
-  private editReservation(reservationDialogComponent: ComponentType<unknown>, dialog: MatDialog,
-    dialogParams: DialogParamsWithAuth<Reservation, ReservationsAuthorizations>, refresh?: () => Observable<void>) {
+  private editReservation(
+    reservationDialogComponent: ComponentType<unknown>,
+    dialog: MatDialog,
+    dialogParams: DialogParamsWithAuth<Reservation, ReservationsAuthorizations>,
+    refresh?: () => Observable<void>
+  ) {
     super.edit(reservationDialogComponent, dialog, dialogParams, refresh);
   }
 }

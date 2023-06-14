@@ -1,9 +1,8 @@
-
 export enum ServerAction {
   UNKNOWN_ACTION = 'Unknown',
 
   RATE_LIMITER = 'RateLimiter',
-  SHIELD ='Shield',
+  SHIELD = 'Shield',
 
   SAP_CONCUR_REQUEST = 'SapConcurRequest',
   RECAPTCHA_REQUEST = 'RecaptchaRequest',
@@ -424,7 +423,7 @@ export enum ServerAction {
   USER_IMAGE = 'UserImage',
   TAGS = 'Tags',
   TAG = 'Tag',
-  TAG_BY_VISUAL_ID= 'TagByVisualID',
+  TAG_BY_VISUAL_ID = 'TagByVisualID',
   USER_DEFAULT_TAG_CAR = 'UserDefaultTagCar',
   TAG_CREATE = 'TagCreate',
   TAG_UPDATE = 'TagUpdate',
@@ -492,7 +491,7 @@ export enum ServerAction {
   HTTP_RESPONSE = 'HttpResponse',
   HTTP_ERROR = 'HttpError',
 
-  EXPORT_TO_CSV = 'ExportToCSV'
+  EXPORT_TO_CSV = 'ExportToCSV',
 }
 
 // RESTful API
@@ -569,7 +568,7 @@ export enum RESTServerRoute {
 
   REST_USERS = 'users',
   REST_USER = 'users/:id',
-  REST_USER_SESSION_CONTEXT= 'users/:id/session-context',
+  REST_USER_SESSION_CONTEXT = 'users/:id/session-context',
   REST_USER_SITES = 'users/:id/sites',
   REST_USER_UPDATE_MOBILE_TOKEN = 'users/:id/mobile-token',
   REST_USER_UPDATE_MOBILE_DATA = 'users/:id/mobile-data',
@@ -732,7 +731,7 @@ export enum RESTServerRoute {
   // RESERVATION URLs for CRUD operations
   REST_RESERVATIONS = 'reservations',
   REST_RESERVATION = 'reservations/:id',
-  REST_RESERVATIONS_EXPORT = 'reservations/action/export'
+  REST_RESERVATIONS_EXPORT = 'reservations/action/export',
 }
 
 export enum OCPIServerRoute {
@@ -747,14 +746,14 @@ export enum OCPIServerRoute {
 }
 
 export enum OCPIServerRouteVersions {
-  VERSION_211 = '2.1.1'
+  VERSION_211 = '2.1.1',
 }
 
 export enum ServerProtocol {
   HTTP = 'http',
   HTTPS = 'https',
   WS = 'ws',
-  WSS = 'wss'
+  WSS = 'wss',
 }
 
 export enum ServerType {
@@ -771,5 +770,5 @@ export enum ServerType {
 
 export enum WSServerProtocol {
   OCPP16 = 'ocpp1.6',
-  REST = 'rest'
+  REST = 'rest',
 }

@@ -22,12 +22,30 @@ import { SiteTableFilter } from 'shared/table/filters/site-table-filter';
 import { SiteAreaTableFilter } from 'shared/table/filters/site-area-table-filter';
 import { CompanyTableFilter } from 'shared/table/filters/company-table-filter';
 import { ReservationsAuthorizations } from 'types/Authorization';
-import { TableEditReservationAction } from 'shared/table/actions/reservations/table-edit-reservation-action';
-import { TableViewReservationAction, TableViewReservationActionDef } from 'shared/table/actions/reservations/table-view-reservation-action';
-import { TableCancelReservationAction } from 'shared/table/actions/reservations/table-cancel-reservation-action';
-import { TableDeleteReservationAction } from 'shared/table/actions/reservations/table-delete-reservation-action';
-import { TableExportReservationsAction } from 'shared/table/actions/reservations/table-export-reservations-action';
-import { TableCreateReservationAction } from 'shared/table/actions/reservations/table-create-reservation-action';
+import {
+  TableEditReservationAction,
+  TableEditReservationActionDef,
+} from 'shared/table/actions/reservations/table-edit-reservation-action';
+import {
+  TableViewReservationAction,
+  TableViewReservationActionDef,
+} from 'shared/table/actions/reservations/table-view-reservation-action';
+import {
+  TableCancelReservationAction,
+  TableCancelReservationActionDef,
+} from 'shared/table/actions/reservations/table-cancel-reservation-action';
+import {
+  TableDeleteReservationAction,
+  TableDeleteReservationActionDef,
+} from 'shared/table/actions/reservations/table-delete-reservation-action';
+import {
+  TableExportReservationsAction,
+  TableExportReservationsActionDef,
+} from 'shared/table/actions/reservations/table-export-reservations-action';
+import {
+  TableCreateReservationAction,
+  TableCreateReservationActionDef,
+} from 'shared/table/actions/reservations/table-create-reservation-action';
 import { AppDatePipe } from 'shared/formatters/app-date.pipe';
 import { DateRangeTableFilter } from 'shared/table/filters/date-range-table-filter';
 import { Utils } from '../../../utils/Utils';
@@ -67,55 +85,67 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
     private windowService: WindowService
   ) {
     super(spinnerService, translateService);
-    this.isOrganizationComponentActive = this.componentService.isActive(TenantComponents.ORGANIZATION);
+    this.isOrganizationComponentActive = this.componentService.isActive(
+      TenantComponents.ORGANIZATION
+    );
     if (this.isOrganizationComponentActive) {
-      this.setStaticFilters([{
-        WithSite: true,
-        WithSiteArea: true,
-        WithUser: true
-      }]);
+      this.setStaticFilters([
+        {
+          WithSite: true,
+          WithSiteArea: true,
+          WithUser: true,
+        },
+      ]);
     }
     this.initDataSource();
   }
 
   public loadDataImpl(): Observable<ReservationDataResult> {
     return new Observable((observer) => {
-      this.centralServerService.getReservations(this.buildFilterValues(), this.getPaging(), this.getSorting()).subscribe({
-        next: (reservations) => {
-          this.reservationsAuthorizations = {
-            canListSiteAreas: Utils.convertToBoolean(reservations.canListSiteAreas ?? true),
-            canListSites: Utils.convertToBoolean(reservations.canListSites ?? true),
-            canListCompanies: Utils.convertToBoolean(reservations.canListCompanies ?? true),
-            canListUsers: Utils.convertToBoolean(reservations.canListUsers ?? true), // e.g. as param
-            canExport: Utils.convertToBoolean(reservations.canExport ?? true),
-            canCreate: Utils.convertToBoolean(reservations.canCreate ?? true),
-            canDelete: Utils.convertToBoolean(reservations.canDelete ?? true),
-            // FIXME: Necessary?
-            canListTags: Utils.convertToBoolean(reservations.canListTags ?? true),
-            canUpdate: Utils.convertToBoolean(reservations.canUpdate ?? true),
-            metadata: reservations.metadata
-          };
-          this.siteFilter.visible = this.reservationsAuthorizations.canListSites;
-          this.siteAreaFilter.visible = this.reservationsAuthorizations.canListSiteAreas;
-          this.companyFilter.visible = this.reservationsAuthorizations.canListCompanies;
-          // this.userFilter.visible = this.reservationsAuthorizations.canListUsers;
-          this.dateRangeFilter.visible = this.reservationsAuthorizations.canListTags;
+      this.centralServerService
+        .getReservations(this.buildFilterValues(), this.getPaging(), this.getSorting())
+        .subscribe({
+          next: (reservations) => {
+            this.reservationsAuthorizations = {
+              canListSiteAreas: Utils.convertToBoolean(reservations.canListSiteAreas ?? true),
+              canListSites: Utils.convertToBoolean(reservations.canListSites ?? true),
+              canListCompanies: Utils.convertToBoolean(reservations.canListCompanies ?? true),
+              canListUsers: Utils.convertToBoolean(reservations.canListUsers ?? true), // e.g. as param
+              canExport: Utils.convertToBoolean(reservations.canExport ?? true),
+              canCreate: Utils.convertToBoolean(reservations.canCreate ?? true),
+              canDelete: Utils.convertToBoolean(reservations.canDelete ?? true),
+              // FIXME: Necessary?
+              canListTags: Utils.convertToBoolean(reservations.canListTags ?? true),
+              canUpdate: Utils.convertToBoolean(reservations.canUpdate ?? true),
+              metadata: reservations.metadata,
+            };
+            this.siteFilter.visible = this.reservationsAuthorizations.canListSites;
+            this.siteAreaFilter.visible = this.reservationsAuthorizations.canListSiteAreas;
+            this.companyFilter.visible = this.reservationsAuthorizations.canListCompanies;
+            // this.userFilter.visible = this.reservationsAuthorizations.canListUsers;
+            this.dateRangeFilter.visible = this.reservationsAuthorizations.canListTags;
 
-          this.canExport.visible = this.reservationsAuthorizations.canExport;
-          this.canCreate.visible = this.reservationsAuthorizations.canCreate;
+            this.canExport.visible = this.reservationsAuthorizations.canExport;
+            this.canCreate.visible = this.reservationsAuthorizations.canCreate;
 
-          const tableDef = this.getTableDef();
-          tableDef.rowDetails.additionalParameters = {
-            projectFields: reservations.projectFields
-          };
-          observer.next(reservations);
-          observer.complete();
-        },
-        error: (error) => {
-          Utils.handleHttpError(error, this.router, this.messageService, this.centralServerService, 'general.error_backend');
-          observer.error(error);
-        },
-      });
+            const tableDef = this.getTableDef();
+            tableDef.rowDetails.additionalParameters = {
+              projectFields: reservations.projectFields,
+            };
+            observer.next(reservations);
+            observer.complete();
+          },
+          error: (error) => {
+            Utils.handleHttpError(
+              error,
+              this.router,
+              this.messageService,
+              this.centralServerService,
+              'general.error_backend'
+            );
+            observer.error(error);
+          },
+        });
     });
   }
 
@@ -129,21 +159,21 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
         multiple: false,
       },
       rowDetails: {
-        enabled: false
+        enabled: false,
       },
-      hasDynamicRowAction: true
+      hasDynamicRowAction: true,
     };
   }
 
   public buildTableColumnDefs(): TableColumnDef[] {
     return [
-      {
-        id: 'id',
-        name: 'reservations.id',
-        sortable: true,
-        headerClass: 'col-5p',
-        class: 'col-5p',
-      },
+      // {
+      //   id: 'id',
+      //   name: 'reservations.id',
+      //   sortable: true,
+      //   headerClass: 'col-5p',
+      //   class: 'col-5p',
+      // },
       {
         id: 'createdOn',
         name: 'reservations.created_on',
@@ -154,17 +184,18 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
         formatter: (created_on: Date) => this.datePipe.transform(created_on, 'E, d  MMMM y, HH:mm'),
       },
       {
-        id: 'chargingStationId',
+        id: 'chargingStationID',
         name: 'reservations.chargingstation_id',
         headerClass: 'col-20p',
         class: 'col-20p',
       },
       {
-        id: 'connectorId',
+        id: 'connectorID',
         name: 'reservations.connector_id',
         headerClass: 'col-10p',
         class: 'col-10p',
-        formatter: (connectorId: number) => connectorId === 0 ? '0' : Utils.getConnectorLetterFromConnectorID(connectorId),
+        formatter: (connectorId: number) =>
+          connectorId === 0 ? '0' : Utils.getConnectorLetterFromConnectorID(connectorId),
       },
       {
         id: 'expiryDate',
@@ -174,7 +205,7 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
         formatter: (expiryDate: Date) => this.datePipe.transform(expiryDate, 'E, d  MMMM y, HH:mm'),
       },
       {
-        id: 'tagId',
+        id: 'idTag',
         name: 'reservations.tag_id',
         headerClass: 'col-10p',
         class: 'col-10p',
@@ -182,14 +213,14 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
       {
         id: 'status',
         name: 'reservations.status',
-        headerClass: 'col-20p',
+        headerClass: 'col-10p',
         class: 'col-20p',
       },
       {
         id: 'type',
         name: 'reservations.type',
         sortable: true,
-        headerClass: 'col-20p',
+        headerClass: 'col-10p',
         class: 'col-20p',
       },
     ];
@@ -204,22 +235,32 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
 
   public buildTableActionsDef(): TableActionDef[] {
     const tableActionsDef = super.buildTableActionsDef();
-    return [
-      this.canCreate,
-      this.canExport,
-      ...tableActionsDef,
-    ];
+    return [this.canCreate, this.canExport, ...tableActionsDef];
   }
 
   public actionTriggered(actionDef: TableActionDef) {
     switch (actionDef.id) {
       case ReservationButtonAction.CREATE_RESERVATION:
         if (actionDef.action) {
+          (actionDef as TableCreateReservationActionDef).action(
+            ReservationDialogComponent,
+            this.dialog,
+            { authorizations: this.reservationsAuthorizations },
+            this.refreshData.bind(this)
+          );
         }
         break;
-      case ReservationButtonAction.CANCEL_RESERVATION:
+      case ReservationButtonAction.EXPORT_RESERVATIONS:
         if (actionDef.action) {
-
+          (actionDef as TableExportReservationsActionDef).action(
+            this.buildFilterValues(),
+            this.dialogService,
+            this.translateService,
+            this.messageService,
+            this.centralServerService,
+            this.router,
+            this.spinnerService
+          );
         }
         break;
     }
@@ -230,24 +271,49 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
       case ReservationButtonAction.VIEW_RESERVATION:
         if (actionDef.action) {
           (actionDef as TableViewReservationActionDef).action(
-            ReservationDialogComponent, this.dialog, { dialogData: reservation, authorizations: this.reservationsAuthorizations },
+            ReservationDialogComponent,
+            this.dialog,
+            { dialogData: reservation, authorizations: this.reservationsAuthorizations },
             this.refreshData.bind(this)
           );
         }
         break;
       case ReservationButtonAction.EDIT_RESERVATION:
         if (actionDef.action) {
-          // Do sth.
+          (actionDef as TableEditReservationActionDef).action(
+            ReservationDialogComponent,
+            this.dialog,
+            { dialogData: reservation, authorizations: this.reservationsAuthorizations },
+            this.refreshData.bind(this)
+          );
         }
         break;
       case ReservationButtonAction.CANCEL_RESERVATION:
         if (actionDef.action) {
-          // Do sth.
+          (actionDef as TableCancelReservationActionDef).action(
+            reservation,
+            this.dialogService,
+            this.translateService,
+            this.messageService,
+            this.centralServerService,
+            this.spinnerService,
+            this.router,
+            this.refreshData.bind(this)
+          );
         }
         break;
       case ReservationButtonAction.DELETE_RESERVATION:
         if (actionDef.action) {
-          // Do sth.
+          (actionDef as TableDeleteReservationActionDef).action(
+            reservation,
+            this.dialogService,
+            this.translateService,
+            this.messageService,
+            this.centralServerService,
+            this.spinnerService,
+            this.router,
+            this.refreshData.bind(this)
+          );
         }
         break;
       default:
@@ -258,9 +324,14 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
   public buildTableFiltersDef(): TableFilterDef[] {
     this.issuerFilter = new IssuerFilter().getFilterDef();
     this.siteFilter = new SiteTableFilter([this.issuerFilter]).getFilterDef();
-    this.siteAreaFilter = new SiteAreaTableFilter([this.issuerFilter, this.siteFilter]).getFilterDef();
+    this.siteAreaFilter = new SiteAreaTableFilter([
+      this.issuerFilter,
+      this.siteFilter,
+    ]).getFilterDef();
     this.companyFilter = new CompanyTableFilter([this.issuerFilter]).getFilterDef();
-    this.dateRangeFilter = new DateRangeTableFilter({ translateService: this.translateService }).getFilterDef();
+    this.dateRangeFilter = new DateRangeTableFilter({
+      translateService: this.translateService,
+    }).getFilterDef();
     const filters: TableFilterDef[] = [
       this.siteFilter,
       this.siteAreaFilter,

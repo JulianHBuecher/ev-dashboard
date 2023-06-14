@@ -3954,10 +3954,7 @@ export class CentralServerService {
       .pipe(catchError(this.handleHttpError));
   }
 
-  public cancelReservation(
-    id: string,
-    reservationId: number
-  ): Observable<ActionResponse> {
+  public cancelReservation(id: string, reservationId: number): Observable<ActionResponse> {
     this.checkInit();
     if (!id) {
       return EMPTY;
@@ -3969,7 +3966,9 @@ export class CentralServerService {
     }`;
     return this.httpClient
       .put<ActionResponse>(
-      this.buildRestEndpointUrl(RESTServerRoute.REST_CHARGING_STATIONS_CANCEL_RESERVATION, { id }),
+      this.buildRestEndpointUrl(RESTServerRoute.REST_CHARGING_STATIONS_CANCEL_RESERVATION, {
+        id,
+      }),
       body,
       {
         headers: this.buildHttpHeaders(),
@@ -3980,34 +3979,37 @@ export class CentralServerService {
 
   public getReservation(id: number): Observable<Reservation> {
     this.checkInit();
-    if(!id) {
+    if (!id) {
       return EMPTY;
     }
-    return this.httpClient.get<ActionResponse>(this.buildRestEndpointUrl(RESTServerRoute.REST_RESERVATION, { id }),
-      {
-        headers: this.buildHttpHeaders(),
-      }).pipe(catchError(this.handleHttpError));
+    return this.httpClient
+      .get<ActionResponse>(this.buildRestEndpointUrl(RESTServerRoute.REST_RESERVATION, { id }), {
+      headers: this.buildHttpHeaders(),
+    })
+      .pipe(catchError(this.handleHttpError));
   }
 
   public getReservations(
     params: FilterParams,
     paging: Paging = Constants.DEFAULT_PAGING,
-    ordering: Ordering[] = []): Observable<ReservationDataResult> {
+    ordering: Ordering[] = []
+  ): Observable<ReservationDataResult> {
     this.checkInit();
     this.getPaging(paging, params);
     this.getSorting(ordering, params);
-    return this.httpClient.get<ReservationDataResult>(this.buildRestEndpointUrl(RESTServerRoute.REST_RESERVATIONS),
-      {
-        headers: this.buildHttpHeaders(),
-        params,
-      })
+    return this.httpClient
+      .get<ReservationDataResult>(this.buildRestEndpointUrl(RESTServerRoute.REST_RESERVATIONS), {
+      headers: this.buildHttpHeaders(),
+      params,
+    })
       .pipe(
         map((reservations) => {
           reservations.result.forEach((reservation) => {
             reservation.expiryDate = new Date(reservation.expiryDate);
           });
           return reservations;
-        }))
+        })
+      )
       .pipe(catchError(this.handleHttpError));
   }
 
@@ -4016,12 +4018,9 @@ export class CentralServerService {
     this.checkInit();
     // Execute the REST service
     return this.httpClient
-      .delete<ActionResponse>(
-      this.buildRestEndpointUrl(RESTServerRoute.REST_RESERVATION, { id }),
-      {
-        headers: this.buildHttpHeaders(),
-      }
-    )
+      .delete<ActionResponse>(this.buildRestEndpointUrl(RESTServerRoute.REST_RESERVATION, { id }), {
+      headers: this.buildHttpHeaders(),
+    })
       .pipe(catchError(this.handleHttpError));
   }
 

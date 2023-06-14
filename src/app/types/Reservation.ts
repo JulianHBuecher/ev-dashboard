@@ -34,7 +34,7 @@ export enum ReservationButtonAction {
   CREATE_RESERVATION = 'create_reservation',
   CANCEL_RESERVATION = 'cancel_reservation',
   EXPORT_RESERVATIONS = 'export_reservations',
-  DELETE_RESERVATION = 'delete_reservation'
+  DELETE_RESERVATION = 'delete_reservation',
 }
 
 export interface ReserveNowDialogData extends TableData {
@@ -52,5 +52,5 @@ export interface CancelReservationDialogData extends TableData {
 
 export enum ReservationType {
   PLANNED = 'planned_reservation',
-  NOW = 'reserve_now'
+  NOW = 'reserve_now',
 }

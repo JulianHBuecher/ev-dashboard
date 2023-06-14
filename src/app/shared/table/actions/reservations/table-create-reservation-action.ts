@@ -7,8 +7,12 @@ import { TableActionDef } from 'types/Table';
 import { TableCreateAction } from '../table-create-action';
 
 export interface TableCreateReservationActionDef extends TableActionDef {
-  action: (reservationDialogComponent: ComponentType<unknown>, dialog: MatDialog,
-    dialogParams: DialogParamsWithAuth<Reservation, ReservationsAuthorizations>, refresh?: () => Observable<void>) => void;
+  action: (
+    reservationDialogComponent: ComponentType<unknown>,
+    dialog: MatDialog,
+    dialogParams: DialogParamsWithAuth<Reservation, ReservationsAuthorizations>,
+    refresh?: () => Observable<void>
+  ) => void;
 }
 
 export class TableCreateReservationAction extends TableCreateAction {
@@ -20,8 +24,12 @@ export class TableCreateReservationAction extends TableCreateAction {
     };
   }
 
-  private createReservation(reservationDialogComponent: ComponentType<unknown>, dialog: MatDialog,
-    dialogParams: DialogParamsWithAuth<Reservation, ReservationsAuthorizations>, refresh?: () => Observable<void>) {
+  private createReservation(
+    reservationDialogComponent: ComponentType<unknown>,
+    dialog: MatDialog,
+    dialogParams: DialogParamsWithAuth<Reservation, ReservationsAuthorizations>,
+    refresh?: () => Observable<void>
+  ) {
     super.create(reservationDialogComponent, dialog, dialogParams, refresh);
   }
 }

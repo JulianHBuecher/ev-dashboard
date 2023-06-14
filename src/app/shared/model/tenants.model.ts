@@ -1,10 +1,17 @@
 import { KeyValue } from '../../types/GlobalType';
-import { AnalyticsSettingsType, BillingSettingsType, PricingSettingsType, RefundSettingsType, SmartChargingSettingsType } from '../../types/Setting';
+import {
+  AnalyticsSettingsType,
+  BillingSettingsType,
+  PricingSettingsType,
+  RefundSettingsType,
+  ReservationSettingsType,
+  SmartChargingSettingsType,
+} from '../../types/Setting';
 
 export const PRICING_TYPES: KeyValue[] = [
   {
     key: PricingSettingsType.SIMPLE,
-    value: 'settings.pricing.simple_pricing_title'
+    value: 'settings.pricing.simple_pricing_title',
   },
 ];
 
@@ -36,4 +43,13 @@ export const SMART_CHARGING_TYPES: KeyValue[] = [
   },
 ];
 
-
+export const RESERVATION_TYPES: KeyValue[] = [
+  {
+    key: ReservationSettingsType.RESERVE_NOW,
+    value: 'settings.reservations.reserve_now.title',
+  },
+  {
+    key: ReservationSettingsType.RESERVE_NOW,
+    value: 'settings.reservations.planned_reservation.title',
+  },
+];

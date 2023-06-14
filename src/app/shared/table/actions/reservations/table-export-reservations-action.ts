@@ -10,9 +10,15 @@ import { ReservationButtonAction } from 'types/Reservation';
 import { TableExportAction } from '../table-export-action';
 
 export interface TableExportReservationsActionDef extends TableActionDef {
-  action: (filters: FilterParams, dialogService: DialogService, translationService: TranslateService,
-    messageService: MessageService, centralServerService: CentralServerService, router: Router,
-    spinnerService: SpinnerService) => void;
+  action: (
+    filters: FilterParams,
+    dialogService: DialogService,
+    translationService: TranslateService,
+    messageService: MessageService,
+    centralServerService: CentralServerService,
+    router: Router,
+    spinnerService: SpinnerService
+  ) => void;
 }
 
 export class TableExportReservationsAction extends TableExportAction {
@@ -24,12 +30,28 @@ export class TableExportReservationsAction extends TableExportAction {
     };
   }
 
-  private exportReservations(filters: FilterParams, dialogService: DialogService, translateService: TranslateService,
-    messageService: MessageService, centralServerService: CentralServerService, router: Router,
-    spinnerService: SpinnerService) {
-    super.export(filters, 'exported-reservations.csv','reservations.dialog.export.title',
-      'reservations.dialog.export.confirm','reservations.dialog.export.error',
-      centralServerService.exportReservations.bind(centralServerService), dialogService,
-      translateService, messageService, centralServerService, spinnerService, router);
+  private exportReservations(
+    filters: FilterParams,
+    dialogService: DialogService,
+    translateService: TranslateService,
+    messageService: MessageService,
+    centralServerService: CentralServerService,
+    router: Router,
+    spinnerService: SpinnerService
+  ) {
+    super.export(
+      filters,
+      'exported-reservations.csv',
+      'reservations.dialog.export.title',
+      'reservations.dialog.export.confirm',
+      'reservations.dialog.export.error',
+      centralServerService.exportReservations.bind(centralServerService),
+      dialogService,
+      translateService,
+      messageService,
+      centralServerService,
+      spinnerService,
+      router
+    );
   }
 }

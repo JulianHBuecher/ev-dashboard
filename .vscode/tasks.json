@@ -5,7 +5,7 @@
   "tasks": [
     {
       "label": "Build & Serve",
-      "command":"pnpm",
+      "command": "pnpm",
       "args": ["start"],
       "isBackground": true,
       "options": {

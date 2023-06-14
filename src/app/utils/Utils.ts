@@ -16,7 +16,15 @@ import { MessageService } from '../services/message.service';
 import { AppUnitPipe } from '../shared/formatters/app-unit.pipe';
 import { Address } from '../types/Address';
 import { Car, CarCatalog, CarConverter, CarType } from '../types/Car';
-import { ChargePoint, ChargingStation, ChargingStationPowers, Connector, CurrentType, StaticLimitAmps, Voltage } from '../types/ChargingStation';
+import {
+  ChargePoint,
+  ChargingStation,
+  ChargingStationPowers,
+  Connector,
+  CurrentType,
+  StaticLimitAmps,
+  Voltage,
+} from '../types/ChargingStation';
 import { ButtonAction, KeyValue } from '../types/GlobalType';
 import { MobileType } from '../types/Mobile';
 import { FilterType, TableDataSourceMode, TableFilterDef } from '../types/Table';
@@ -24,10 +32,13 @@ import { Constants } from './Constants';
 
 export class Utils {
   public static generateTagID(size = 8): string {
-    return [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('').toUpperCase();
+    return [...Array(size)]
+      .map(() => Math.floor(Math.random() * 16).toString(16))
+      .join('')
+      .toUpperCase();
   }
 
-  public static shrinkObjectProperties(properties: any): any  {
+  public static shrinkObjectProperties(properties: any): any {
     for (const propertyName in properties) {
       if (!properties[propertyName]) {
         delete properties[propertyName];
@@ -42,14 +53,16 @@ export class Utils {
   public static buildDependentFilters(filterDef: TableFilterDef) {
     if (!Utils.isEmptyArray(filterDef.dependentFilters)) {
       filterDef.dialogComponentData = {
-        staticFilter: {}
+        staticFilter: {},
       };
       for (const dependentFilter of filterDef.dependentFilters) {
         if (!Utils.isEmptyArray(dependentFilter.currentValue)) {
           if (dependentFilter.multiple) {
-            if (dependentFilter.type === FilterType.DROPDOWN &&
+            if (
+              dependentFilter.type === FilterType.DROPDOWN &&
               dependentFilter.currentValue.length === dependentFilter.items.length &&
-              dependentFilter.exhaustive) {
+              dependentFilter.exhaustive
+            ) {
               continue;
             }
             filterDef.dialogComponentData.staticFilter[dependentFilter.httpId] =
@@ -141,7 +154,9 @@ export class Utils {
   }
 
   public static getValuesFromEnum(enumType: any): number[] {
-    const keys: string[] = Object.keys(enumType).filter(httpError => typeof enumType[httpError] === 'number');
+    const keys: string[] = Object.keys(enumType).filter(
+      (httpError) => typeof enumType[httpError] === 'number'
+    );
     const values: number[] = keys.map((httpErrorKey: string) => enumType[httpErrorKey]);
     return values;
   }
@@ -155,8 +170,11 @@ export class Utils {
     });
   }
 
-  public static registerValidateCloseKeyEvents(dialogRef: MatDialogRef<any>,
-    validate: () => void, close: () => void) {
+  public static registerValidateCloseKeyEvents(
+    dialogRef: MatDialogRef<any>,
+    validate: () => void,
+    close: () => void
+  ) {
     // listen to keystroke
     dialogRef.keydownEvents().subscribe((keydownEvents) => {
       if (keydownEvents && keydownEvents.code === 'Escape') {
@@ -168,8 +186,12 @@ export class Utils {
     });
   }
 
-  public static registerSaveCloseKeyEvents(dialogRef: MatDialogRef<any>, formGroup: UntypedFormGroup,
-    save: (data: Data) => void, close: () => void) {
+  public static registerSaveCloseKeyEvents(
+    dialogRef: MatDialogRef<any>,
+    formGroup: UntypedFormGroup,
+    save: (data: Data) => void,
+    close: () => void
+  ) {
     // listen to keystroke
     dialogRef.keydownEvents().subscribe((keydownEvents) => {
       if (keydownEvents?.code === 'Escape') {
@@ -183,28 +205,37 @@ export class Utils {
     });
   }
 
-  public static checkAndSaveAndCloseDialog(formGroup: UntypedFormGroup, dialogService: DialogService,
-    translateService: TranslateService, save: (data: Data) => void, closeDialog: (saved: boolean) => void) {
+  public static checkAndSaveAndCloseDialog(
+    formGroup: UntypedFormGroup,
+    dialogService: DialogService,
+    translateService: TranslateService,
+    save: (data: Data) => void,
+    closeDialog: (saved: boolean) => void
+  ) {
     if (formGroup.invalid && formGroup.dirty) {
-      dialogService.createAndShowInvalidChangeCloseDialog(
-        translateService.instant('general.change_invalid_pending_title'),
-        translateService.instant('general.change_invalid_pending_text'),
-      ).subscribe((result) => {
-        if (result === ButtonAction.DO_NOT_SAVE_AND_CLOSE) {
-          closeDialog(false);
-        }
-      });
+      dialogService
+        .createAndShowInvalidChangeCloseDialog(
+          translateService.instant('general.change_invalid_pending_title'),
+          translateService.instant('general.change_invalid_pending_text')
+        )
+        .subscribe((result) => {
+          if (result === ButtonAction.DO_NOT_SAVE_AND_CLOSE) {
+            closeDialog(false);
+          }
+        });
     } else if (formGroup.dirty) {
-      dialogService.createAndShowDirtyChangeCloseDialog(
-        translateService.instant('general.change_pending_title'),
-        translateService.instant('general.change_pending_text'),
-      ).subscribe((result) => {
-        if (result === ButtonAction.SAVE_AND_CLOSE) {
-          save(formGroup.getRawValue());
-        } else if (result === ButtonAction.DO_NOT_SAVE_AND_CLOSE) {
-          closeDialog(false);
-        }
-      });
+      dialogService
+        .createAndShowDirtyChangeCloseDialog(
+          translateService.instant('general.change_pending_title'),
+          translateService.instant('general.change_pending_text')
+        )
+        .subscribe((result) => {
+          if (result === ButtonAction.SAVE_AND_CLOSE) {
+            save(formGroup.getRawValue());
+          } else if (result === ButtonAction.DO_NOT_SAVE_AND_CLOSE) {
+            closeDialog(false);
+          }
+        });
     } else {
       closeDialog(false);
     }
@@ -222,8 +253,10 @@ export class Utils {
     // Check if GPs are available
     if (coordinates && coordinates.length === 2 && coordinates[0] && coordinates[1]) {
       // Check Longitude & Latitude
-      if (new RegExp(Constants.REGEX_VALIDATION_LONGITUDE).test(coordinates[0].toString())
-        && new RegExp(Constants.REGEX_VALIDATION_LATITUDE).test(coordinates[1].toString())) {
+      if (
+        new RegExp(Constants.REGEX_VALIDATION_LONGITUDE).test(coordinates[0].toString()) &&
+        new RegExp(Constants.REGEX_VALIDATION_LATITUDE).test(coordinates[1].toString())
+      ) {
         return true;
       }
     }
@@ -234,7 +267,11 @@ export class Utils {
     return JSON.parse(JSON.stringify(object)) as T;
   }
 
-  public static validateEqual(formGroup: UntypedFormGroup, firstField: string, secondField: string) {
+  public static validateEqual(
+    formGroup: UntypedFormGroup,
+    firstField: string,
+    secondField: string
+  ) {
     const field1: UntypedFormControl = formGroup.controls[firstField] as UntypedFormControl;
     const field2: UntypedFormControl = formGroup.controls[secondField] as UntypedFormControl;
 
@@ -291,7 +328,12 @@ export class Utils {
     };
   }
 
-  public static handleError(error: any, messageService: MessageService, errorMessage: string = '', params?: Record<string, unknown>): void {
+  public static handleError(
+    error: any,
+    messageService: MessageService,
+    errorMessage: string = '',
+    params?: Record<string, unknown>
+  ): void {
     console.log(`Error: ${errorMessage}`, error);
     messageService.showErrorMessage(errorMessage, params);
   }
@@ -304,31 +346,59 @@ export class Utils {
     return value ? value.replace(/\n/g, '') : '';
   }
 
-  public static getChargingStationPowers(chargingStation: ChargingStation,
-    chargePoint?: ChargePoint, connectorId = 0, forChargingProfile: boolean = false): ChargingStationPowers {
-    const numberOfPhases = Utils.getNumberOfConnectedPhases(chargingStation, chargePoint, connectorId);
-    const numberOfConnectors = chargePoint ? chargePoint.connectorIDs.length : chargingStation.connectors.length;
+  public static getChargingStationPowers(
+    chargingStation: ChargingStation,
+    chargePoint?: ChargePoint,
+    connectorId = 0,
+    forChargingProfile: boolean = false
+  ): ChargingStationPowers {
+    const numberOfPhases = Utils.getNumberOfConnectedPhases(
+      chargingStation,
+      chargePoint,
+      connectorId
+    );
+    const numberOfConnectors = chargePoint
+      ? chargePoint.connectorIDs.length
+      : chargingStation.connectors.length;
     const result: ChargingStationPowers = {
       notSupported: false,
       minAmp: StaticLimitAmps.MIN_LIMIT_PER_PHASE * numberOfPhases * numberOfConnectors,
-      minWatt: Utils.convertAmpToWatt(chargingStation, chargePoint, connectorId,
-        StaticLimitAmps.MIN_LIMIT_PER_PHASE * numberOfPhases * numberOfConnectors),
+      minWatt: Utils.convertAmpToWatt(
+        chargingStation,
+        chargePoint,
+        connectorId,
+        StaticLimitAmps.MIN_LIMIT_PER_PHASE * numberOfPhases * numberOfConnectors
+      ),
       maxAmp: StaticLimitAmps.MIN_LIMIT_PER_PHASE * numberOfPhases * numberOfConnectors,
-      maxWatt: Utils.convertAmpToWatt(chargingStation, chargePoint, connectorId,
-        StaticLimitAmps.MIN_LIMIT_PER_PHASE * numberOfPhases * numberOfConnectors),
+      maxWatt: Utils.convertAmpToWatt(
+        chargingStation,
+        chargePoint,
+        connectorId,
+        StaticLimitAmps.MIN_LIMIT_PER_PHASE * numberOfPhases * numberOfConnectors
+      ),
       currentAmp: 0,
       currentWatt: 0,
     };
-    if (!chargingStation ||
+    if (
+      !chargingStation ||
       !chargingStation.connectors ||
-      Utils.isEmptyArray(chargingStation.connectors)) {
+      Utils.isEmptyArray(chargingStation.connectors)
+    ) {
       result.notSupported = true;
       result.currentAmp = result.maxAmp;
       result.currentWatt = Utils.convertAmpToWatt(
-        chargingStation, chargePoint, connectorId, result.currentAmp);
+        chargingStation,
+        chargePoint,
+        connectorId,
+        result.currentAmp
+      );
       return result;
     }
-    const chargingStationAmperageLimit = Utils.getChargingStationAmperageLimit(chargingStation, chargePoint, connectorId);
+    const chargingStationAmperageLimit = Utils.getChargingStationAmperageLimit(
+      chargingStation,
+      chargePoint,
+      connectorId
+    );
     // Use Limit Amps
     if (forChargingProfile) {
       result.maxAmp = chargingStationAmperageLimit;
@@ -340,9 +410,24 @@ export class Utils {
     if (result.currentAmp === 0) {
       result.currentAmp = result.maxAmp;
     }
-    result.minWatt = Utils.convertAmpToWatt(chargingStation, chargePoint, connectorId, result.minAmp);
-    result.maxWatt = Utils.convertAmpToWatt(chargingStation, chargePoint, connectorId, result.maxAmp);
-    result.currentWatt = Utils.convertAmpToWatt(chargingStation, chargePoint, connectorId, result.currentAmp);
+    result.minWatt = Utils.convertAmpToWatt(
+      chargingStation,
+      chargePoint,
+      connectorId,
+      result.minAmp
+    );
+    result.maxWatt = Utils.convertAmpToWatt(
+      chargingStation,
+      chargePoint,
+      connectorId,
+      result.maxAmp
+    );
+    result.currentWatt = Utils.convertAmpToWatt(
+      chargingStation,
+      chargePoint,
+      connectorId,
+      result.currentAmp
+    );
     return result;
   }
 
@@ -356,7 +441,10 @@ export class Utils {
     return 0;
   }
 
-  public static computeStaticLimitAmpSteps(chargingStation: ChargingStation, chargePoint: ChargePoint): number {
+  public static computeStaticLimitAmpSteps(
+    chargingStation: ChargingStation,
+    chargePoint: ChargePoint
+  ): number {
     if (chargingStation && chargePoint) {
       const numberOfPhases = Utils.getNumberOfConnectedPhases(chargingStation, chargePoint, 0);
       if (numberOfPhases > 0) {
@@ -371,7 +459,12 @@ export class Utils {
     return Math.round(value * roundPower) / roundPower;
   }
 
-  public static convertAmpToWatt(chargingStation: ChargingStation, chargePoint: ChargePoint, connectorID = 0, ampValue: number): number {
+  public static convertAmpToWatt(
+    chargingStation: ChargingStation,
+    chargePoint: ChargePoint,
+    connectorID = 0,
+    ampValue: number
+  ): number {
     const voltage = Utils.getChargingStationVoltage(chargingStation, chargePoint, connectorID);
     if (voltage) {
       return voltage * ampValue;
@@ -379,7 +472,12 @@ export class Utils {
     return 0;
   }
 
-  public static convertWattToAmp(chargingStation: ChargingStation, chargePoint: ChargePoint, connectorID = 0, wattValue: number): number {
+  public static convertWattToAmp(
+    chargingStation: ChargingStation,
+    chargePoint: ChargePoint,
+    connectorID = 0,
+    wattValue: number
+  ): number {
     const voltage = Utils.getChargingStationVoltage(chargingStation, chargePoint, connectorID);
     if (voltage) {
       return Math.floor(wattValue / voltage);
@@ -387,20 +485,28 @@ export class Utils {
     return 0;
   }
 
-  public static getChargePointFromID(chargingStation: ChargingStation, chargePointID: number): ChargePoint {
+  public static getChargePointFromID(
+    chargingStation: ChargingStation,
+    chargePointID: number
+  ): ChargePoint {
     if (!chargingStation.chargePoints) {
       return null;
     }
-    return chargingStation.chargePoints.find((chargePoint: ChargePoint) =>
-      chargePoint && (chargePoint.chargePointID === chargePointID));
+    return chargingStation.chargePoints.find(
+      (chargePoint: ChargePoint) => chargePoint && chargePoint.chargePointID === chargePointID
+    );
   }
 
-  public static getConnectorFromID(chargingStation: ChargingStation, connectorID: number): Connector {
+  public static getConnectorFromID(
+    chargingStation: ChargingStation,
+    connectorID: number
+  ): Connector {
     if (!chargingStation.connectors) {
       return null;
     }
-    return chargingStation.connectors.find((connector: Connector) =>
-      connector && (connector.connectorId === connectorID));
+    return chargingStation.connectors.find(
+      (connector: Connector) => connector && connector.connectorId === connectorID
+    );
   }
 
   public static computeChargingStationTotalAmps(chargingStation: ChargingStation): number {
@@ -427,7 +533,11 @@ export class Utils {
   }
 
   // eslint-disable-next-line complexity
-  public static getChargingStationPower(chargingStation: ChargingStation, chargePoint?: ChargePoint, connectorId = 0): number {
+  public static getChargingStationPower(
+    chargingStation: ChargingStation,
+    chargePoint?: ChargePoint,
+    connectorId = 0
+  ): number {
     let totalPower = 0;
     if (chargingStation) {
       // Check at charge point level
@@ -438,8 +548,14 @@ export class Utils {
             if (connectorId === 0 && chargePointOfCS.power) {
               totalPower += chargePointOfCS.power;
               // Connector
-            } else if (chargePointOfCS.connectorIDs.includes(connectorId) && chargePointOfCS.power) {
-              if (chargePointOfCS.cannotChargeInParallel || chargePointOfCS.sharePowerToAllConnectors) {
+            } else if (
+              chargePointOfCS.connectorIDs.includes(connectorId) &&
+              chargePointOfCS.power
+            ) {
+              if (
+                chargePointOfCS.cannotChargeInParallel ||
+                chargePointOfCS.sharePowerToAllConnectors
+              ) {
                 // Check Connector ID
                 const connector = Utils.getConnectorFromID(chargingStation, connectorId);
                 if (connector.power) {
@@ -475,7 +591,11 @@ export class Utils {
     return totalPower;
   }
 
-  public static getNumberOfConnectedPhases(chargingStation: ChargingStation, chargePoint?: ChargePoint, connectorId = 0): number {
+  public static getNumberOfConnectedPhases(
+    chargingStation: ChargingStation,
+    chargePoint?: ChargePoint,
+    connectorId = 0
+  ): number {
     if (chargingStation) {
       // Check at charge point level
       if (chargingStation.chargePoints) {
@@ -486,7 +606,10 @@ export class Utils {
               return chargePointOfCS.numberOfConnectedPhase;
             }
             // Connector
-            if (chargePointOfCS.connectorIDs.includes(connectorId) && chargePointOfCS.numberOfConnectedPhase) {
+            if (
+              chargePointOfCS.connectorIDs.includes(connectorId) &&
+              chargePointOfCS.numberOfConnectedPhase
+            ) {
               // Check Connector ID
               const connector = Utils.getConnectorFromID(chargingStation, connectorId);
               if (connector.numberOfConnectedPhase) {
@@ -535,7 +658,11 @@ export class Utils {
     }
   }
 
-  public static getChargingStationVoltage(chargingStation: ChargingStation, chargePoint?: ChargePoint, connectorId = 0): Voltage {
+  public static getChargingStationVoltage(
+    chargingStation: ChargingStation,
+    chargePoint?: ChargePoint,
+    connectorId = 0
+  ): Voltage {
     if (chargingStation) {
       // Check at charging station level
       if (chargingStation.voltage) {
@@ -577,7 +704,11 @@ export class Utils {
     return Voltage.VOLTAGE_230;
   }
 
-  public static getChargingStationCurrentType(chargingStation: ChargingStation, chargePoint: ChargePoint, connectorId = 0): CurrentType {
+  public static getChargingStationCurrentType(
+    chargingStation: ChargingStation,
+    chargePoint: ChargePoint,
+    connectorId = 0
+  ): CurrentType {
     if (chargingStation) {
       // Check at charge point level
       if (chargingStation.chargePoints) {
@@ -587,7 +718,10 @@ export class Utils {
             if (connectorId === 0 && chargePointOfCS.currentType) {
               return chargePointOfCS.currentType;
               // Connector
-            } else if (chargePointOfCS.connectorIDs.includes(connectorId) && chargePointOfCS.currentType) {
+            } else if (
+              chargePointOfCS.connectorIDs.includes(connectorId) &&
+              chargePointOfCS.currentType
+            ) {
               // Check Connector ID
               const connector = Utils.getConnectorFromID(chargingStation, connectorId);
               if (connector.currentType) {
@@ -615,7 +749,11 @@ export class Utils {
   }
 
   // eslint-disable-next-line complexity
-  public static getChargingStationAmperage(chargingStation: ChargingStation, chargePoint?: ChargePoint, connectorId = 0): number {
+  public static getChargingStationAmperage(
+    chargingStation: ChargingStation,
+    chargePoint?: ChargePoint,
+    connectorId = 0
+  ): number {
     let totalAmps = 0;
     if (chargingStation) {
       // Check at charge point level
@@ -625,8 +763,14 @@ export class Utils {
             // Charging Station
             if (connectorId === 0 && chargePointOfCS.amperage) {
               totalAmps += chargePointOfCS.amperage;
-            } else if (chargePointOfCS.connectorIDs.includes(connectorId) && chargePointOfCS.amperage) {
-              if (chargePointOfCS.cannotChargeInParallel || chargePointOfCS.sharePowerToAllConnectors) {
+            } else if (
+              chargePointOfCS.connectorIDs.includes(connectorId) &&
+              chargePointOfCS.amperage
+            ) {
+              if (
+                chargePointOfCS.cannotChargeInParallel ||
+                chargePointOfCS.sharePowerToAllConnectors
+              ) {
                 // Same power for all connectors
                 // Check Connector ID first
                 const connector = Utils.getConnectorFromID(chargingStation, connectorId);
@@ -656,7 +800,11 @@ export class Utils {
     return totalAmps;
   }
 
-  public static getChargingStationAmperageLimit(chargingStation: ChargingStation, chargePoint: ChargePoint, connectorId = 0): number {
+  public static getChargingStationAmperageLimit(
+    chargingStation: ChargingStation,
+    chargePoint: ChargePoint,
+    connectorId = 0
+  ): number {
     let amperageLimit = 0;
     if (chargingStation) {
       if (connectorId > 0) {
@@ -669,14 +817,22 @@ export class Utils {
             if (chargePointOfCS.excludeFromPowerLimitation) {
               continue;
             }
-            if (chargePointOfCS.cannotChargeInParallel ||
-              chargePointOfCS.sharePowerToAllConnectors) {
+            if (
+              chargePointOfCS.cannotChargeInParallel ||
+              chargePointOfCS.sharePowerToAllConnectors
+            ) {
               // Add limit amp of one connector
-              amperageLimit += Utils.getConnectorFromID(chargingStation, chargePointOfCS.connectorIDs[0]).amperageLimit;
+              amperageLimit += Utils.getConnectorFromID(
+                chargingStation,
+                chargePointOfCS.connectorIDs[0]
+              ).amperageLimit;
             } else {
               // Add limit amp of all connectors
               for (const connectorID of chargePointOfCS.connectorIDs) {
-                amperageLimit += Utils.getConnectorFromID(chargingStation, connectorID).amperageLimit;
+                amperageLimit += Utils.getConnectorFromID(
+                  chargingStation,
+                  connectorID
+                ).amperageLimit;
               }
             }
           }
@@ -697,14 +853,27 @@ export class Utils {
     return amperageLimit;
   }
 
-  public static convertAmpToWattString(chargingStation: ChargingStation, chargePoint: ChargePoint, connectorId = 0,
-    appUnitFormatter: AppUnitPipe, ampValue: number, unit: 'W' | 'kW' = 'kW', displayUnit: boolean = true,
-    numberOfDecimals?: number): string {
+  public static convertAmpToWattString(
+    chargingStation: ChargingStation,
+    chargePoint: ChargePoint,
+    connectorId = 0,
+    appUnitFormatter: AppUnitPipe,
+    ampValue: number,
+    unit: 'W' | 'kW' = 'kW',
+    displayUnit: boolean = true,
+    numberOfDecimals?: number
+  ): string {
     // TBD use corresponding connector, instead of first connector
     if (chargingStation) {
       return appUnitFormatter.transform(
         Utils.convertAmpToWatt(chargingStation, chargePoint, connectorId, ampValue),
-        'W', unit, displayUnit, 1, 0, numberOfDecimals ? numberOfDecimals : 0);
+        'W',
+        unit,
+        displayUnit,
+        1,
+        0,
+        numberOfDecimals ? numberOfDecimals : 0
+      );
     }
     return 'N/A';
   }
@@ -770,7 +939,12 @@ export class Utils {
     return carCatalogName;
   }
 
-  public static buildCarName(car: Car, translateService: TranslateService, withVIN = true, withID = false): string {
+  public static buildCarName(
+    car: Car,
+    translateService: TranslateService,
+    withVIN = true,
+    withID = false
+  ): string {
     const carName: string[] = [];
     if (!car) {
       return '-';
@@ -803,11 +977,16 @@ export class Utils {
     }
   }
 
-  public static buildCarCatalogConverterName(converter: CarConverter, translateService: TranslateService): string {
+  public static buildCarCatalogConverterName(
+    converter: CarConverter,
+    translateService: TranslateService
+  ): string {
     let converterName = '';
     converterName += `${converter.powerWatts} kW`;
     if (converter.numberOfPhases > 0) {
-      converterName += ` - ${converter.numberOfPhases} ${translateService.instant('cars.evse_phase')}`;
+      converterName += ` - ${converter.numberOfPhases} ${translateService.instant(
+        'cars.evse_phase'
+      )}`;
     }
     if (converter.amperagePerPhase > 0) {
       converterName += ` - ${converter.amperagePerPhase} A`;
@@ -816,7 +995,10 @@ export class Utils {
   }
 
   public static getMobileVendor(): MobileType | null {
-    const userAgent: string = navigator.userAgent as string || navigator.vendor as string || window['opera'] as string;
+    const userAgent: string =
+      (navigator.userAgent as string) ||
+      (navigator.vendor as string) ||
+      (window['opera'] as string);
     if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i) || userAgent.match(/iPod/i)) {
       return MobileType.IOS;
     } else if (userAgent.match(/Android/i)) {
@@ -835,8 +1017,14 @@ export class Utils {
     }
   }
 
-  public static handleHttpError(error: any, router: Router, messageService: MessageService,
-    centralServerService: CentralServerService, errorMessage: string, params?: Record<string, unknown>): void {
+  public static handleHttpError(
+    error: any,
+    router: Router,
+    messageService: MessageService,
+    centralServerService: CentralServerService,
+    errorMessage: string,
+    params?: Record<string, unknown>
+  ): void {
     // Check error
     switch (error.status) {
       // Server connection error
@@ -876,11 +1064,10 @@ export class Utils {
         messageService.showErrorMessage(error.message);
         break;
       case StatusCodes.MOVED_TEMPORARILY:
-        const { redirectDomain = null, subdomain = null } = error.details?.errorDetailedMessage || {};
+        const { redirectDomain = null, subdomain = null } =
+          error.details?.errorDetailedMessage || {};
         if (redirectDomain && subdomain) {
-          centralServerService.getWindowService().redirectToDomain(
-            redirectDomain,
-            subdomain);
+          centralServerService.getWindowService().redirectToDomain(redirectDomain, subdomain);
         } else {
           console.log(`HTTP Error: ${errorMessage}: ${error.message} (${error.status})`, error);
         }
@@ -903,7 +1090,7 @@ export class Utils {
         result = value;
       } else {
         // Convert
-        result = (value === 'true');
+        result = value === 'true';
       }
     }
     return result;
@@ -991,7 +1178,7 @@ export class Utils {
     let momentLocale = Utils.convertToBrowserLocale(locale).toLowerCase(); // Converts 'fr-FR' to 'fr-fr'
     const fragments = momentLocale.split('-');
     if (fragments.length === 2 && fragments[0] === fragments[1]) {
-      momentLocale = fragments[0];  // Converts 'fr-fr' to 'fr'
+      momentLocale = fragments[0]; // Converts 'fr-fr' to 'fr'
     }
     return momentLocale;
   }
@@ -1003,19 +1190,31 @@ export class Utils {
       moment.locale(momentLocale);
       console.log('Moment Locale as been set to: ' + moment.locale());
       console.log('List of loaded locales: ' + moment.locales());
-      console.log('Current format -  Date: ' + moment().format('LL') + '- time: ' + moment().format('LT'));
+      console.log(
+        'Current format -  Date: ' + moment().format('LL') + '- time: ' + moment().format('LT')
+      );
     }
   }
 
-  public static createDateWithDelay(days?: number, hours?: number, minutes?: number, seconds?: number): Date {
-    return new Date(Date.now() + (3600 * 1000 * 24) * days + (3600 * 1000) * hours + (3600) * minutes + seconds);
+  public static createDateWithDelay(
+    days?: number,
+    hours?: number,
+    minutes?: number,
+    seconds?: number
+  ): Date {
+    return new Date(
+      Date.now() + 3600 * 1000 * 24 * days + 3600 * 1000 * hours + 3600 * minutes + seconds
+    );
   }
 
   public static createRandomId(): number {
-    return Math.floor((Math.random() * 100) + 1);
+    return Math.floor(Math.random() * 100 + 1);
   }
 
-  public static createSortFieldParam(field: string, order: string = Constants.ORDERING.asc): Ordering {
+  public static createSortFieldParam(
+    field: string,
+    order: string = Constants.ORDERING.asc
+  ): Ordering {
     if (order === Constants.ORDERING.desc) {
       return { field: `-${field}` };
     }

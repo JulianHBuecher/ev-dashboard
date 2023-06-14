@@ -45,7 +45,7 @@
         "--config='./jest.config.ts'",
         "--reporters='default'",
         "--reporters='./test/JestEvseReporter'",
-        "--watchAll=false",
+        "--watchAll=false"
       ],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
@@ -54,6 +54,6 @@
       "windows": {
         "program": "${workspaceFolder}/node_modules/jest/bin/jest"
       }
-    },
+    }
   ]
 }

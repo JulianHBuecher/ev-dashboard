@@ -8,7 +8,7 @@ import { Utils } from 'utils/Utils';
 @Component({
   selector: 'app-reservation-properties',
   templateUrl: 'reservation-properties.component.html',
-  styleUrls: ['reservation-properties.component.scss']
+  styleUrls: ['reservation-properties.component.scss'],
 })
 export class ReservationPropertiesComponent implements OnInit {
   @Input() public reservation!: Reservation;
@@ -18,16 +18,29 @@ export class ReservationPropertiesComponent implements OnInit {
 
   public displayedProperties: PropertyDisplay[] = [
     { key: 'id', title: 'reservations.id' },
-    { key: 'createdOn', title: 'reservations.created_on', formatter: (created_on: Date) => this.datePipe.transform(created_on, 'E, d  MMMM y, HH:mm') },
+    {
+      key: 'createdOn',
+      title: 'reservations.created_on',
+      formatter: (created_on: Date) => this.datePipe.transform(created_on, 'E, d  MMMM y, HH:mm'),
+    },
     { key: 'chargingStationId', title: 'reservations.chargingstation_id' },
-    { key: 'connectorId', title: 'reservations.connector_id', formatter: (connectorId: number) => connectorId === 0 ? '0' : Utils.getConnectorLetterFromConnectorID(connectorId) },
-    { key: 'expiryDate', title: 'reservations.expiry_date', formatter: (created_on: Date) => this.datePipe.transform(created_on, 'E, d  MMMM y, HH:mm') },
+    {
+      key: 'connectorId',
+      title: 'reservations.connector_id',
+      formatter: (connectorId: number) =>
+        connectorId === 0 ? '0' : Utils.getConnectorLetterFromConnectorID(connectorId),
+    },
+    {
+      key: 'expiryDate',
+      title: 'reservations.expiry_date',
+      formatter: (created_on: Date) => this.datePipe.transform(created_on, 'E, d  MMMM y, HH:mm'),
+    },
     { key: 'tagId', title: 'reservations.tag_id' },
     { key: 'status', title: 'reservations.status' },
     { key: 'type', title: 'reservations.type' },
   ];
 
-  public displayedColumns: string[] = ['title','value'];
+  public displayedColumns: string[] = ['title', 'value'];
 
   // eslint-disable-next-line no-useless-constructor
   public constructor(private datePipe: AppDatePipe) {}
@@ -41,5 +54,4 @@ export class ReservationPropertiesComponent implements OnInit {
       }
     }
   }
-
 }

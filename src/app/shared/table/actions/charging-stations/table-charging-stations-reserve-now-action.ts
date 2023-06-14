@@ -9,7 +9,13 @@ import { DialogService } from 'services/dialog.service';
 import { MessageService } from 'services/message.service';
 import { SpinnerService } from 'services/spinner.service';
 import { ChargingStationsAuthorizations, DialogParamsWithAuth } from 'types/Authorization';
-import { ChargePointStatus, ChargingStation, ChargingStationButtonAction, Connector, OCPPGeneralResponse } from 'types/ChargingStation';
+import {
+  ChargePointStatus,
+  ChargingStation,
+  ChargingStationButtonAction,
+  Connector,
+  OCPPGeneralResponse,
+} from 'types/ChargingStation';
 import { ActionResponse } from 'types/DataResult';
 import { ButtonAction, ButtonActionColor } from 'types/GlobalType';
 import { ReserveNow, ReserveNowDialogData } from 'types/Reservation';
@@ -68,8 +74,10 @@ export class TableChargingStationsReserveNowAction implements TableAction {
       );
       return;
     }
-    if (connector.status === ChargePointStatus.UNAVAILABLE
-      || connector.status === ChargePointStatus.RESERVED) {
+    if (
+      connector.status === ChargePointStatus.UNAVAILABLE ||
+      connector.status === ChargePointStatus.RESERVED
+    ) {
       dialogService.createAndShowOkDialog(
         translateService.instant('reservations.action_error.reserve_now_title'),
         translateService.instant('reservations.action_error.reserve_now_not_available')
@@ -93,8 +101,8 @@ export class TableChargingStationsReserveNowAction implements TableAction {
         id: chargingStation.id,
         chargingStation,
         connector,
-        expiryDate: Utils.createDateWithDelay(0,1,0,0), // Provide a default expiration-date within 1 hour
-        reservationId: Utils.createRandomId() // Provide a default reservationID in form of a random UUID
+        expiryDate: Utils.createDateWithDelay(0, 1, 0, 0), // Provide a default expiration-date within 1 hour
+        reservationId: Utils.createRandomId(), // Provide a default reservationID in form of a random UUID
       },
     };
     dialogConfig.data = dialogData;
@@ -138,7 +146,7 @@ export class TableChargingStationsReserveNowAction implements TableAction {
         translateService.instant('reservations.dialog.reserve_now_confirm', {
           chargingStationId: chargingStation.id,
           connectorId: Utils.getConnectorLetterFromConnectorID(connector.connectorId),
-          userName: userFullName
+          userName: userFullName,
         })
       )
       .subscribe((response) => {
@@ -155,8 +163,14 @@ export class TableChargingStationsReserveNowAction implements TableAction {
           }
           spinnerService.show();
           centralServerService
-            .reserveNow(chargingStation.id, connector.connectorId, reserveNow.expiryDate, reserveNow.idTag,
-              reserveNow.reservationId, reserveNow?.parentIdTag)
+            .reserveNow(
+              chargingStation.id,
+              connector.connectorId,
+              reserveNow.expiryDate,
+              reserveNow.idTag,
+              reserveNow.reservationId,
+              reserveNow?.parentIdTag
+            )
             .subscribe({
               next: (reserveNowResponse: ActionResponse) => {
                 spinnerService.hide();
@@ -164,7 +178,7 @@ export class TableChargingStationsReserveNowAction implements TableAction {
                   messageService.showSuccessMessage(
                     translateService.instant('reservations.dialog.reserve_now_success', {
                       chargingStationId: chargingStation.id,
-                      connectorId: Utils.getConnectorLetterFromConnectorID(connector.connectorId)
+                      connectorId: Utils.getConnectorLetterFromConnectorID(connector.connectorId),
                     })
                   );
                   if (refresh) {

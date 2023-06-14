@@ -10,9 +10,16 @@ import { Router } from '@angular/router';
 import { TableDeleteAction } from '../table-delete-action';
 
 export interface TableDeleteReservationActionDef extends TableActionDef {
-  action: (reservation: Reservation, dialogService: DialogService, translateService: TranslateService,
-    messageService: MessageService, centralServerService: CentralServerService, spinnerService: SpinnerService,
-    router: Router, refresh?: () => Observable<void>) => void;
+  action: (
+    reservation: Reservation,
+    dialogService: DialogService,
+    translateService: TranslateService,
+    messageService: MessageService,
+    centralServerService: CentralServerService,
+    spinnerService: SpinnerService,
+    router: Router,
+    refresh?: () => Observable<void>
+  ) => void;
 }
 
 export class TableDeleteReservationAction extends TableDeleteAction {
@@ -24,13 +31,30 @@ export class TableDeleteReservationAction extends TableDeleteAction {
     };
   }
 
-  private deleteReservation(reservation: Reservation, dialogService: DialogService, translateService: TranslateService,
-    messageService: MessageService, centralServerService: CentralServerService, spinnerService: SpinnerService, router: Router,
-    refresh?: () => Observable<void>) {
-    super.delete(reservation, 'reservations.delete_title',
+  private deleteReservation(
+    reservation: Reservation,
+    dialogService: DialogService,
+    translateService: TranslateService,
+    messageService: MessageService,
+    centralServerService: CentralServerService,
+    spinnerService: SpinnerService,
+    router: Router,
+    refresh?: () => Observable<void>
+  ) {
+    super.delete(
+      reservation,
+      'reservations.delete_title',
       translateService.instant('reservations.delete_confirm', { reservationID: reservation.id }),
       translateService.instant('reservations.delete_success', { reservationID: reservation.id }),
-      'reservations.delete_error', centralServerService.deleteReservation.bind(centralServerService),
-      dialogService, translateService, messageService, centralServerService, spinnerService, router, refresh);
+      'reservations.delete_error',
+      centralServerService.deleteReservation.bind(centralServerService),
+      dialogService,
+      translateService,
+      messageService,
+      centralServerService,
+      spinnerService,
+      router,
+      refresh
+    );
   }
 }

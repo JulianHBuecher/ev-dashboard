@@ -78,26 +78,27 @@ export class TableChargingStationsCancelReservationAction implements TableAction
       return;
     }
 
-    dialogService.createAndShowYesNoDialog(
-      translateService.instant('reservations.dialog.cancel_reservation_title'),
-      translateService.instant('reservations.dialog.cancel_reservation_confirm', {
-        chargingStationId: chargingStation.id,
-        reservationId: reservation.id,
-      })
-    ).subscribe((response) => {
-      if (response === ButtonAction.YES) {
-        spinnerService.show();
-        centralServerService
-          .cancelReservation(chargingStation.id,reservation.id)
-          .subscribe({
+    dialogService
+      .createAndShowYesNoDialog(
+        translateService.instant('reservations.dialog.cancel_reservation_title'),
+        translateService.instant('reservations.dialog.cancel_reservation_confirm', {
+          chargingStationId: chargingStation.id,
+          reservationId: reservation.id,
+        })
+      )
+      .subscribe((response) => {
+        if (response === ButtonAction.YES) {
+          spinnerService.show();
+          centralServerService.cancelReservation(chargingStation.id, reservation.id).subscribe({
             next: (cancelReservationResponse: ActionResponse) => {
               spinnerService.hide();
               if (cancelReservationResponse.status === OCPPGeneralResponse.ACCEPTED) {
-                messageService.showSuccessMessage(translateService.instant('reservations.dialog.cancel_reservation_success',
-                  {
+                messageService.showSuccessMessage(
+                  translateService.instant('reservations.dialog.cancel_reservation_success', {
                     reservationId: reservation.id,
-                    chargingStationId: chargingStation.id
-                  }));
+                    chargingStationId: chargingStation.id,
+                  })
+                );
                 if (refresh) {
                   refresh().subscribe();
                 }
@@ -105,11 +106,10 @@ export class TableChargingStationsCancelReservationAction implements TableAction
                 Utils.handleError(
                   JSON.stringify(response),
                   messageService,
-                  translateService.instant('reservations.dialog.cancel_reservation_error',
-                    {
-                      reservationId: reservation.id,
-                      chargingStationId: chargingStation.id
-                    })
+                  translateService.instant('reservations.dialog.cancel_reservation_error', {
+                    reservationId: reservation.id,
+                    chargingStationId: chargingStation.id,
+                  })
                 );
               }
             },
@@ -120,15 +120,14 @@ export class TableChargingStationsCancelReservationAction implements TableAction
                 router,
                 messageService,
                 centralServerService,
-                translateService.instant('reservations.dialog.cancel_reservation_error',
-                  {
-                    reservationId: reservation.id,
-                    chargingStationId: chargingStation.id
-                  })
+                translateService.instant('reservations.dialog.cancel_reservation_error', {
+                  reservationId: reservation.id,
+                  chargingStationId: chargingStation.id,
+                })
               );
-            }
+            },
           });
-      }
-    });
+        }
+      });
   }
 }

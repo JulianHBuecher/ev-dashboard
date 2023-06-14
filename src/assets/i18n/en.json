@@ -1923,6 +1923,16 @@
       "synchronize_car_catalogs_dialog_confirm": "Do you really want to launch the synchronization of all the electric vehicles?",
       "assign_user_to_car_dialog_title": "Assign user to car",
       "assign_user_to_car_dialog_confirm": "This car already exists, do you really want to reuse it?"
+    },
+    "reservations": {
+      "reserve_now": {
+        "title": "Reserve Now",
+        "description": "Make an immediate reservation on a (specific) charging station and connector"
+      },
+      "planned_reservation": {
+        "title": "Planned Reservation",
+        "description": "Make planned reservations in the future on a (specific) charging station and connector"
+      }
     }
   },
   "technical_settings": {
@@ -2747,6 +2757,8 @@
   },
   "reservations": {
     "title": "Reservations",
+    "description": "Creation of reservations on charging stations and connectors",
+    "title_singular": "Reservation",
     "id": "ID",
     "created_on": "Creation Date",
     "chargingstation_id": "Charging Station ID",
@@ -2759,18 +2771,19 @@
     "change_reservation_success": "The reservation '{{reservationId}}' has been saved successfully",
     "change_reservation_error": "Cannot change the reservation details, check the logs",
     "update_reservation_error": "Updating a reservation is not supported",
-    "general":{
+    "properties_title": "Properties",
+    "general": {
       "reserve_now": "Reserve Now",
       "cancel_reservation": "Cancel reservation",
-      "tooltips":{
+      "tooltips": {
         "reserve_now": "Reserve Now",
         "cancel_reservation": "Cancel reservation"
       }
     },
-    "tabs":{
+    "tabs": {
       "list": "Reservations"
     },
-    "dialog":{
+    "dialog": {
       "reserve_now_title": "Complete Reservation",
       "reserve_now_details_title": "Reserve connector '{{connectorId}}' at chargepoint '{{chargingStationId}}'",
       "reserve_now_confirm": "Do you really want to reserve the connector '{{connectorId}}' for user '{{userName}}' on the charging station '{{chargingStationId}}'?",
@@ -2782,7 +2795,7 @@
       "cancel_reservation_success": "The reservation with ID '{{reservationId}}' at charging station '{{chargingStationId}}' is successfully canceled",
       "cancel_reservation_error": "Error occured while trying to cancel the reservation with ID '{{reservationId}}' at charging station '{{chargingStationId}}'"
     },
-    "action_error":{
+    "action_error": {
       "reserve_now_title": "Reserve now error",
       "reserve_now_not_available": "Connector is not available, unable to reserve it",
       "cancel_reservation_title": "Error during cancelation of reservation with ID '{{reservationId}}'",

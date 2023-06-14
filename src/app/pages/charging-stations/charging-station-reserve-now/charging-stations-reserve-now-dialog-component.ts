@@ -1,6 +1,17 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import {
+  AbstractControl,
+  UntypedFormControl,
+  UntypedFormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogConfig,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ChargingStationsAuthorizations, DialogParamsWithAuth } from 'types/Authorization';
@@ -18,7 +29,7 @@ import { User, UserSessionContext, UserToken } from '../../../types/User';
 import { Utils } from '../../../utils/Utils';
 
 @Component({
-  templateUrl: 'charging-stations-reserve-now-dialog-component.html'
+  templateUrl: 'charging-stations-reserve-now-dialog-component.html',
 })
 export class ChargingStationsReserveNowDialogComponent implements OnInit {
   public title = '';
@@ -52,20 +63,25 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
     private componentService: ComponentService,
     private centralServerService: CentralServerService,
     private dialogRef: MatDialogRef<ChargingStationsReserveNowDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) data: DialogParamsWithAuth<ReserveNowDialogData, ChargingStationsAuthorizations> ) {
+    @Inject(MAT_DIALOG_DATA)
+    data: DialogParamsWithAuth<ReserveNowDialogData, ChargingStationsAuthorizations>
+  ) {
     // Set
-    this.title = translateService.instant('reservations.dialog.reserve_now_details_title',
-      { chargingStationId: data.dialogData.chargingStation.id,
-        connectorId: Utils.getConnectorLetterFromConnectorID(data.dialogData.connector.connectorId)
-      });
+    this.title = translateService.instant('reservations.dialog.reserve_now_details_title', {
+      chargingStationId: data.dialogData.chargingStation.id,
+      connectorId: Utils.getConnectorLetterFromConnectorID(data.dialogData.connector.connectorId),
+    });
     this.chargingStationId = data.dialogData.chargingStation.id;
     this.connectorId = data.dialogData.connector.connectorId;
     this.loggedUser = this.centralServerService.getLoggedUser();
     this.canListUsers = data.dialogData.chargingStation.canListUsers;
     this.providedExpiryDate = data.dialogData.expiryDate;
     this.providedReservationId = data.dialogData.reservationId;
-    Utils.registerValidateCloseKeyEvents(this.dialogRef,
-      this.reserveNow.bind(this), this.cancel.bind(this));
+    Utils.registerValidateCloseKeyEvents(
+      this.dialogRef,
+      this.reserveNow.bind(this),
+      this.cancel.bind(this)
+    );
   }
 
   public ngOnInit() {
@@ -75,35 +91,25 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
       //   Validators.compose([
       //     Validators.required
       //   ])),
-      user: new UntypedFormControl('',
-        Validators.compose([
-          Validators.required,
-        ])),
-      userID: new UntypedFormControl('',
-        Validators.compose([
-          Validators.required,
-        ])),
-      tag: new UntypedFormControl('',
-        Validators.compose([
-          Validators.required,
-          this.tagActiveValidator.bind(this),
-        ])),
-      visualTagID: new UntypedFormControl('',
-        Validators.compose([
-          Validators.required,
-        ])),
+      user: new UntypedFormControl('', Validators.compose([Validators.required])),
+      userID: new UntypedFormControl('', Validators.compose([Validators.required])),
+      tag: new UntypedFormControl(
+        '',
+        Validators.compose([Validators.required, this.tagActiveValidator.bind(this)])
+      ),
+      visualTagID: new UntypedFormControl('', Validators.compose([Validators.required])),
       // parentIDTag: new UntypedFormControl('',
       //   Validators.compose([
       //     Validators.required,
       //   ])),
-      expiryDate: new UntypedFormControl(this.providedExpiryDate ?? '',
-        Validators.compose([
-          Validators.required
-        ])),
-      reservationID: new UntypedFormControl(this.providedReservationId ?? '',
-        Validators.compose([
-          Validators.required
-        ]))
+      expiryDate: new UntypedFormControl(
+        this.providedExpiryDate ?? '',
+        Validators.compose([Validators.required])
+      ),
+      reservationID: new UntypedFormControl(
+        this.providedReservationId ?? '',
+        Validators.compose([Validators.required])
+      ),
     });
     // Form
     this.user = this.formGroup.controls['user'];
@@ -121,36 +127,52 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
   public loadUserSessionContext() {
     if (this.userID.value) {
       this.spinnerService.show();
-      this.centralServerService.getUserSessionContext(this.userID.value, this.chargingStationId, this.connectorId).subscribe({
-        next: (userSessionContext: UserSessionContext) => {
-          this.spinnerService.hide();
-          // Set Tag
-          this.selectedTag = userSessionContext.tag;
-          this.tag.setValue(userSessionContext.tag ? Utils.buildTagName(userSessionContext.tag) : '');
-          this.visualTagId.setValue(userSessionContext.tag?.visualID);
-          // Update form
-          this.formGroup.updateValueAndValidity();
-          if (Utils.isEmptyArray(userSessionContext.errorCodes)) {
-            this.formGroup.markAsPristine();
-            this.formGroup.markAllAsTouched();
-          } else {
-            // TODO: Add error codes for not supported user context in reservations
-            // Setting errors automatically disable start transaction button
-            this.formGroup.setErrors(userSessionContext.errorCodes);
-            // Set mat-error message depending on errorCode provided
-            if (userSessionContext.errorCodes[0] === StartTransactionErrorCode.BILLING_NO_PAYMENT_METHOD) {
-              this.errorMessage = this.translateService.instant('transactions.error_start_no_payment_method');
+      this.centralServerService
+        .getUserSessionContext(this.userID.value, this.chargingStationId, this.connectorId)
+        .subscribe({
+          next: (userSessionContext: UserSessionContext) => {
+            this.spinnerService.hide();
+            // Set Tag
+            this.selectedTag = userSessionContext.tag;
+            this.tag.setValue(
+              userSessionContext.tag ? Utils.buildTagName(userSessionContext.tag) : ''
+            );
+            this.visualTagId.setValue(userSessionContext.tag?.visualID);
+            // Update form
+            this.formGroup.updateValueAndValidity();
+            if (Utils.isEmptyArray(userSessionContext.errorCodes)) {
+              this.formGroup.markAsPristine();
+              this.formGroup.markAllAsTouched();
             } else {
-              this.errorMessage = this.translateService.instant('transactions.error_start_general');
+              // TODO: Add error codes for not supported user context in reservations
+              // Setting errors automatically disable start transaction button
+              this.formGroup.setErrors(userSessionContext.errorCodes);
+              // Set mat-error message depending on errorCode provided
+              if (
+                userSessionContext.errorCodes[0] ===
+                StartTransactionErrorCode.BILLING_NO_PAYMENT_METHOD
+              ) {
+                this.errorMessage = this.translateService.instant(
+                  'transactions.error_start_no_payment_method'
+                );
+              } else {
+                this.errorMessage = this.translateService.instant(
+                  'transactions.error_start_general'
+                );
+              }
             }
-          }
-        },
-        error: (error) => {
-          this.spinnerService.hide();
-          Utils.handleHttpError(error, this.router, this.messageService,
-            this.centralServerService, 'general.error_backend');
-        }
-      });
+          },
+          error: (error) => {
+            this.spinnerService.hide();
+            Utils.handleHttpError(
+              error,
+              this.router,
+              this.messageService,
+              this.centralServerService,
+              'general.error_backend'
+            );
+          },
+        });
     }
   }
 
@@ -185,7 +207,7 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
       rowMultipleSelection: false,
       staticFilter: {
         UserID: this.userID.value,
-        Issuer: true
+        Issuer: true,
       },
     };
     // Show

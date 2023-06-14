@@ -16,7 +16,7 @@ export class ReservationsComponent extends AbstractTabComponent {
     activatedRoute: ActivatedRoute,
     windowService: WindowService
   ) {
-    super(activatedRoute,windowService,['reservations']);
+    super(activatedRoute, windowService, ['reservations']);
     // TODO: Implementation regarding access control for listing reservationns
     this.canListReservations = true; // this.authorizationService.canListReservations();
   }
