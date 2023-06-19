@@ -2,7 +2,6 @@ import { ReservationsAuthorizationActions } from './Authorization';
 import { ChargingStation, Connector } from './ChargingStation';
 import { TableData } from './Table';
 import { User } from './User';
-import { OCPPReservationStatus } from './ocpp/OCPP';
 
 export interface Reservation extends TableData, ReservationsAuthorizationActions {
   id: number;
@@ -15,7 +14,7 @@ export interface Reservation extends TableData, ReservationsAuthorizationActions
   userId?: string;
   idTag: string;
   parentIdTag?: string;
-  status: OCPPReservationStatus;
+  status: ReservationStatus;
   type?: ReservationType;
 }
 
@@ -50,7 +49,16 @@ export interface CancelReservationDialogData extends TableData {
   user: User;
 }
 
+export enum ReservationStatus {
+  DONE = 'reservation_done',
+  SCHEDULED = 'reservation_scheduled',
+  IN_PROGRESS = 'reservation_in_progress',
+  CANCELLED = 'reservation_cancelled',
+  INACTIVE = 'reservation_inactive',
+  EXPIRED = 'reservation_expired',
+}
+
 export enum ReservationType {
-  PLANNED = 'planned_reservation',
-  NOW = 'reserve_now',
+  PLANNED_RESERVATION = 'planned_reservation',
+  RESERVE_NOW = 'reserve_now',
 }

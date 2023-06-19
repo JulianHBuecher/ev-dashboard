@@ -19,6 +19,19 @@ import { ReservationComponent } from './reservation/reservation.component';
 import { ReservationPropertiesComponent } from './reservation/properties/reservation-properties.component';
 import { ReservationDialogComponent } from './reservation/reservation-dialog.component';
 import { ReservationParametersComponent } from './reservation/parameters/reservation-parameters.component';
+import { ReservationsConnectorsCellComponent } from './cell-components/reservations-connectors-cell.component';
+import {
+  AppReservationsFormatConnectorPipe,
+  ReservationsConnectorCellComponent,
+} from './cell-components/reservations-connector-cell.component';
+import {
+  AppReservationsFormatStatusPipe,
+  ReservationStatusFormatterCellComponent,
+} from './cell-components/reservations-status-cell.component';
+import {
+  AppReservationsFormatTypePipe,
+  ReservationsTypeFormatterCellComponent,
+} from './cell-components/reservations-type-cell.component';
 
 @NgModule({
   imports: [
@@ -43,6 +56,13 @@ import { ReservationParametersComponent } from './reservation/parameters/reserva
     ReservationDialogComponent,
     ReservationPropertiesComponent,
     ReservationParametersComponent,
+    ReservationsConnectorsCellComponent,
+    ReservationsConnectorCellComponent,
+    AppReservationsFormatConnectorPipe,
+    ReservationStatusFormatterCellComponent,
+    AppReservationsFormatStatusPipe,
+    ReservationsTypeFormatterCellComponent,
+    AppReservationsFormatTypePipe,
   ],
   providers: [ReservationsListTableDataSource],
 })

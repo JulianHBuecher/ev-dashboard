@@ -2761,17 +2761,21 @@
     "title_singular": "Reservation",
     "id": "ID",
     "created_on": "Creation Date",
-    "chargingstation_id": "Charging Station ID",
-    "connector_id": "Connector ID",
+    "chargingstation_id": "Charging Station",
+    "connector_id": "Connector",
     "expiry_date": "Expiration Date",
-    "tag_id": "Tag ID",
+    "tag_id": "Tag",
     "status": "Status",
     "type": "Reservation Type",
+    "user": "User",
     "reservation_not_found": "The reservation has not been found",
     "change_reservation_success": "The reservation '{{reservationId}}' has been saved successfully",
     "change_reservation_error": "Cannot change the reservation details, check the logs",
     "update_reservation_error": "Updating a reservation is not supported",
     "properties_title": "Properties",
+    "delete_confirm": "Do you really want to delete the reservation '{{reservationID}}'?",
+    "delete_success": "The reservation '{{reservationID}}' is successfully deleted",
+    "delete_error": "An error occured during the deletion of the reservation, check the logs",
     "general": {
       "reserve_now": "Reserve Now",
       "cancel_reservation": "Cancel reservation",
@@ -2800,6 +2804,17 @@
       "reserve_now_not_available": "Connector is not available, unable to reserve it",
       "cancel_reservation_title": "Error during cancelation of reservation with ID '{{reservationId}}'",
       "cancel_reservation_not_available": "Connector is not available, reservation could not be canceled"
+    },
+    "status_scheduled": "Scheduled",
+    "status_done": "Done",
+    "status_in_progress": "In Progress",
+    "status_inactive": "Inaktiv",
+    "status_cancelled": "Cancelled",
+    "status_expired": "Expired",
+    "types": {
+      "reserve_now": "Reserve Now",
+      "planned_reservation": "Planned Reservation",
+      "unknown": "Unknown Type"
     }
   }
 }

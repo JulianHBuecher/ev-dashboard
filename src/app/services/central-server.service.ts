@@ -6,7 +6,7 @@ import { StatusCodes } from 'http-status-codes';
 import { BehaviorSubject, EMPTY, Observable, Observer, TimeoutError, of, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
-import { Reservation } from 'types/Reservation';
+import { Reservation, ReservationType } from 'types/Reservation';
 import { Asset, AssetConsumption } from '../types/Asset';
 import { BillingAccount } from '../types/Billing';
 import { Car, CarCatalog, CarMaker, ImageObject } from '../types/Car';
@@ -74,7 +74,7 @@ import { OicpEndpoint } from '../types/oicp/OICPEndpoint';
 import PricingDefinition from '../types/Pricing';
 import { RefundReport } from '../types/Refund';
 import { RegistrationToken } from '../types/RegistrationToken';
-import { RESTServerRoute, ServerAction } from '../types/Server';
+import { RESTServerRoute } from '../types/Server';
 import { BillingSettings, SettingDB } from '../types/Setting';
 import { Site } from '../types/Site';
 import { SiteArea, SiteAreaConsumption, SubSiteAreaAction } from '../types/SiteArea';
@@ -3941,6 +3941,7 @@ export class CentralServerService {
         "idTag": "${idTag}",
         "reservationId": ${reservationId},
         "parentIdTag": "${parentIdTag}"
+        "type": "${ReservationType.RESERVE_NOW}
       }
     }`;
     return this.httpClient
@@ -4013,7 +4014,20 @@ export class CentralServerService {
       .pipe(catchError(this.handleHttpError));
   }
 
-  public deleteReservation(id: number) {
+  public createReservation(reservation: Reservation): Observable<ActionResponse> {
+    this.checkInit();
+    return this.httpClient
+      .post<ActionResponse>(
+      this.buildRestEndpointUrl(RESTServerRoute.REST_RESERVATIONS),
+      reservation,
+      {
+        headers: this.buildHttpHeaders(),
+      }
+    )
+      .pipe(catchError(this.handleHttpError));
+  }
+
+  public deleteReservation(id: number): Observable<ActionResponse> {
     // Verify init
     this.checkInit();
     // Execute the REST service
@@ -4024,7 +4038,7 @@ export class CentralServerService {
       .pipe(catchError(this.handleHttpError));
   }
 
-  public updateReservation(reservation: Reservation) {
+  public updateReservation(reservation: Reservation): Observable<ActionResponse> {
     // Verify init
     this.checkInit();
     // Execute
@@ -4035,7 +4049,7 @@ export class CentralServerService {
       }),
       reservation,
       {
-        headers: this.buildHttpHeaders(this.windowService.getSubdomain()),
+        headers: this.buildHttpHeaders(),
       }
     )
       .pipe(catchError(this.handleHttpError));

@@ -48,8 +48,13 @@ import {
 } from 'shared/table/actions/reservations/table-create-reservation-action';
 import { AppDatePipe } from 'shared/formatters/app-date.pipe';
 import { DateRangeTableFilter } from 'shared/table/filters/date-range-table-filter';
+import { Constants } from 'utils/Constants';
+import { User } from 'types/User';
 import { Utils } from '../../../utils/Utils';
 import { ReservationDialogComponent } from '../reservation/reservation-dialog.component';
+import { ReservationsConnectorsCellComponent } from '../cell-components/reservations-connectors-cell.component';
+import { ReservationsTypeFormatterCellComponent } from '../cell-components/reservations-type-cell.component';
+import { ReservationStatusFormatterCellComponent } from '../cell-components/reservations-status-cell.component';
 
 @Injectable()
 export class ReservationsListTableDataSource extends TableDataSource<Reservation> {
@@ -103,20 +108,26 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
   public loadDataImpl(): Observable<ReservationDataResult> {
     return new Observable((observer) => {
       this.centralServerService
-        .getReservations(this.buildFilterValues(), this.getPaging(), this.getSorting())
+        .getReservations(
+          {
+            ...this.buildFilterValues(),
+            WithChargingStation: 'true',
+            WithTag: 'true',
+            WithUser: 'true',
+          },
+          this.getPaging(),
+          this.getSorting()
+        )
         .subscribe({
           next: (reservations) => {
             this.reservationsAuthorizations = {
-              canListSiteAreas: Utils.convertToBoolean(reservations.canListSiteAreas ?? true),
-              canListSites: Utils.convertToBoolean(reservations.canListSites ?? true),
-              canListCompanies: Utils.convertToBoolean(reservations.canListCompanies ?? true),
-              canListUsers: Utils.convertToBoolean(reservations.canListUsers ?? true), // e.g. as param
-              canExport: Utils.convertToBoolean(reservations.canExport ?? true),
-              canCreate: Utils.convertToBoolean(reservations.canCreate ?? true),
-              canDelete: Utils.convertToBoolean(reservations.canDelete ?? true),
-              // FIXME: Necessary?
-              canListTags: Utils.convertToBoolean(reservations.canListTags ?? true),
-              canUpdate: Utils.convertToBoolean(reservations.canUpdate ?? true),
+              canListSiteAreas: Utils.convertToBoolean(reservations.canListSiteAreas),
+              canListSites: Utils.convertToBoolean(reservations.canListSites),
+              canListCompanies: Utils.convertToBoolean(reservations.canListCompanies),
+              canListUsers: Utils.convertToBoolean(reservations.canListUsers),
+              canExport: Utils.convertToBoolean(reservations.canExport),
+              canCreate: Utils.convertToBoolean(reservations.canCreate),
+              canListTags: Utils.convertToBoolean(reservations.canListTags),
               metadata: reservations.metadata,
             };
             this.siteFilter.visible = this.reservationsAuthorizations.canListSites;
@@ -181,47 +192,73 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
         class: 'col-15p',
         sorted: true,
         direction: 'desc',
-        formatter: (created_on: Date) => this.datePipe.transform(created_on, 'E, d  MMMM y, HH:mm'),
+        sortable: true,
+        formatter: (created_on: Date) =>
+          this.datePipe.transform(created_on, Constants.CUSTOM_DATE_FORMAT),
       },
       {
         id: 'chargingStationID',
         name: 'reservations.chargingstation_id',
-        headerClass: 'col-20p',
-        class: 'col-20p',
+        headerClass: 'col-10p',
+        class: 'col-10p',
       },
       {
         id: 'connectorID',
         name: 'reservations.connector_id',
-        headerClass: 'col-10p',
-        class: 'col-10p',
-        formatter: (connectorId: number) =>
-          connectorId === 0 ? '0' : Utils.getConnectorLetterFromConnectorID(connectorId),
+        headerClass: 'text-center',
+        class: 'text-center table-cell-angular-big-component',
+        isAngularComponent: true,
+        angularComponent: ReservationsConnectorsCellComponent,
       },
       {
         id: 'expiryDate',
         name: 'reservations.expiry_date',
         headerClass: 'col-15p',
         class: 'col-15p',
-        formatter: (expiryDate: Date) => this.datePipe.transform(expiryDate, 'E, d  MMMM y, HH:mm'),
+        formatter: (expiryDate: Date) =>
+          this.datePipe.transform(expiryDate, Constants.CUSTOM_DATE_FORMAT),
       },
       {
-        id: 'idTag',
-        name: 'reservations.tag_id',
+        id: 'tag.user.name',
+        name: 'reservations.user',
+        formatter: (name: string, reservation: Reservation) =>
+          Utils.buildUserFullName(reservation['tag'].user),
         headerClass: 'col-10p',
         class: 'col-10p',
       },
       {
         id: 'status',
         name: 'reservations.status',
-        headerClass: 'col-10p',
-        class: 'col-20p',
+        headerClass: 'col-10p text-center',
+        class: 'col-10p text-center table-cell-angular-big-component',
+        isAngularComponent: true,
+        angularComponent: ReservationStatusFormatterCellComponent,
+        sortable: true,
       },
       {
         id: 'type',
         name: 'reservations.type',
         sortable: true,
-        headerClass: 'col-10p',
-        class: 'col-20p',
+        headerClass: 'col-10p text-center',
+        class: 'col-10p text-center table-cell-angular-big-component',
+        isAngularComponent: true,
+        angularComponent: ReservationsTypeFormatterCellComponent,
+      },
+      {
+        id: 'createdOn',
+        name: 'users.created_on',
+        formatter: (createdOn: Date) =>
+          this.datePipe.transform(createdOn, Constants.CUSTOM_DATE_FORMAT),
+        headerClass: 'col-15em',
+        class: 'col-15em',
+        sortable: true,
+      },
+      {
+        id: 'createdBy',
+        name: 'users.created_by',
+        formatter: (user: User) => Utils.buildUserFullName(user),
+        headerClass: 'col-15em',
+        class: 'col-15em',
       },
     ];
   }

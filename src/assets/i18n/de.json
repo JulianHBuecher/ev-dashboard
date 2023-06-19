@@ -2761,17 +2761,21 @@
     "title_singular": "Reservierung",
     "id": "ID",
     "created_on": "Erstellungsdatum",
-    "chargingstation_id": "Ladestation-ID",
-    "connector_id": "Anschluss-ID",
+    "chargingstation_id": "Ladestation",
+    "connector_id": "Anschluss",
     "expiry_date": "Ablaufdatum",
     "tag_id": "Tag ID",
     "status": "Status",
     "type": "Reservierungs-Typ",
     "properties_title": "Details",
+    "user": "Nutzer",
     "reservation_not_found": "Die Reservierung wurde nicht gefunden",
     "change_reservation_success": "Die Reservierung '{{reservationId}}' wurde erfolgreich gespeichert",
     "change_reservation_error": "Die Reservierung kann nicht verändert werden, siehe Log-Nachrichten für Details",
     "update_reservation_error": "Aktualisieren von Reservierungen ist nicht unterstützt",
+    "delete_confirm": "Sind Sie sich sicher, dass Sie die Reservierung '{{reservationID}}' löschen wollen?",
+    "delete_success": "Die Reservierung '{{reservationID}}' wurde erfolgreich gelöscht",
+    "delete_error": "Beim Löschen der Reservierung ist ein Fehler aufgetreten",
     "general": {
       "reserve_now": "Jetzt Reservieren",
       "cancel_reservation": "Reservierung stornieren",
@@ -2800,6 +2804,17 @@
       "reserve_now_not_available": "Anschluss ist nicht verfügbar, Ladestation kann nicht reserviert werden",
       "cancel_reservation_title": "Fehler beim Stornieren der Reservierung mit der ID '{{reservationId}}'",
       "cancel_reservation_not_available": "Anschluss ist nicht verfügbar, die Reservierung kann nicht storniert werden"
+    },
+    "status_scheduled": "Geplant",
+    "status_done": "Wahrgenommen",
+    "status_in_progress": "Aktiv",
+    "status_inactive": "Inaktiv",
+    "status_cancelled": "Storniert",
+    "status_expired": "Abgelaufen",
+    "types": {
+      "reserve_now": "Reservierung",
+      "planned_reservation": "Geplante Reservierung",
+      "unknown": "Unbekannt"
     }
   }
 }

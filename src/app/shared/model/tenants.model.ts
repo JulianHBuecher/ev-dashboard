@@ -49,7 +49,7 @@ export const RESERVATION_TYPES: KeyValue[] = [
     value: 'settings.reservations.reserve_now.title',
   },
   {
-    key: ReservationSettingsType.RESERVE_NOW,
+    key: ReservationSettingsType.PLANNED_RESERVATION,
     value: 'settings.reservations.planned_reservation.title',
   },
 ];

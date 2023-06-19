@@ -26,7 +26,8 @@ type SettingsType =
   | SmartChargingSettingsType
   | AssetSettingsType
   | CarConnectorSettingsType
-  | UserSettingsType;
+  | UserSettingsType
+  | ReservationSettingsType;
 
 export interface SettingDBContent {
   type: SettingsType;

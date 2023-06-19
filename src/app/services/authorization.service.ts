@@ -432,4 +432,8 @@ export class AuthorizationService {
     }
     return false;
   }
+
+  public canListReservations(): boolean {
+    return this.canAccess(Entity.RESERVATION, Action.LIST);
+  }
 }

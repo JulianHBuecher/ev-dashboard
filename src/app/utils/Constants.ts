@@ -70,10 +70,13 @@ export class Constants {
   public static readonly STRIPE_APP_NAME = 'Open e-Mobility';
   public static readonly STRIPE_PARTNER_ID = 'TECH-000685';
 
+  /* Ordering Possibilities */
   public static readonly ASCENDING_ORDER = '1';
   public static readonly DESCENDING_ORDER = '-1';
   public static readonly ORDERING = {
     asc: Constants.ASCENDING_ORDER,
     desc: Constants.DESCENDING_ORDER,
   };
+  /* Reusable Date Format for List Data Sources */
+  public static readonly CUSTOM_DATE_FORMAT = 'E, d  MMMM y, HH:mm';
 }
