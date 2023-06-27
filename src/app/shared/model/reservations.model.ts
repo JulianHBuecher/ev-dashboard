@@ -1,12 +1,12 @@
 import { ReservationStatus, ReservationType } from 'types/Reservation';
 
 export const RESERVATION_STATUSES = [
-  { key: ReservationStatus.SCHEDULED, value: 'reservations.status_scheduled' },
-  { key: ReservationStatus.DONE, value: 'reservations.status_done' },
-  { key: ReservationStatus.INACTIVE, value: 'reservations.status_inactive' },
-  { key: ReservationStatus.CANCELLED, value: 'reservations.status_cancelled' },
-  { key: ReservationStatus.EXPIRED, value: 'reservations.status_expired' },
-  { key: ReservationStatus.IN_PROGRESS, value: 'reservations.status_in_progress' },
+  { key: ReservationStatus.SCHEDULED, value: 'reservations.state.scheduled' },
+  { key: ReservationStatus.DONE, value: 'reservations.state.done' },
+  { key: ReservationStatus.INACTIVE, value: 'reservations.state.inactive' },
+  { key: ReservationStatus.CANCELLED, value: 'reservations.state.cancelled' },
+  { key: ReservationStatus.EXPIRED, value: 'reservations.state.expired' },
+  { key: ReservationStatus.IN_PROGRESS, value: 'reservations.state.in_progress' },
 ];
 
 export const RESERVATION_TYPES = [

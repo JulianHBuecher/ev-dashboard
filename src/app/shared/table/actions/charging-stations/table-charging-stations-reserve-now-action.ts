@@ -45,8 +45,8 @@ export class TableChargingStationsReserveNowAction implements TableAction {
     type: 'button',
     icon: 'key',
     color: ButtonActionColor.ACCENT,
-    name: 'reservations.general.reserve_now',
-    tooltip: 'reservations.general.tooltips.reserve_now',
+    name: 'reservations.dialog.reserve_now.title',
+    tooltip: 'reservations.dialog.reserve_now.tooltips',
     action: this.reserveNow.bind(this),
   };
 
@@ -69,8 +69,8 @@ export class TableChargingStationsReserveNowAction implements TableAction {
   ) {
     if (chargingStation.inactive) {
       dialogService.createAndShowOkDialog(
-        translateService.instant('reservations.action_error.reserve_now_title'),
-        translateService.instant('reservations.action_error.reserve_now_title')
+        translateService.instant('reservations.action_error.reserve_now.title'),
+        translateService.instant('reservations.action_error.reserve_now.title')
       );
       return;
     }
@@ -79,14 +79,14 @@ export class TableChargingStationsReserveNowAction implements TableAction {
       connector.status === ChargePointStatus.RESERVED
     ) {
       dialogService.createAndShowOkDialog(
-        translateService.instant('reservations.action_error.reserve_now_title'),
-        translateService.instant('reservations.action_error.reserve_now_not_available')
+        translateService.instant('reservations.action_error.reserve_now.title'),
+        translateService.instant('reservations.action_error.reserve_now.not_available')
       );
       return;
     }
     if (connector.currentTransactionID) {
       dialogService.createAndShowOkDialog(
-        translateService.instant('reservations.action_error.reserve_now_title'),
+        translateService.instant('reservations.action_error.reserve_now.title'),
         translateService.instant('chargers.action_error.transaction_in_progress')
       );
       return;
@@ -101,8 +101,8 @@ export class TableChargingStationsReserveNowAction implements TableAction {
         id: chargingStation.id,
         chargingStation,
         connector,
-        expiryDate: Utils.createDateWithDelay(0, 1, 0, 0), // Provide a default expiration-date within 1 hour
-        reservationId: Utils.createRandomId(), // Provide a default reservationID in form of a random UUID
+        expiryDate: Utils.generateDateWithDelay(0, 1, 0, 0), // Provide a default expiration-date within 1 hour
+        reservationId: Utils.generateRandomReservationID(),
       },
     };
     dialogConfig.data = dialogData;
@@ -142,8 +142,8 @@ export class TableChargingStationsReserveNowAction implements TableAction {
   ): void {
     dialogService
       .createAndShowYesNoDialog(
-        translateService.instant('reservations.dialog.reserve_now_title'),
-        translateService.instant('reservations.dialog.reserve_now_confirm', {
+        translateService.instant('reservations.dialog.reserve_now.title'),
+        translateService.instant('reservations.dialog.reserve_now.confirm', {
           chargingStationId: chargingStation.id,
           connectorId: Utils.getConnectorLetterFromConnectorID(connector.connectorId),
           userName: userFullName,
@@ -176,7 +176,7 @@ export class TableChargingStationsReserveNowAction implements TableAction {
                 spinnerService.hide();
                 if (reserveNowResponse.status === OCPPGeneralResponse.ACCEPTED) {
                   messageService.showSuccessMessage(
-                    translateService.instant('reservations.dialog.reserve_now_success', {
+                    translateService.instant('reservations.dialog.reserve_now.success', {
                       chargingStationId: chargingStation.id,
                       connectorId: Utils.getConnectorLetterFromConnectorID(connector.connectorId),
                     })
@@ -188,7 +188,7 @@ export class TableChargingStationsReserveNowAction implements TableAction {
                   Utils.handleError(
                     JSON.stringify(response),
                     messageService,
-                    translateService.instant('reservations.dialog.reserve_now_error')
+                    translateService.instant('reservations.dialog.reserve_now.error')
                   );
                 }
               },

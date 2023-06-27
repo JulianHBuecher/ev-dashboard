@@ -67,7 +67,7 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
     data: DialogParamsWithAuth<ReserveNowDialogData, ChargingStationsAuthorizations>
   ) {
     // Set
-    this.title = translateService.instant('reservations.dialog.reserve_now_details_title', {
+    this.title = translateService.instant('reservations.dialog.reserve_now.details', {
       chargingStationId: data.dialogData.chargingStation.id,
       connectorId: Utils.getConnectorLetterFromConnectorID(data.dialogData.connector.connectorId),
     });

@@ -1196,7 +1196,7 @@ export class Utils {
     }
   }
 
-  public static createDateWithDelay(
+  public static generateDateWithDelay(
     days?: number,
     hours?: number,
     minutes?: number,
@@ -1207,7 +1207,7 @@ export class Utils {
     );
   }
 
-  public static createRandomId(): number {
+  public static generateRandomReservationID(): number {
     return Math.floor(Math.random() * 100 + 1);
   }
 
@@ -1219,5 +1219,9 @@ export class Utils {
       return { field: `-${field}` };
     }
     return { field: `${field}` };
+  }
+
+  public static replaceAll(input: string, pattern: string, replacement: string = '') {
+    return input.split(pattern).join(replacement);
   }
 }

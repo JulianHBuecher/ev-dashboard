@@ -7,7 +7,6 @@ import {
   BILLING_TYPES,
   PRICING_TYPES,
   REFUND_TYPES,
-  RESERVATION_TYPES,
   SMART_CHARGING_TYPES,
 } from '../../../../shared/model/tenants.model';
 import { KeyValue } from '../../../../types/GlobalType';
@@ -31,7 +30,6 @@ export class TenantComponentsComponent implements OnInit, OnChanges {
   public refundTypes: KeyValue[];
   public analyticsTypes: KeyValue[];
   public smartChargingTypes: KeyValue[];
-  public reservationTypes: KeyValue[];
 
   public constructor() {
     this.pricingTypes = PRICING_TYPES;
@@ -39,7 +37,6 @@ export class TenantComponentsComponent implements OnInit, OnChanges {
     this.refundTypes = REFUND_TYPES;
     this.analyticsTypes = ANALYTICS_TYPES;
     this.smartChargingTypes = SMART_CHARGING_TYPES;
-    this.reservationTypes = RESERVATION_TYPES;
   }
 
   public ngOnInit() {

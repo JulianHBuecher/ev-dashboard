@@ -1,19 +1,31 @@
 import { ReservationsAuthorizationActions } from './Authorization';
+import { Car } from './Car';
 import { ChargingStation, Connector } from './ChargingStation';
+import CreatedUpdatedProps from './CreatedUpdatedProps';
 import { TableData } from './Table';
+import { Tag } from './Tag';
 import { User } from './User';
 
-export interface Reservation extends TableData, ReservationsAuthorizationActions {
+export interface Reservation
+  extends TableData,
+  CreatedUpdatedProps,
+  ReservationsAuthorizationActions {
   id: number;
-  createdOn: Date;
-  chargingStationId: string;
-  connectorId: number;
+  chargingStationID: string;
+  chargingStation?: ChargingStation;
+  connectorID: number;
+  connector?: Connector;
   expiryDate: Date;
   fromDate?: Date;
   toDate?: Date;
-  userId?: string;
+  arrivalTime?: Date;
   idTag: string;
+  visualTagID?: string;
+  tag?: Tag;
+  carID?: string;
+  car?: Car;
   parentIdTag?: string;
+  parentTag?: Tag;
   status: ReservationStatus;
   type?: ReservationType;
 }

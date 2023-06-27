@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { TransactionDialogComponent } from 'shared/dialogs/transaction/transaction-dialog.component';
 
 import { Constants } from 'utils/Constants';
+import { ReservationStatus, ReservationType } from 'types/Reservation';
 import { AuthorizationService } from '../../../services/authorization.service';
 import { CentralServerService } from '../../../services/central-server.service';
 import { DialogService } from '../../../services/dialog.service';
@@ -351,8 +352,10 @@ export class ChargingStationConnectorsTableDataSource extends TableDataSource<Co
         this.centralServerService
           .getReservations(
             {
-              chargingStationIds: [this.chargingStation.id],
-              connectorIds: [connector.connectorId.toString()],
+              ChargingStationIDs: [this.chargingStation.id],
+              ConnectorIDs: [connector.connectorId.toString()],
+              Status: [ReservationStatus.IN_PROGRESS],
+              Type: [ReservationType.RESERVE_NOW],
             },
             { limit: 1, skip: Constants.DEFAULT_SKIP },
             [Utils.createSortFieldParam('expiryDate', Constants.ORDERING.desc)]
@@ -375,7 +378,7 @@ export class ChargingStationConnectorsTableDataSource extends TableDataSource<Co
               }
             },
             error: (error) => {
-              this.messageService.showErrorMessage('reservations.reservation_not_found');
+              this.messageService.showErrorMessage('reservations.action_error.not_found');
             },
           });
         break;

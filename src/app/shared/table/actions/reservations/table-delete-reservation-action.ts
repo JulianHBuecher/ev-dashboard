@@ -43,10 +43,14 @@ export class TableDeleteReservationAction extends TableDeleteAction {
   ) {
     super.delete(
       reservation,
-      'reservations.delete_title',
-      translateService.instant('reservations.delete_confirm', { reservationID: reservation.id }),
-      translateService.instant('reservations.delete_success', { reservationID: reservation.id }),
-      'reservations.delete_error',
+      'reservations.dialog.delete.title',
+      translateService.instant('reservations.dialog.delete.confirm', {
+        reservationID: reservation.id,
+      }),
+      translateService.instant('reservations.dialog.delete.success', {
+        reservationID: reservation.id,
+      }),
+      'reservations.dialog.delete.error',
       centralServerService.deleteReservation.bind(centralServerService),
       dialogService,
       translateService,

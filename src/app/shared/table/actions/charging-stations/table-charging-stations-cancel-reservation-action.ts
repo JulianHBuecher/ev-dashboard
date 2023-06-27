@@ -42,8 +42,8 @@ export class TableChargingStationsCancelReservationAction implements TableAction
     type: 'button',
     icon: 'key_off',
     color: ButtonActionColor.ACCENT,
-    name: 'reservations.general.cancel_reservation',
-    tooltip: 'reservations.general.tooltips.cancel_reservation',
+    name: 'reservations.dialog.cancel_reservation.title',
+    tooltip: 'reservations.dialog.cancel_reservation.tooltip',
     action: this.cancelReservation.bind(this),
   };
 
@@ -65,23 +65,23 @@ export class TableChargingStationsCancelReservationAction implements TableAction
   ) {
     if (chargingStation.inactive) {
       dialogService.createAndShowOkDialog(
-        translateService.instant('reservations.action_error.cancel_reservation_title'),
-        translateService.instant('reservations.action_error.cancel_reservation_title')
+        translateService.instant('reservations.action_error.cancel_reservation.title'),
+        translateService.instant('reservations.action_error.cancel_reservation.title')
       );
       return;
     }
     if (connector.status === ChargePointStatus.UNAVAILABLE) {
       dialogService.createAndShowOkDialog(
-        translateService.instant('reservations.action_error.cancel_reservation_title'),
-        translateService.instant('reservations.action_error.cancel_reservation_not_available')
+        translateService.instant('reservations.action_error.cancel_reservation.title'),
+        translateService.instant('reservations.action_error.cancel_reservation.not_available')
       );
       return;
     }
 
     dialogService
       .createAndShowYesNoDialog(
-        translateService.instant('reservations.dialog.cancel_reservation_title'),
-        translateService.instant('reservations.dialog.cancel_reservation_confirm', {
+        translateService.instant('reservations.dialog.cancel_reservation.title'),
+        translateService.instant('reservations.dialog.cancel_reservation.confirm', {
           chargingStationId: chargingStation.id,
           reservationId: reservation.id,
         })
@@ -94,7 +94,7 @@ export class TableChargingStationsCancelReservationAction implements TableAction
               spinnerService.hide();
               if (cancelReservationResponse.status === OCPPGeneralResponse.ACCEPTED) {
                 messageService.showSuccessMessage(
-                  translateService.instant('reservations.dialog.cancel_reservation_success', {
+                  translateService.instant('reservations.dialog.cancel_reservation.success', {
                     reservationId: reservation.id,
                     chargingStationId: chargingStation.id,
                   })
@@ -106,7 +106,7 @@ export class TableChargingStationsCancelReservationAction implements TableAction
                 Utils.handleError(
                   JSON.stringify(response),
                   messageService,
-                  translateService.instant('reservations.dialog.cancel_reservation_error', {
+                  translateService.instant('reservations.dialog.cancel_reservation.error', {
                     reservationId: reservation.id,
                     chargingStationId: chargingStation.id,
                   })
@@ -120,7 +120,7 @@ export class TableChargingStationsCancelReservationAction implements TableAction
                 router,
                 messageService,
                 centralServerService,
-                translateService.instant('reservations.dialog.cancel_reservation_error', {
+                translateService.instant('reservations.dialog.cancel_reservation.error', {
                   reservationId: reservation.id,
                   chargingStationId: chargingStation.id,
                 })

@@ -64,6 +64,11 @@ export class ChargingStationsDialogTableDataSource extends DialogTableDataSource
         name: 'chargers.vendor',
         class: 'text-left',
       },
+      {
+        id: 'siteArea.name',
+        name: 'chargers.site_area',
+        class: 'text-left',
+      },
     ];
   }
 }

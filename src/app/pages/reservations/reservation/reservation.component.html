@@ -3,48 +3,24 @@
     <mat-tab-group
       animationDuration="0ms"
       disableRipple="true"
-      (selectedTabChange)="changeActivePane($event)"
       class="mat-tab-info reservation-dialog-container"
-      [class]="
-        dialogRef && !readOnly && activeTabIndex === 0
-          ? 'mat-tabs-with-actions'
-          : 'mat-tabs-with-close-action'
-      "
+      [class]="dialogRef ? 'mat-tabs-with-actions' : 'mat-tabs-with-close-action'"
     >
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon>book</mat-icon>
-          <span>{{ 'reservations.title_singular' | translate }} {{ reservation?.id }}</span>
+          <span>{{ 'reservations.title' | translate }} {{ reservation?.id }}</span>
         </ng-template>
-        <div class="card-body reservation-param mat-tab-dialog-body-content">
-          <div class="tab-content">
-            <app-reservation-parameters
-              [formGroup]="formGroup"
-              [reservation]="reservation"
-              [reservationsAuthorizations]="reservationsAuthorizations"
-              [readOnly]="readOnly"
-            ></app-reservation-parameters>
-          </div>
+        <div class="card-body mat-tab-dialog-body-content">
+          <app-reservation-main
+            #reservationMainComponent
+            [formGroup]="formGroup"
+            [reservation]="reservation"
+            [reservationsAuthorizations]="reservationsAuthorizations"
+            [readOnly]="readOnly"
+          ></app-reservation-main>
         </div>
       </mat-tab>
-      <ng-container *ngIf="reservation">
-        <mat-tab>
-          <ng-template mat-tab-label>
-            <mat-icon>info</mat-icon>
-            <span>{{ 'reservations.properties_title' | translate }}</span>
-          </ng-template>
-          <div class="card-body mat-tab-dialog-body-content">
-            <div class="tab-content">
-              <div>
-                <app-reservation-properties
-                  [reservation]="reservation"
-                  [reservationsAuthorizations]="reservationsAuthorizations"
-                ></app-reservation-properties>
-              </div>
-            </div>
-          </div>
-        </mat-tab>
-      </ng-container>
     </mat-tab-group>
     <div [class]="dialogRef ? 'tabs-actions' : 'tabs-actions-embedded'">
       <button

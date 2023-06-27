@@ -3940,8 +3940,8 @@ export class CentralServerService {
         "expiryDate": "${expiryDate.toISOString()}",
         "idTag": "${idTag}",
         "reservationId": ${reservationId},
-        "parentIdTag": "${parentIdTag}"
-        "type": "${ReservationType.RESERVE_NOW}
+        "parentIdTag": "${parentIdTag}",
+        "type": "${ReservationType.RESERVE_NOW}"
       }
     }`;
     return this.httpClient

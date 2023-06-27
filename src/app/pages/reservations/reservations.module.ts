@@ -1,24 +1,23 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MaterialModule } from 'app.module';
-import { MomentModule } from 'ngx-moment';
-import { ComponentModule } from 'shared/component/component.module';
-import { DialogsModule } from 'shared/dialogs/dialogs.module';
-import { CommonDirectivesModule } from 'shared/directives/directives.module';
-import { FormattersModule } from 'shared/formatters/formatters.module';
 import { TableModule } from 'shared/table/table.module';
-import { ReservationsRoutes } from './reservations.routing';
+import { CommonDirectivesModule } from 'shared/directives/directives.module';
+import { DialogsModule } from 'shared/dialogs/dialogs.module';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { FormattersModule } from 'shared/formatters/formatters.module';
+import { ComponentModule } from 'shared/component/component.module';
+import { MomentModule } from 'ngx-moment';
 import { ReservationsComponent } from './reservations.component';
 import { ReservationsListComponent } from './list/reservations-list.component';
 import { ReservationsListTableDataSource } from './list/reservations-list-table-data-source';
 import { ReservationComponent } from './reservation/reservation.component';
 import { ReservationPropertiesComponent } from './reservation/properties/reservation-properties.component';
 import { ReservationDialogComponent } from './reservation/reservation-dialog.component';
-import { ReservationParametersComponent } from './reservation/parameters/reservation-parameters.component';
+import { ReservationMainComponent } from './reservation/main/reservation-main.component';
 import { ReservationsConnectorsCellComponent } from './cell-components/reservations-connectors-cell.component';
 import {
   AppReservationsFormatConnectorPipe,
@@ -32,6 +31,7 @@ import {
   AppReservationsFormatTypePipe,
   ReservationsTypeFormatterCellComponent,
 } from './cell-components/reservations-type-cell.component';
+import { ReservationsRoutes } from './reservations.routing';
 
 @NgModule({
   imports: [
@@ -55,7 +55,7 @@ import {
     ReservationComponent,
     ReservationDialogComponent,
     ReservationPropertiesComponent,
-    ReservationParametersComponent,
+    ReservationMainComponent,
     ReservationsConnectorsCellComponent,
     ReservationsConnectorCellComponent,
     AppReservationsFormatConnectorPipe,

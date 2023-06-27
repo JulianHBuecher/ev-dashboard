@@ -6,12 +6,17 @@ import { Reservation } from 'types/Reservation';
 import { ReservationComponent } from './reservation.component';
 
 @Component({
-  template:
-    '<app-reservation #appRef [reservationId]="reservationId" [dialogMode]="dialogMode" [dialogRef]="dialogRef" [reservationsAuthorizations]="reservationsAuthorizations" ></app-reservation>',
+  template: `<app-reservation
+    #appRef
+    [currentReservationID]="reservationID"
+    [dialogMode]="dialogMode"
+    [dialogRef]="dialogRef"
+    [reservationsAuthorizations]="reservationsAuthorizations"
+  ></app-reservation>`,
 })
 export class ReservationDialogComponent implements AfterViewInit {
   @ViewChild('appRef') public appRef!: ReservationComponent;
-  public reservationId!: number;
+  public reservationID!: number;
   public dialogMode!: DialogMode;
   public reservationsAuthorizations!: ReservationsAuthorizations;
 
@@ -20,7 +25,7 @@ export class ReservationDialogComponent implements AfterViewInit {
     @Inject(MAT_DIALOG_DATA)
     dialogParams: DialogParamsWithAuth<Reservation, ReservationsAuthorizations>
   ) {
-    this.reservationId = dialogParams.dialogData?.id;
+    this.reservationID = dialogParams.dialogData?.id;
     this.dialogMode = dialogParams.dialogMode;
     this.reservationsAuthorizations = dialogParams.authorizations;
   }

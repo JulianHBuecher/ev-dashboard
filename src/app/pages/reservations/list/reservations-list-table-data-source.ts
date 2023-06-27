@@ -14,7 +14,7 @@ import { TableAutoRefreshAction } from 'shared/table/actions/table-auto-refresh-
 import { TableRefreshAction } from 'shared/table/actions/table-refresh-action';
 import { TableDataSource } from 'shared/table/table-data-source';
 import { ReservationDataResult } from 'types/DataResult';
-import { Reservation, ReservationButtonAction } from 'types/Reservation';
+import { Reservation, ReservationButtonAction, ReservationStatus } from 'types/Reservation';
 import { TableActionDef, TableColumnDef, TableDef, TableFilterDef } from 'types/Table';
 import { TenantComponents } from 'types/Tenant';
 import { IssuerFilter } from 'shared/table/filters/issuer-filter';
@@ -50,6 +50,7 @@ import { AppDatePipe } from 'shared/formatters/app-date.pipe';
 import { DateRangeTableFilter } from 'shared/table/filters/date-range-table-filter';
 import { Constants } from 'utils/Constants';
 import { User } from 'types/User';
+import { UserTableFilter } from 'shared/table/filters/user-table-filter';
 import { Utils } from '../../../utils/Utils';
 import { ReservationDialogComponent } from '../reservation/reservation-dialog.component';
 import { ReservationsConnectorsCellComponent } from '../cell-components/reservations-connectors-cell.component';
@@ -99,6 +100,8 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
           WithSite: true,
           WithSiteArea: true,
           WithUser: true,
+          WithChargingStation: true,
+          WithTag: true,
         },
       ]);
     }
@@ -108,16 +111,7 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
   public loadDataImpl(): Observable<ReservationDataResult> {
     return new Observable((observer) => {
       this.centralServerService
-        .getReservations(
-          {
-            ...this.buildFilterValues(),
-            WithChargingStation: 'true',
-            WithTag: 'true',
-            WithUser: 'true',
-          },
-          this.getPaging(),
-          this.getSorting()
-        )
+        .getReservations(this.buildFilterValues(), this.getPaging(), this.getSorting())
         .subscribe({
           next: (reservations) => {
             this.reservationsAuthorizations = {
@@ -133,8 +127,8 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
             this.siteFilter.visible = this.reservationsAuthorizations.canListSites;
             this.siteAreaFilter.visible = this.reservationsAuthorizations.canListSiteAreas;
             this.companyFilter.visible = this.reservationsAuthorizations.canListCompanies;
-            // this.userFilter.visible = this.reservationsAuthorizations.canListUsers;
-            this.dateRangeFilter.visible = this.reservationsAuthorizations.canListTags;
+            this.userFilter.visible = this.reservationsAuthorizations.canListUsers;
+            this.dateRangeFilter.visible = true;
 
             this.canExport.visible = this.reservationsAuthorizations.canExport;
             this.canCreate.visible = this.reservationsAuthorizations.canCreate;
@@ -178,24 +172,6 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
 
   public buildTableColumnDefs(): TableColumnDef[] {
     return [
-      // {
-      //   id: 'id',
-      //   name: 'reservations.id',
-      //   sortable: true,
-      //   headerClass: 'col-5p',
-      //   class: 'col-5p',
-      // },
-      {
-        id: 'createdOn',
-        name: 'reservations.created_on',
-        headerClass: 'col-15p',
-        class: 'col-15p',
-        sorted: true,
-        direction: 'desc',
-        sortable: true,
-        formatter: (created_on: Date) =>
-          this.datePipe.transform(created_on, Constants.CUSTOM_DATE_FORMAT),
-      },
       {
         id: 'chargingStationID',
         name: 'reservations.chargingstation_id',
@@ -211,12 +187,19 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
         angularComponent: ReservationsConnectorsCellComponent,
       },
       {
-        id: 'expiryDate',
-        name: 'reservations.expiry_date',
+        id: 'fromDate',
+        name: 'reservations.from_date',
         headerClass: 'col-15p',
         class: 'col-15p',
-        formatter: (expiryDate: Date) =>
-          this.datePipe.transform(expiryDate, Constants.CUSTOM_DATE_FORMAT),
+        formatter: (fromDate: Date) =>
+          this.datePipe.transform(fromDate, Constants.CUSTOM_DATE_FORMAT),
+      },
+      {
+        id: 'toDate',
+        name: 'reservations.to_date',
+        headerClass: 'col-15p',
+        class: 'col-15p',
+        formatter: (toDate: Date) => this.datePipe.transform(toDate, Constants.CUSTOM_DATE_FORMAT),
       },
       {
         id: 'tag.user.name',
@@ -246,16 +229,18 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
       },
       {
         id: 'createdOn',
-        name: 'users.created_on',
-        formatter: (createdOn: Date) =>
-          this.datePipe.transform(createdOn, Constants.CUSTOM_DATE_FORMAT),
-        headerClass: 'col-15em',
-        class: 'col-15em',
+        name: 'general.created_on',
+        headerClass: 'col-15p',
+        class: 'col-15p',
+        sorted: true,
+        direction: 'desc',
         sortable: true,
+        formatter: (created_on: Date) =>
+          this.datePipe.transform(created_on, Constants.CUSTOM_DATE_FORMAT),
       },
       {
         id: 'createdBy',
-        name: 'users.created_by',
+        name: 'general.created_by',
         formatter: (user: User) => Utils.buildUserFullName(user),
         headerClass: 'col-15em',
         class: 'col-15em',
@@ -369,11 +354,13 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
     this.dateRangeFilter = new DateRangeTableFilter({
       translateService: this.translateService,
     }).getFilterDef();
+    this.userFilter = new UserTableFilter([this.issuerFilter]).getFilterDef();
     const filters: TableFilterDef[] = [
       this.siteFilter,
       this.siteAreaFilter,
       this.companyFilter,
       this.dateRangeFilter,
+      this.userFilter,
     ];
     return filters;
   }
@@ -388,7 +375,11 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
     if (reservation.canDelete) {
       tableActionDef.push(this.deleteAction);
     }
-    if (reservation.canCancel) {
+    if (
+      ![ReservationStatus.DONE, ReservationStatus.EXPIRED, ReservationStatus.CANCELLED].includes(
+        reservation.status
+      )
+    ) {
       tableActionDef.push(this.cancelAction);
     }
     return tableActionDef;

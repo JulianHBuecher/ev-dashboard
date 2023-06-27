@@ -7,7 +7,9 @@ import { MessageService } from 'services/message.service';
 import { CentralServerService } from 'services/central-server.service';
 import { SpinnerService } from 'services/spinner.service';
 import { Router } from '@angular/router';
-import { TableDeleteAction } from '../table-delete-action';
+import { ButtonAction, ButtonActionColor, RestResponse } from 'types/GlobalType';
+import { Utils } from 'utils/Utils';
+import { TableAction } from '../table-action';
 
 export interface TableCancelReservationActionDef extends TableActionDef {
   action: (
@@ -22,10 +24,17 @@ export interface TableCancelReservationActionDef extends TableActionDef {
   ) => void;
 }
 
-export class TableCancelReservationAction extends TableDeleteAction {
+export class TableCancelReservationAction implements TableAction {
   public getActionDef(): TableCancelReservationActionDef {
     return {
-      ...super.getActionDef(),
+      ...{
+        id: ButtonAction.CANCEL,
+        type: 'button',
+        icon: 'cancel',
+        color: ButtonActionColor.WARN,
+        name: 'reservations.general.cancel_reservation',
+        tooltip: 'reservations.general.tooltips.cancel_reservation',
+      },
       id: ReservationButtonAction.CANCEL_RESERVATION,
       action: this.cancelReservation,
     };
@@ -41,20 +50,58 @@ export class TableCancelReservationAction extends TableDeleteAction {
     router: Router,
     refresh?: () => Observable<void>
   ) {
-    super.delete(
-      reservation,
-      'reservations.cancel_title',
-      translateService.instant('reservations.cancel_confirm', { reservationID: reservation.id }),
-      translateService.instant('reservations.cancel_success', { reservationID: reservation.id }),
-      'reservations.cancel_error',
-      centralServerService.cancelReservation.bind(centralServerService),
-      dialogService,
-      translateService,
-      messageService,
-      centralServerService,
-      spinnerService,
-      router,
-      refresh
-    );
+    dialogService
+      .createAndShowYesNoDialog(
+        'reservations.dialog.cancel_reservation.title',
+        translateService.instant('reservations.dialog.cancel_reservation.confirm', {
+          reservationID: reservation.id,
+          chargingStationID: reservation.chargingStationID,
+        })
+      )
+      .subscribe((result) => {
+        if (result === ButtonAction.YES) {
+          spinnerService.show();
+          centralServerService
+            .cancelReservation(reservation.chargingStationID, reservation.id)
+            .subscribe({
+              next: (response) => {
+                spinnerService.hide();
+                if (response.status === RestResponse.SUCCESS) {
+                  messageService.showSuccessMessage(
+                    translateService.instant('reservations.dialog.cancel_reservation.success', {
+                      reservationID: reservation.id,
+                      chargingStationID: reservation.chargingStationID,
+                    })
+                  );
+                  if (refresh) {
+                    refresh().subscribe();
+                  }
+                } else {
+                  Utils.handleError(
+                    JSON.stringify(response),
+                    messageService,
+                    translateService.instant('reservations.dialog.cancel_reservation.error', {
+                      reservationID: reservation.id,
+                      chargingStationID: reservation.chargingStationID,
+                    })
+                  );
+                }
+              },
+              error: (error) => {
+                spinnerService.hide();
+                Utils.handleHttpError(
+                  error,
+                  router,
+                  messageService,
+                  centralServerService,
+                  translateService.instant('reservations.dialog.cancel_reservation.error', {
+                    reservationID: reservation.id,
+                    chargingStationID: reservation.chargingStationID,
+                  })
+                );
+              },
+            });
+        }
+      });
   }
 }

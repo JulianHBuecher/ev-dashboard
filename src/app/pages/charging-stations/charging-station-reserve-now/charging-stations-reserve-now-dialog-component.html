@@ -78,7 +78,7 @@
           <input
             matInput
             [formControl]="expiryDate"
-            placeholder="{{'reservations.dialog.expiry_date' | translate}}"
+            placeholder="{{'reservations.dialog.general.expiry_date' | translate}}"
             [matDatetimepicker]="expiryDatePicker"
             [min]="providedExpiryDate"
             autocomplete="false"
@@ -117,7 +117,7 @@
     color="primary"
     disabled="false"
   >
-    {{"reservations.general.reserve_now" | translate}}
+    {{"reservations.dialog.reserve_now.title" | translate}}
   </button>
   <button mat-raised-button (click)="cancel()">{{'general.cancel' | translate}}</button>
 </mat-dialog-actions>

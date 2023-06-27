@@ -2,6 +2,7 @@ import { Component, Input, Pipe, PipeTransform } from '@angular/core';
 import { CellContentTemplateDirective } from 'shared/table/cell-content-template/cell-content-template.directive';
 import { ChipType } from 'types/GlobalType';
 import { Reservation, ReservationType } from 'types/Reservation';
+import { Utils } from 'utils/Utils';
 
 @Component({
   template: `
@@ -32,10 +33,10 @@ export class AppReservationsFormatTypePipe implements PipeTransform {
     let classNames = 'chip-width-10em ';
     switch (reservationType) {
       case ReservationType.RESERVE_NOW:
-        classNames += this.buildStyleClass(ReservationType.RESERVE_NOW);
+        classNames += Utils.replaceAll(ReservationType.RESERVE_NOW, '_', '-');
         break;
       case ReservationType.PLANNED_RESERVATION:
-        classNames += this.buildStyleClass(ReservationType.PLANNED_RESERVATION);
+        classNames += Utils.replaceAll(ReservationType.PLANNED_RESERVATION, '_', '-');
         break;
       default:
         classNames += ChipType.DEFAULT;
@@ -45,9 +46,5 @@ export class AppReservationsFormatTypePipe implements PipeTransform {
 
   public buildReservationTypeText(reservationType: string): string {
     return `reservations.types.${reservationType ? reservationType.toLowerCase() : 'unknown'}`;
-  }
-
-  private buildStyleClass(status: string): string {
-    return status.replace('_', '-');
   }
 }

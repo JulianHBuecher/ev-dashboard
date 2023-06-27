@@ -1,7 +1,7 @@
 import { Asset } from './Asset';
 import { BillingAccount } from './Billing';
 import { Car, CarCatalog, CarMaker } from './Car';
-import { ChargingStation } from './ChargingStation';
+import { ChargingStation, Connector } from './ChargingStation';
 import { Company } from './Company';
 import { LogAction } from './Log';
 import { RefundReport } from './Refund';
@@ -57,7 +57,8 @@ export interface KeyValue {
   | CarMaker
   | LogAction
   | Tag
-  | BillingAccount;
+  | BillingAccount
+  | Connector;
   readonly?: boolean;
   custom?: boolean;
   icon?: string;

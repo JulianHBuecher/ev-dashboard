@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
@@ -7,15 +7,20 @@ import { TranslateService } from '@ngx-translate/core';
 import { StatusCodes } from 'http-status-codes';
 import { CentralServerService } from 'services/central-server.service';
 import { DialogService } from 'services/dialog.service';
-import { LocaleService } from 'services/locale.service';
 import { MessageService } from 'services/message.service';
 import { SpinnerService } from 'services/spinner.service';
-import { UtilsService } from 'services/utils.service';
 import { DialogMode, ReservationsAuthorizations } from 'types/Authorization';
-import { KeyValue, RestResponse } from 'types/GlobalType';
+import { RestResponse } from 'types/GlobalType';
 import { HTTPError } from 'types/HTTPError';
 import { Reservation } from 'types/Reservation';
 import { Utils } from 'utils/Utils';
+import { ComponentService } from 'services/component.service';
+import { WindowService } from 'services/window.service';
+import { TenantComponents } from 'types/Tenant';
+import { ActionResponse } from 'types/DataResult';
+import { HttpErrorResponse } from '@angular/common/http';
+import moment from 'moment';
+import { ReservationMainComponent } from './main/reservation-main.component';
 
 @Component({
   selector: 'app-reservation',
@@ -23,20 +28,19 @@ import { Utils } from 'utils/Utils';
   styleUrls: ['reservation.component.scss'],
 })
 export class ReservationComponent implements OnInit {
-  @Input() public reservationId!: number;
-  @Input() public dialogRef!: MatDialogRef<any>;
+  @Input() public currentReservationID: number;
   @Input() public dialogMode!: DialogMode;
+  @Input() public dialogRef!: MatDialogRef<any>;
   @Input() public reservationsAuthorizations!: ReservationsAuthorizations;
 
-  public formGroup: UntypedFormGroup;
-  public reservation: Reservation;
-  public userLocales: KeyValue[];
-  public isProdLandscape!: boolean;
+  @ViewChild('reservationMainComponent') public reservationMainComponent!: ReservationMainComponent;
 
-  public canUpdate: boolean;
+  public formGroup!: UntypedFormGroup;
+  public isReservationComponentActive: boolean;
+  // public canListChargingStations: boolean;
+  public canListUsers: boolean;
   public readOnly = true;
-  public canCancel: boolean;
-  public canDelete: boolean;
+  public reservation: Reservation;
   public activeTabIndex = 0;
 
   public constructor(
@@ -44,27 +48,50 @@ export class ReservationComponent implements OnInit {
     private centralServerService: CentralServerService,
     private messageService: MessageService,
     private translateService: TranslateService,
-    private localeService: LocaleService,
     private dialogService: DialogService,
+    private router: Router,
+    private componentService: ComponentService,
     protected activatedRoute: ActivatedRoute,
-    private utilsService: UtilsService,
-    private router: Router
+    protected windowService: WindowService
   ) {
-    this.userLocales = this.localeService.getLocales();
-    this.formGroup = new UntypedFormGroup({});
+    // super(activatedRoute,windowService, ['main','smartcharging'],false); for extends AbstractTabComponent
+    this.isReservationComponentActive = this.componentService.isActive(
+      TenantComponents.RESERVATION
+    );
   }
 
   public ngOnInit() {
-    this.isProdLandscape = this.utilsService.isProdLandscape();
+    this.formGroup = new UntypedFormGroup({});
     this.readOnly = this.dialogMode === DialogMode.VIEW;
+    this.canListUsers = Utils.convertToBoolean(this.reservationsAuthorizations.canListUsers);
     Utils.handleDialogMode(this.dialogMode, this.formGroup);
     this.loadReservation();
   }
 
+  public onClose() {
+    Utils.checkAndSaveAndCloseDialog(
+      this.formGroup,
+      this.dialogService,
+      this.translateService,
+      this.saveReservation.bind(this),
+      this.closeDialog.bind(this)
+    );
+  }
+
+  public close() {
+    Utils.checkAndSaveAndCloseDialog(
+      this.formGroup,
+      this.dialogService,
+      this.translateService,
+      this.saveReservation.bind(this),
+      this.closeDialog.bind(this)
+    );
+  }
+
   public loadReservation() {
-    if (this.reservationId) {
+    if (this.currentReservationID) {
       this.spinnerService.show();
-      this.centralServerService.getReservation(this.reservationId).subscribe({
+      this.centralServerService.getReservation(this.currentReservationID).subscribe({
         next: (reservation: Reservation) => {
           this.spinnerService.hide();
           this.reservation = reservation;
@@ -79,7 +106,7 @@ export class ReservationComponent implements OnInit {
           this.spinnerService.hide();
           switch (error.status) {
             case StatusCodes.NOT_FOUND:
-              this.messageService.showErrorMessage('reservations.reservation_not_found');
+              this.messageService.showErrorMessage('reservations.action_error.not_found');
               break;
             default:
               Utils.handleHttpError(
@@ -87,7 +114,7 @@ export class ReservationComponent implements OnInit {
                 this.router,
                 this.messageService,
                 this.centralServerService,
-                'reservations.reservation_not_found'
+                'reservations.action_error.not_found'
               );
           }
         },
@@ -95,31 +122,62 @@ export class ReservationComponent implements OnInit {
     }
   }
 
-  public saveReservation(reservation: Reservation) {
-    // Clone
-    const reservationToSave = Utils.cloneObject(reservation) as Reservation;
-    // Save
+  public closeDialog(saved: boolean = false): void {
+    if (this.dialogRef) {
+      this.dialogRef.close(saved);
+    }
+  }
+
+  public saveReservation(reservation: Reservation): void {
+    if (this.currentReservationID) {
+      this.updateReservation(reservation);
+    } else {
+      this.createReservation(reservation);
+    }
+  }
+
+  public changeActivePane(tabChangedEvent: MatTabChangeEvent) {
+    this.activeTabIndex = tabChangedEvent.index;
+  }
+
+  private updateReservation(reservation: Reservation) {
     this.spinnerService.show();
-    this.centralServerService.updateReservation(reservationToSave).subscribe({
-      next: (response) => {
+    this.centralServerService.updateReservation(reservation).subscribe({
+      next: (response: ActionResponse) => {
         this.spinnerService.hide();
         if (response.status === RestResponse.SUCCESS) {
-          this.messageService.showSuccessMessage('reservations.change_reservation_success', {
-            reservationId: this.reservationId,
+          this.messageService.showSuccessMessage('reservations.dialog.update.success', {
+            reservationID: reservation.id,
           });
           this.closeDialog(true);
         } else {
-          this.messageService.showErrorMessage('reservations.change_reservation_error');
+          Utils.handleError(
+            JSON.stringify(response),
+            this.messageService,
+            'reservations.dialog.update.error'
+          );
         }
       },
-      error: (error) => {
+      error: (error: HttpErrorResponse) => {
         this.spinnerService.hide();
         switch (error.status) {
-          case StatusCodes.NOT_FOUND:
-            this.messageService.showErrorMessage('reservations.change_reservation_error');
+          case HTTPError.RESERVATION_COLLISION_ERROR:
+            this.messageService.showErrorMessage('reservations.action_error.collision');
             break;
-          case HTTPError.FEATURE_NOT_SUPPORTED_ERROR:
-            this.messageService.showErrorMessage('reservations.update_reservation_error');
+          case HTTPError.RESERVATION_REJECTED_ERROR:
+            this.messageService.showErrorMessage('reservations.action_error.rejected');
+            break;
+          case HTTPError.RESERVATION_FAULTED_ERROR:
+            this.messageService.showErrorMessage('reservations.action_error.faulted');
+            break;
+          case HTTPError.RESERVATION_OCCUPIED_ERROR:
+            this.messageService.showErrorMessage('reservations.action_error.occupied');
+            break;
+          case HTTPError.RESERVATION_UNAVAILABLE_ERROR:
+            this.messageService.showErrorMessage('reservations.action_error.unavailable');
+            break;
+          case HTTPError.RESERVATION_MULTIPLE_RESERVE_NOW_ERROR:
+            this.messageService.showErrorMessage('reservations.action_error.multiple_reserve_now');
             break;
           default:
             Utils.handleHttpError(
@@ -127,29 +185,78 @@ export class ReservationComponent implements OnInit {
               this.router,
               this.messageService,
               this.centralServerService,
-              'reservations.change_reservation_error'
+              'reservations.dialog.update.error'
             );
         }
       },
     });
   }
 
-  public changeActivePane(tabChangedEvent: MatTabChangeEvent) {
-    this.activeTabIndex = tabChangedEvent.index;
-  }
-
-  public closeDialog(saved: boolean = false) {
-    if (this.dialogRef) {
-      this.dialogRef.close(saved);
+  private createReservation(reservation: Reservation) {
+    if (!reservation.connectorID) {
+      reservation.connectorID = 0;
     }
-  }
-  public close() {
-    Utils.checkAndSaveAndCloseDialog(
-      this.formGroup,
-      this.dialogService,
-      this.translateService,
-      this.saveReservation.bind(this),
-      this.closeDialog.bind(this)
-    );
+    if (!reservation.fromDate && !reservation.toDate) {
+      reservation.fromDate = moment().toDate();
+      reservation.toDate = reservation.expiryDate;
+    }
+    if (!reservation.expiryDate) {
+      reservation.expiryDate = reservation.toDate;
+    }
+    this.spinnerService.show();
+    this.centralServerService.createReservation(reservation).subscribe({
+      next: (response: ActionResponse) => {
+        this.spinnerService.hide();
+        if (response.status === RestResponse.SUCCESS) {
+          this.messageService.showSuccessMessage('reservations.dialog.create.success', {
+            reservationID: reservation.id,
+          });
+          this.closeDialog(true);
+        } else {
+          Utils.handleError(
+            JSON.stringify(response),
+            this.messageService,
+            'reservations.dialog.create.error'
+          );
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        this.spinnerService.hide();
+        switch (error.status) {
+          case HTTPError.RESERVATION_ALREADY_EXISTS_ERROR:
+            this.messageService.showErrorMessage('reservations.action_error.already_exists');
+            break;
+          case HTTPError.RESERVATION_NOT_SUPPORTED_ERROR:
+            this.messageService.showErrorMessage('reservations.action_error.not_supported');
+            break;
+          case HTTPError.RESERVATION_REJECTED_ERROR:
+            this.messageService.showErrorMessage('reservations.action_error.rejected');
+            break;
+          case HTTPError.RESERVATION_COLLISION_ERROR:
+            this.messageService.showErrorMessage('reservations.action_error.collision');
+            break;
+          case HTTPError.RESERVATION_FAULTED_ERROR:
+            this.messageService.showErrorMessage('reservations.action_error.faulted');
+            break;
+          case HTTPError.RESERVATION_OCCUPIED_ERROR:
+            this.messageService.showErrorMessage('reservations.action_error.occupied');
+            break;
+          case HTTPError.RESERVATION_UNAVAILABLE_ERROR:
+            this.messageService.showErrorMessage('reservations.action_error.unavailable');
+            break;
+          case HTTPError.RESERVATION_MULTIPLE_RESERVE_NOW_ERROR:
+            this.messageService.showErrorMessage('reservations.action_error.multiple_reserve_now');
+            break;
+          default:
+            Utils.handleHttpError(
+              error,
+              this.router,
+              this.messageService,
+              this.centralServerService,
+              'reservations.dialog.create.error'
+            );
+        }
+      },
+    });
   }
 }

@@ -3,6 +3,7 @@ import { RESERVATION_STATUSES } from 'shared/model/reservations.model';
 import { CellContentTemplateDirective } from 'shared/table/cell-content-template/cell-content-template.directive';
 import { ChipType } from 'types/GlobalType';
 import { Reservation, ReservationStatus } from 'types/Reservation';
+import { Utils } from 'utils/Utils';
 
 @Component({
   template: `
@@ -33,22 +34,22 @@ export class AppReservationsFormatStatusPipe implements PipeTransform {
     let classNames = 'chip-width-8em ';
     switch (status) {
       case ReservationStatus.DONE:
-        classNames += this.buildStyleClass(ReservationStatus.DONE);
+        classNames += Utils.replaceAll(ReservationStatus.DONE, '_', '-');
         break;
       case ReservationStatus.SCHEDULED:
-        classNames += this.buildStyleClass(ReservationStatus.SCHEDULED);
+        classNames += Utils.replaceAll(ReservationStatus.SCHEDULED, '_', '-');
         break;
       case ReservationStatus.CANCELLED:
-        classNames += this.buildStyleClass(ReservationStatus.CANCELLED);
+        classNames += Utils.replaceAll(ReservationStatus.CANCELLED, '_', '-');
         break;
       case ReservationStatus.INACTIVE:
-        classNames += this.buildStyleClass(ReservationStatus.INACTIVE);
+        classNames += Utils.replaceAll(ReservationStatus.INACTIVE, '_', '-');
         break;
       case ReservationStatus.EXPIRED:
-        classNames += this.buildStyleClass(ReservationStatus.EXPIRED);
+        classNames += Utils.replaceAll(ReservationStatus.EXPIRED, '_', '-');
         break;
       case ReservationStatus.IN_PROGRESS:
-        classNames += this.buildStyleClass(ReservationStatus.IN_PROGRESS);
+        classNames += Utils.replaceAll(ReservationStatus.IN_PROGRESS, '_', '-');
         break;
       default:
         classNames += ChipType.DEFAULT;
@@ -63,9 +64,5 @@ export class AppReservationsFormatStatusPipe implements PipeTransform {
       }
     }
     return '';
-  }
-
-  private buildStyleClass(status: string): string {
-    return status.replace('_', '-');
   }
 }

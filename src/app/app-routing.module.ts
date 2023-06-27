@@ -69,6 +69,7 @@ const routes: Routes = [
           },
           activeInSuperTenant: false,
           displayInSuperTenant: false,
+          component: TenantComponents.RESERVATION,
         },
       },
       {

@@ -42,14 +42,3 @@ export const SMART_CHARGING_TYPES: KeyValue[] = [
     value: 'settings.smart_charging.sap_smart_charging.title',
   },
 ];
-
-export const RESERVATION_TYPES: KeyValue[] = [
-  {
-    key: ReservationSettingsType.RESERVE_NOW,
-    value: 'settings.reservations.reserve_now.title',
-  },
-  {
-    key: ReservationSettingsType.PLANNED_RESERVATION,
-    value: 'settings.reservations.planned_reservation.title',
-  },
-];
