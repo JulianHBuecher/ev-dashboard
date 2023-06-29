@@ -50,6 +50,8 @@ import { UsersDialogTableDataSource } from './users/users-dialog-table-data-sour
 import { UsersDialogComponent } from './users/users-dialog.component';
 import { ChargingStationConnectorsDialogComponent } from './connectors/connectors-dialog.component';
 import { ChargingStationConnectorsDialogTableDataSource } from './connectors/connectors-dialog-table-data-source';
+import { ReservableChargingStationsDialogComponent } from './charging-stations/reservable/reservable-charging-stations-dialog.component';
+import { ReservableChargingStationsDialogTableDataSource } from './charging-stations/reservable/reservable-charging-stations-dialog-table-data-source';
 
 @NgModule({
   imports: [
@@ -89,6 +91,7 @@ import { ChargingStationConnectorsDialogTableDataSource } from './connectors/con
     LogActionsDialogComponent,
     AccountsDialogComponent,
     ChargingStationConnectorsDialogComponent,
+    ReservableChargingStationsDialogComponent,
   ],
   exports: [
     CarMakersDialogComponent,
@@ -113,6 +116,7 @@ import { ChargingStationConnectorsDialogTableDataSource } from './connectors/con
     LogActionsDialogComponent,
     AccountsDialogComponent,
     ChargingStationConnectorsDialogComponent,
+    ReservableChargingStationsDialogComponent,
   ],
   providers: [
     AppConnectorIdPipe,
@@ -131,6 +135,7 @@ import { ChargingStationConnectorsDialogTableDataSource } from './connectors/con
     LogActionsDialogTableDataSource,
     AccountsDialogTableDataSource,
     ChargingStationConnectorsDialogTableDataSource,
+    ReservableChargingStationsDialogTableDataSource,
   ],
 })
 export class DialogsModule {}

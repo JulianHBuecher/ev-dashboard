@@ -4,7 +4,7 @@
       animationDuration="0ms"
       disableRipple="true"
       class="mat-tab-info reservation-dialog-container"
-      [class]="dialogRef ? 'mat-tabs-with-actions' : 'mat-tabs-with-close-action'"
+      [class]="dialogRef && !readOnly ? 'mat-tabs-with-actions' : 'mat-tabs-with-close-action'"
     >
       <mat-tab>
         <ng-template mat-tab-label>

@@ -898,6 +898,29 @@ export class CentralServerService {
       .pipe(catchError(this.handleHttpError));
   }
 
+  public getReservableChargingStations(
+    params: FilterParams,
+    paging: Paging = Constants.DEFAULT_PAGING,
+    ordering: Ordering[] = []
+  ): Observable<ChargingStationDataResult> {
+    // Verify init
+    this.checkInit();
+    // Build Paging
+    this.getPaging(paging, params);
+    // Build Ordering
+    this.getSorting(ordering, params);
+    // Execute the REST service
+    return this.httpClient
+      .get<ChargingStationDataResult>(
+      this.buildRestEndpointUrl(RESTServerRoute.REST_CHARGING_STATIONS_RESERVATION_AVAILABILITY),
+      {
+        headers: this.buildHttpHeaders(),
+        params,
+      }
+    )
+      .pipe(catchError(this.handleHttpError));
+  }
+
   public getChargingStation(id: string): Observable<ChargingStation> {
     const params: { [param: string]: string } = {};
     params['WithSite'] = 'true';
@@ -3983,9 +4006,15 @@ export class CentralServerService {
     if (!id) {
       return EMPTY;
     }
+    const params: { [param: string]: string } = {};
+    params['WithChargingStation'] = 'true';
+    params['WithTag'] = 'true';
+    params['WithUser'] = 'true';
+    params['WithCar'] = 'true';
     return this.httpClient
       .get<ActionResponse>(this.buildRestEndpointUrl(RESTServerRoute.REST_RESERVATION, { id }), {
       headers: this.buildHttpHeaders(),
+      params,
     })
       .pipe(catchError(this.handleHttpError));
   }

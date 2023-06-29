@@ -1,3 +1,5 @@
+import { ReservationStatus, ReservationStatusTransition } from 'types/Reservation';
+
 export class Constants {
   public static readonly URL_PATTERN =
     /^(?:https?|wss?):\/\/((?:[\w-]+)(?:\.[\w-]+)*)(?:[\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?$/;
@@ -79,4 +81,16 @@ export class Constants {
   };
   /* Reusable Date Format for List Data Sources */
   public static readonly CUSTOM_DATE_FORMAT = 'E, d  MMMM y, HH:mm';
+  /* Permitted State Transitions between Reservation Statuses */
+  public static readonly ReservationStatusTransitions: Readonly<ReservationStatusTransition[]> =
+    Object.freeze([
+      { to: ReservationStatus.IN_PROGRESS },
+      { to: ReservationStatus.SCHEDULED },
+      { from: ReservationStatus.SCHEDULED, to: ReservationStatus.IN_PROGRESS },
+      { from: ReservationStatus.SCHEDULED, to: ReservationStatus.CANCELLED },
+      { from: ReservationStatus.SCHEDULED, to: ReservationStatus.EXPIRED },
+      { from: ReservationStatus.IN_PROGRESS, to: ReservationStatus.CANCELLED },
+      { from: ReservationStatus.IN_PROGRESS, to: ReservationStatus.EXPIRED },
+      { from: ReservationStatus.IN_PROGRESS, to: ReservationStatus.DONE },
+    ]);
 }

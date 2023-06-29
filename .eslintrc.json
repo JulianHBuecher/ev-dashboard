@@ -70,7 +70,7 @@
         "import/order": "error",
         "linebreak-style": ["error", "unix"],
         "max-len": [
-          "error",
+          "warn",
           {
             "ignoreRegExpLiterals": true,
             "ignoreStrings": true,

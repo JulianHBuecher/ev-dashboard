@@ -497,13 +497,6 @@ export class ChargingStationsListTableDataSource extends TableDataSource<Chargin
           );
         }
         break;
-      // TODO: Implement ReserveNowAction on Charging Station Level
-      // case ChargingStationButtonAction.RESERVE_NOW:
-      //   if (actionDef.action) {
-      //     (actionDef as TableChargingStationsReserveNowActionDef).action(ChargingStationsReserveNowDialogComponent, chargingStation,
-      //       this.dialogService, this.dialog, this.translateService, this.messageService, this.centralServerService, this.spinnerService,
-      //       this.router, this.refreshData.bind(this));
-      //   }
     }
   }
 
@@ -586,17 +579,6 @@ export class ChargingStationsListTableDataSource extends TableDataSource<Chargin
     // Delete
     if (chargingStation.canDelete) {
       moreActions.addActionInMoreActions(this.deleteAction);
-    }
-    if (chargingStation.canReserveNow) {
-      moreActions.addActionInMoreActions(this.canReserveAction);
-      for (const connector in chargingStation.connectors) {
-        if (chargingStation.connectors[connector].status === ChargePointStatus.RESERVED) {
-          moreActions.addActionInMoreActions(
-            new TableChargingStationsCancelReservationAction().getActionDef()
-          );
-          break;
-        }
-      }
     }
     // Add more action if array has more than one element
     if (moreActions.getActionsInMoreActions().length > 1) {

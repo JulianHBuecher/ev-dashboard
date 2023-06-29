@@ -95,8 +95,8 @@ export class TableChargingStationsCancelReservationAction implements TableAction
               if (cancelReservationResponse.status === OCPPGeneralResponse.ACCEPTED) {
                 messageService.showSuccessMessage(
                   translateService.instant('reservations.dialog.cancel_reservation.success', {
-                    reservationId: reservation.id,
-                    chargingStationId: chargingStation.id,
+                    reservationID: reservation.id,
+                    chargingStationD: chargingStation.id,
                   })
                 );
                 if (refresh) {
@@ -107,8 +107,8 @@ export class TableChargingStationsCancelReservationAction implements TableAction
                   JSON.stringify(response),
                   messageService,
                   translateService.instant('reservations.dialog.cancel_reservation.error', {
-                    reservationId: reservation.id,
-                    chargingStationId: chargingStation.id,
+                    reservationID: reservation.id,
+                    chargingStationD: chargingStation.id,
                   })
                 );
               }
@@ -121,8 +121,8 @@ export class TableChargingStationsCancelReservationAction implements TableAction
                 messageService,
                 centralServerService,
                 translateService.instant('reservations.dialog.cancel_reservation.error', {
-                  reservationId: reservation.id,
-                  chargingStationId: chargingStation.id,
+                  reservationID: reservation.id,
+                  chargingStationD: chargingStation.id,
                 })
               );
             },

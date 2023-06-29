@@ -12,7 +12,7 @@ import { ComponentService } from 'services/component.service';
 import { MessageService } from 'services/message.service';
 import { SpinnerService } from 'services/spinner.service';
 import { CarsDialogComponent } from 'shared/dialogs/cars/cars-dialog.component';
-import { ChargingStationsDialogComponent } from 'shared/dialogs/charging-stations/charging-stations-dialog.component';
+import { ReservableChargingStationsDialogComponent } from 'shared/dialogs/charging-stations/reservable/reservable-charging-stations-dialog.component';
 import { ChargingStationConnectorsDialogComponent } from 'shared/dialogs/connectors/connectors-dialog.component';
 import { TagsDialogComponent } from 'shared/dialogs/tags/tags-dialog.component';
 import { UsersDialogComponent } from 'shared/dialogs/users/users-dialog.component';
@@ -20,7 +20,7 @@ import { RESERVATION_STATUSES, RESERVATION_TYPES } from 'shared/model/reservatio
 import { ReservationsAuthorizations } from 'types/Authorization';
 import { Car } from 'types/Car';
 import { ChargingStation, Connector } from 'types/ChargingStation';
-import { KeyValue } from 'types/GlobalType';
+import { KeyValue, RestResponse } from 'types/GlobalType';
 import { Reservation, ReservationStatus, ReservationType } from 'types/Reservation';
 import { Tag } from 'types/Tag';
 import { TenantComponents } from 'types/Tenant';
@@ -118,10 +118,6 @@ export class ReservationMainComponent implements OnInit, OnChanges {
       new FormControl('', Validators.compose([Validators.required]))
     );
     this.formGroup.addControl(
-      'idTag',
-      new FormControl('', Validators.compose([Validators.required]))
-    );
-    this.formGroup.addControl(
       'visualTagID',
       new FormControl(null, Validators.compose([Validators.required]))
     );
@@ -172,9 +168,9 @@ export class ReservationMainComponent implements OnInit, OnChanges {
     this.toDate = this.formGroup.controls['toDate'];
     this.userID = this.formGroup.controls['userID'];
     this.user = this.formGroup.controls['user'];
-    this.idTag = this.formGroup.controls['idTag'];
-    this.tag = this.formGroup.controls['tag'];
     this.visualTagID = this.formGroup.controls['visualTagID'];
+    this.tag = this.formGroup.controls['tag'];
+    this.parentIdTag = this.formGroup.controls['parentIdTag'];
     this.parentTag = this.formGroup.controls['parentTag'];
     this.carID = this.formGroup.controls['carID'];
     this.car = this.formGroup.controls['car'];
@@ -216,25 +212,39 @@ export class ReservationMainComponent implements OnInit, OnChanges {
       this.connector.setValue(
         Utils.getConnectorLetterFromConnectorID(this.selectedConnector.connectorId)
       );
-      if (this.type.value === ReservationType.PLANNED_RESERVATION) {
-        this.fromDate.setValue(this.reservation.fromDate);
-        this.toDate.setValue(this.reservation.expiryDate ?? this.reservation.toDate);
-        this.expiryDate.disable();
+      if (this.reservation.type === ReservationType.PLANNED_RESERVATION) {
+        this.fromDate.enable();
+        this.toDate.enable();
       }
-      if (this.type.value === ReservationType.RESERVE_NOW) {
-        this.expiryDate.setValue(this.reservation.expiryDate ?? this.reservation.toDate);
-        this.fromDate.disable();
-        this.toDate.disable();
-      }
+      this.fromDate.setValue(this.reservation.fromDate);
+      this.toDate.setValue(this.reservation.toDate);
+      this.expiryDate.setValue(this.reservation.expiryDate);
       this.userID.setValue(this.reservation.tag.userID);
       this.selectedUser = this.reservation.tag.user;
       this.user.setValue(Utils.buildUserFullName(this.selectedUser));
-      this.idTag.setValue(this.reservation.idTag);
-      this.tag.setValue(Utils.buildTagName(this.reservation.tag));
       this.selectedTag = this.reservation.tag;
+      this.visualTagID.setValue(this.selectedTag.visualID);
+      this.tag.setValue(Utils.buildTagName(this.selectedTag));
       this.parentIdTag.setValue(this.reservation.parentIdTag);
       this.status.setValue(this.reservation.status);
+      if (
+        ![ReservationStatus.CANCELLED, ReservationStatus.DONE, ReservationStatus.EXPIRED].includes(
+          this.reservation.status
+        )
+      ) {
+        this.reservationStatuses = RESERVATION_STATUSES.filter((status) =>
+          Constants.ReservationStatusTransitions.filter(
+            (transition) => transition.from === this.reservation.status
+          )
+            .map((transition) => [transition.from, transition.to])
+            .flatMap((transition) => transition)
+            .includes(status.key)
+        );
+      }
       this.type.setValue(this.reservation.type);
+      this.selectedCar = this.reservation.car;
+      this.car.setValue(Utils.buildCarName(this.selectedCar, this.translateService));
+      this.carID.setValue(this.selectedCar.id);
       // Site Area Image
       this.centralServerService
         .getSiteAreaImage(this.selectedChargingStation.siteAreaID)
@@ -278,7 +288,6 @@ export class ReservationMainComponent implements OnInit, OnChanges {
             this.tag.setValue(
               userSessionContext.tag ? Utils.buildTagName(userSessionContext.tag) : ''
             );
-            this.idTag.disable();
             this.visualTagID.setValue(this.selectedTag.visualID);
             // Set Car
             this.selectedCar = userSessionContext.car;
@@ -291,7 +300,7 @@ export class ReservationMainComponent implements OnInit, OnChanges {
             // Update form
             this.formGroup.updateValueAndValidity();
             if (Utils.isEmptyArray(userSessionContext.errorCodes)) {
-              this.formGroup.markAsPristine();
+              this.formGroup.markAsDirty();
               this.formGroup.markAllAsTouched();
             } else {
               // Setting errors automatically disable start transaction button
@@ -321,10 +330,12 @@ export class ReservationMainComponent implements OnInit, OnChanges {
       staticFilter: {
         WithSiteArea: true,
         Issuer: true,
+        ToDate: this.toDate.value?.toISOString() ?? this.expiryDate.value?.toISOString(),
+        FromDate: this.fromDate.value?.toISOString() ?? moment().toISOString(),
       },
     };
     this.dialog
-      .open(ChargingStationsDialogComponent, dialogConfig)
+      .open(ReservableChargingStationsDialogComponent, dialogConfig)
       .afterClosed()
       .subscribe((result) => {
         if (!Utils.isEmptyArray(result) && result[0].objectRef) {
@@ -407,8 +418,8 @@ export class ReservationMainComponent implements OnInit, OnChanges {
           this.selectedUser = result[0].objectRef as User;
           this.user.setValue(Utils.buildUserFullName(this.selectedUser));
           this.userID.setValue(this.selectedUser.id);
-          this.tag.setValue('');
-          this.idTag.setValue('');
+          this.tag.reset();
+          this.visualTagID.reset();
           this.selectedTag = null;
           this.formGroup.markAsDirty();
         }
@@ -435,7 +446,6 @@ export class ReservationMainComponent implements OnInit, OnChanges {
         if (!Utils.isEmptyArray(result) && result[0].objectRef) {
           this.selectedTag = result[0].objectRef as Tag;
           this.tag.setValue(Utils.buildTagName(this.selectedTag));
-          this.idTag.setValue(this.selectedTag.id ?? null);
           this.visualTagID.setValue(this.selectedTag.visualID);
           this.formGroup.markAsDirty();
         }
@@ -478,6 +488,7 @@ export class ReservationMainComponent implements OnInit, OnChanges {
 
   public onReservationTypeChanged(event: MatRadioChange) {
     this.type.setValue(event.value);
+    this.status.reset();
     if (this.type.value === ReservationType.RESERVE_NOW) {
       this.fromDate.disable();
       this.toDate.disable();
@@ -496,5 +507,34 @@ export class ReservationMainComponent implements OnInit, OnChanges {
       return actualDate.toDate();
     }
     return givenDate.isBefore(actualDate) ? givenDate.toDate() : actualDate.toDate();
+  }
+
+  public cancelReservation() {
+    this.centralServerService
+      .cancelReservation(this.chargingStationID.value, this.id.value)
+      .subscribe({
+        next: (response) => {
+          if (response.status === RestResponse.SUCCESS) {
+            this.messageService.showSuccessMessage(
+              'reservations.dialog.cancel_reservation.success',
+              {
+                reservationID: this.id.value,
+                chargingStationID: this.chargingStationID.value,
+              }
+            );
+            this.dialog.closeAll();
+          }
+        },
+        error: (error) => {
+          this.messageService.showErrorMessage('reservations.dialog.cancel_reservation.error', {
+            reservationID: this.id.value,
+            chargingStationID: this.chargingStationID.value,
+          });
+        },
+      });
+  }
+
+  public cancel() {
+    this.dialog.closeAll();
   }
 }

@@ -2,18 +2,17 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-
-import { CentralServerService } from '../../../services/central-server.service';
-import { MessageService } from '../../../services/message.service';
-import { SpinnerService } from '../../../services/spinner.service';
-import { ChargingStation } from '../../../types/ChargingStation';
-import { ChargingStationDataResult } from '../../../types/DataResult';
-import { TableColumnDef } from '../../../types/Table';
-import { Utils } from '../../../utils/Utils';
-import { DialogTableDataSource } from '../dialog-table-data-source';
+import { CentralServerService } from 'services/central-server.service';
+import { MessageService } from 'services/message.service';
+import { SpinnerService } from 'services/spinner.service';
+import { DialogTableDataSource } from 'shared/dialogs/dialog-table-data-source';
+import { ChargingStation } from 'types/ChargingStation';
+import { ChargingStationDataResult } from 'types/DataResult';
+import { TableColumnDef } from 'types/Table';
+import { Utils } from 'utils/Utils';
 
 @Injectable()
-export class ChargingStationsDialogTableDataSource extends DialogTableDataSource<ChargingStation> {
+export class ReservableChargingStationsDialogTableDataSource extends DialogTableDataSource<ChargingStation> {
   public constructor(
     public spinnerService: SpinnerService,
     public translateService: TranslateService,
@@ -29,7 +28,11 @@ export class ChargingStationsDialogTableDataSource extends DialogTableDataSource
   public loadDataImpl(): Observable<ChargingStationDataResult> {
     return new Observable((observer) => {
       this.centralServerService
-        .getChargingStations(this.buildFilterValues(), this.getPaging(), this.getSorting())
+        .getReservableChargingStations(
+          this.buildFilterValues(),
+          this.getPaging(),
+          this.getSorting()
+        )
         .subscribe({
           next: (chargers) => {
             observer.next(chargers);
@@ -62,6 +65,11 @@ export class ChargingStationsDialogTableDataSource extends DialogTableDataSource
       {
         id: 'chargePointVendor',
         name: 'chargers.vendor',
+        class: 'text-left',
+      },
+      {
+        id: 'siteArea.name',
+        name: 'chargers.site_area',
         class: 'text-left',
       },
     ];

@@ -367,21 +367,23 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
 
   public buildTableDynamicRowActions(reservation: Reservation): TableActionDef[] {
     const tableActionDef: TableActionDef[] = [];
-    if (reservation.canUpdate) {
+    if (reservation.canUpdate && this.isActiveReservation(reservation)) {
       tableActionDef.push(this.editAction);
+      tableActionDef.push(this.cancelAction);
     } else {
       tableActionDef.push(this.viewAction);
     }
     if (reservation.canDelete) {
       tableActionDef.push(this.deleteAction);
     }
-    if (
-      ![ReservationStatus.DONE, ReservationStatus.EXPIRED, ReservationStatus.CANCELLED].includes(
-        reservation.status
-      )
-    ) {
-      tableActionDef.push(this.cancelAction);
-    }
     return tableActionDef;
+  }
+
+  private isActiveReservation(reservation: Reservation): boolean {
+    return ![
+      ReservationStatus.DONE,
+      ReservationStatus.EXPIRED,
+      ReservationStatus.CANCELLED,
+    ].includes(reservation.status);
   }
 }

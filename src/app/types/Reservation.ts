@@ -26,7 +26,7 @@ export interface Reservation
   car?: Car;
   parentIdTag?: string;
   parentTag?: Tag;
-  status: ReservationStatus;
+  status: ReservationStatusEnum;
   type?: ReservationType;
 }
 
@@ -74,3 +74,11 @@ export enum ReservationType {
   PLANNED_RESERVATION = 'planned_reservation',
   RESERVE_NOW = 'reserve_now',
 }
+
+// export const ReservationStatusEnum = { ...ReservationStatus };
+export type ReservationStatusEnum = ReservationStatus;
+
+export type ReservationStatusTransition = Readonly<{
+  from?: ReservationStatusEnum;
+  to: ReservationStatusEnum;
+}>;

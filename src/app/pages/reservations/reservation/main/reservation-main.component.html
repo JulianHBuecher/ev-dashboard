@@ -267,7 +267,7 @@
           </button>
         </mat-form-field>
       </div>
-      <div class="form-group mt-4" *ngIf="reservation?.status">
+      <div class="form-group mt-4" *ngIf="status.value">
         <mat-form-field>
           <mat-label for="reservationStatus">{{ 'reservations.status' | translate }}</mat-label>
           <mat-select
@@ -296,6 +296,18 @@
           }}</mat-error>
         </mat-radio-group>
       </div>
+      <mat-dialog-actions class="form-group" align="end" *ngIf="reservation">
+        <button
+          mat-raised-button
+          [disabled]="!formGroup.valid"
+          (click)="cancelReservation()"
+          color="error"
+          disabled="false"
+        >
+          {{ 'reservations.dialog.cancel_reservation.title' | translate }}
+        </button>
+        <button mat-raised-button (click)="cancel()">{{ 'general.cancel' | translate }}</button>
+      </mat-dialog-actions>
     </div>
   </div>
 </form>
