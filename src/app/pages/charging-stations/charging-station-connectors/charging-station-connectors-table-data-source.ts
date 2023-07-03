@@ -229,15 +229,11 @@ export class ChargingStationConnectorsTableDataSource extends TableDataSource<Co
       if (connector.canUnlockConnector) {
         rowActions.push(this.unlockConnectorAction);
       }
-      if (
-        this.chargingStation.canReserveNow &&
-        connector.status !== ChargePointStatus.UNAVAILABLE
-      ) {
-        if (connector.status === ChargePointStatus.RESERVED) {
-          rowActions.push(this.cancelReservationAction);
-        } else {
-          rowActions.push(this.reserveNowAction);
-        }
+      if (connector.canReserveNow) {
+        rowActions.push(this.reserveNowAction);
+      }
+      if (connector.canCancelReservation) {
+        rowActions.push(this.cancelReservationAction);
       }
     }
     if (!Utils.isEmptyArray(rowActions)) {
@@ -349,38 +345,20 @@ export class ChargingStationConnectorsTableDataSource extends TableDataSource<Co
         }
         break;
       case ChargingStationButtonAction.CANCEL_RESERVATION:
-        this.centralServerService
-          .getReservations(
-            {
-              ChargingStationIDs: [this.chargingStation.id],
-              ConnectorIDs: [connector.connectorId.toString()],
-              Status: [ReservationStatus.IN_PROGRESS],
-              Type: [ReservationType.RESERVE_NOW],
-            },
-            { limit: 1, skip: Constants.DEFAULT_SKIP },
-            [Utils.createSortFieldParam('expiryDate', Constants.ORDERING.desc)]
-          )
-          .subscribe({
-            next: (reservation) => {
-              if (actionDef.action) {
-                (actionDef as TableChargingStationsCancelReservationActionDef).action(
-                  this.chargingStation,
-                  connector,
-                  reservation.result.pop(),
-                  this.dialogService,
-                  this.translateService,
-                  this.messageService,
-                  this.centralServerService,
-                  this.spinnerService,
-                  this.router,
-                  this.refreshData.bind(this)
-                );
-              }
-            },
-            error: (error) => {
-              this.messageService.showErrorMessage('reservations.action_error.not_found');
-            },
-          });
+        if (actionDef.action) {
+          (actionDef as TableChargingStationsCancelReservationActionDef).action(
+            this.chargingStation,
+            connector,
+            { id: connector.reservationID },
+            this.dialogService,
+            this.translateService,
+            this.messageService,
+            this.centralServerService,
+            this.spinnerService,
+            this.router,
+            this.refreshData.bind(this)
+          );
+        }
         break;
     }
   }

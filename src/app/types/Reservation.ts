@@ -34,8 +34,8 @@ export interface ReserveNow {
   reservationId: number;
   connectorId: number;
   expiryDate: Date;
-  idTag: string;
-  user: User;
+  idTag?: string;
+  visualTagID?: string;
   parentIdTag?: string;
 }
 

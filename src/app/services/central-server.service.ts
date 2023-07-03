@@ -3949,7 +3949,7 @@ export class CentralServerService {
     id: string,
     connectorId: number,
     expiryDate: Date,
-    idTag: string,
+    visualTagID: string,
     reservationId: number,
     parentIdTag?: string
   ): Observable<ActionResponse> {
@@ -3957,11 +3957,12 @@ export class CentralServerService {
     if (!id) {
       return EMPTY;
     }
+    // TODO: Add carID for smart charging
     const body = `{
       "args": {
         "connectorId": ${connectorId},
         "expiryDate": "${expiryDate.toISOString()}",
-        "idTag": "${idTag}",
+        "visualTagID": "${visualTagID}",
         "reservationId": ${reservationId},
         "parentIdTag": "${parentIdTag}",
         "type": "${ReservationType.RESERVE_NOW}"

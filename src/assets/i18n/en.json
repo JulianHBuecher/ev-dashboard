@@ -2773,18 +2773,18 @@
       "reserve_now": {
         "title": "Complete Reserve Now",
         "tooltips": "Reserve Now",
-        "confirm": "Do you really want to reserve the connector '{{connectorId}}' for user '{{userName}}' on the charging station '{{chargingStationId}}'?",
-        "details": "Reserve connector '{{connectorId}}' at chargepoint '{{chargingStationId}}'",
-        "success": "The reservation on the charging station '{{chargingStationId}}' at connector '{{connectorId}}' was successfully",
+        "confirm": "Do you really want to reserve the connector '{{connectorID}}' for user '{{userName}}' on the charging station '{{chargingStationID}}'?",
+        "details": "Reserve connector '{{connectorID}}' at chargepoint '{{chargingStationID}}'",
+        "success": "The reservation on the charging station '{{chargingStationID}}' at connector '{{connectorID}}' was successfully",
         "error": "Error occurred while trying to create a reservation, check the logs"
       },
       "cancel_reservation": {
         "title": "Cancel Reservation",
         "tooltips": "Cancel Reservation",
-        "confirm": "Do you really want to cancel the reservation '{{reservationID}}' at charging station '{{chargingStationID}}'?",
+        "confirm": "Do you really want to cancel the reservation at charging station '{{chargingStationID}}'?",
         "details": "",
-        "success": "The reservation with ID '{{reservationID}}' at charging station '{{chargingStationID}}' is successfully canceled",
-        "error": "Error occured while trying to cancel the reservation with ID '{{reservationID}}' at charging station '{{chargingStationID}}'"
+        "success": "The reservation at charging station '{{chargingStationID}}' is successfully canceled",
+        "error": "Error occured while trying to cancel the reservation at charging station '{{chargingStationID}}'"
       },
       "create": {
         "title": "Create Reservation",

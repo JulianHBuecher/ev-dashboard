@@ -154,7 +154,9 @@ export interface Connector extends TableData {
   canRemoteStartTransaction: boolean;
   canUnlockConnector: boolean;
   canReadTransaction: boolean;
-  reservation?: Reservation;
+  reservationID?: number;
+  canReserveNow?: boolean;
+  canCancelReservation?: boolean;
 }
 
 export interface PhaseAssignmentToGrid {

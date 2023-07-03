@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
-import { ButtonAction, ButtonActionColor } from 'types/GlobalType';
+import { ButtonAction, ButtonActionColor, RestResponse } from 'types/GlobalType';
 import { CentralServerService } from 'services/central-server.service';
 import { DialogService } from 'services/dialog.service';
 import { MessageService } from 'services/message.service';
@@ -12,7 +12,6 @@ import {
   ChargingStation,
   ChargingStationButtonAction,
   Connector,
-  OCPPGeneralResponse,
 } from 'types/ChargingStation';
 import { TableActionDef } from 'types/Table';
 import { ActionResponse } from 'types/DataResult';
@@ -22,10 +21,9 @@ import { TableAction } from '../table-action';
 
 export interface TableChargingStationsCancelReservationActionDef extends TableActionDef {
   action: (
-    // chargingStationCancelReservationDialogComponent: ComponentType<unknown>,
     chargingStation: ChargingStation,
     connector: Connector,
-    reservation: Reservation,
+    reservation: Partial<Reservation>,
     dialogService: DialogService,
     translateService: TranslateService,
     messageService: MessageService,
@@ -54,7 +52,7 @@ export class TableChargingStationsCancelReservationAction implements TableAction
   private cancelReservation(
     chargingStation: ChargingStation,
     connector: Connector,
-    reservation: Reservation,
+    reservation: Partial<Reservation>,
     dialogService: DialogService,
     translateService: TranslateService,
     messageService: MessageService,
@@ -82,8 +80,7 @@ export class TableChargingStationsCancelReservationAction implements TableAction
       .createAndShowYesNoDialog(
         translateService.instant('reservations.dialog.cancel_reservation.title'),
         translateService.instant('reservations.dialog.cancel_reservation.confirm', {
-          chargingStationId: chargingStation.id,
-          reservationId: reservation.id,
+          chargingStationID: chargingStation.id,
         })
       )
       .subscribe((response) => {
@@ -92,11 +89,10 @@ export class TableChargingStationsCancelReservationAction implements TableAction
           centralServerService.cancelReservation(chargingStation.id, reservation.id).subscribe({
             next: (cancelReservationResponse: ActionResponse) => {
               spinnerService.hide();
-              if (cancelReservationResponse.status === OCPPGeneralResponse.ACCEPTED) {
+              if (cancelReservationResponse.status === RestResponse.SUCCESS) {
                 messageService.showSuccessMessage(
                   translateService.instant('reservations.dialog.cancel_reservation.success', {
-                    reservationID: reservation.id,
-                    chargingStationD: chargingStation.id,
+                    chargingStationID: chargingStation.id,
                   })
                 );
                 if (refresh) {
@@ -107,8 +103,7 @@ export class TableChargingStationsCancelReservationAction implements TableAction
                   JSON.stringify(response),
                   messageService,
                   translateService.instant('reservations.dialog.cancel_reservation.error', {
-                    reservationID: reservation.id,
-                    chargingStationD: chargingStation.id,
+                    chargingStationID: chargingStation.id,
                   })
                 );
               }
@@ -121,8 +116,7 @@ export class TableChargingStationsCancelReservationAction implements TableAction
                 messageService,
                 centralServerService,
                 translateService.instant('reservations.dialog.cancel_reservation.error', {
-                  reservationID: reservation.id,
-                  chargingStationD: chargingStation.id,
+                  chargingStationID: chargingStation.id,
                 })
               );
             },

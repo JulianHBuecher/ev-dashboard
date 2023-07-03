@@ -17,6 +17,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { ChargingStationsAuthorizations, DialogParamsWithAuth } from 'types/Authorization';
 import { Tag } from 'types/Tag';
 
+import { ChargingStation, Connector } from 'types/ChargingStation';
+import { Car } from 'types/Car';
+import { CarsDialogComponent } from 'shared/dialogs/cars/cars-dialog.component';
+import { TenantComponents } from 'types/Tenant';
 import { CentralServerService } from '../../../services/central-server.service';
 import { ComponentService } from '../../../services/component.service';
 import { MessageService } from '../../../services/message.service';
@@ -33,26 +37,36 @@ import { Utils } from '../../../utils/Utils';
 })
 export class ChargingStationsReserveNowDialogComponent implements OnInit {
   public title = '';
-  public chargingStationId = '';
-  public connectorId = null;
+
+  public selectedChargingStation!: ChargingStation;
+  public selectedConnector!: Connector;
   public selectedUser!: User;
   public selectedTag!: Tag;
-  public providedExpiryDate: Date;
-  public providedReservationId: number;
+  public selectedParentTag!: Tag;
+  public selectedCar!: Car;
+  public selectedExpiryDate!: Date;
+  public selectedReservationID!: number;
 
   public formGroup!: UntypedFormGroup;
+
   public user!: AbstractControl;
   public userID!: AbstractControl;
   public tag!: AbstractControl;
-  public visualTagId!: AbstractControl;
-  public parentTagId!: AbstractControl;
+  public visualTagID!: AbstractControl;
+  public parentTag!: AbstractControl;
+  public parentTagID!: AbstractControl;
   public expiryDate!: AbstractControl;
-  public reservationId!: AbstractControl;
-
-  public errorMessage: string;
+  public reservationID!: AbstractControl;
+  public car!: AbstractControl;
+  public carID!: AbstractControl;
 
   public loggedUser: UserToken;
-  public canListUsers = false;
+  public canListUsers: boolean;
+
+  public isCarComponentActive: boolean;
+  public isReservationComponentActive: boolean;
+
+  public errorMessage: string;
 
   public constructor(
     private dialog: MatDialog,
@@ -68,15 +82,21 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
   ) {
     // Set
     this.title = translateService.instant('reservations.dialog.reserve_now.details', {
-      chargingStationId: data.dialogData.chargingStation.id,
-      connectorId: Utils.getConnectorLetterFromConnectorID(data.dialogData.connector.connectorId),
+      chargingStationID: data.dialogData.chargingStation.id,
+      connectorID: Utils.getConnectorLetterFromConnectorID(data.dialogData.connector.connectorId),
     });
-    this.chargingStationId = data.dialogData.chargingStation.id;
-    this.connectorId = data.dialogData.connector.connectorId;
+    this.selectedChargingStation = data.dialogData.chargingStation;
+    this.selectedConnector = data.dialogData.connector;
     this.loggedUser = this.centralServerService.getLoggedUser();
-    this.canListUsers = data.dialogData.chargingStation.canListUsers;
-    this.providedExpiryDate = data.dialogData.expiryDate;
-    this.providedReservationId = data.dialogData.reservationId;
+    this.canListUsers = this.selectedChargingStation.canListUsers;
+    this.selectedExpiryDate = data.dialogData.expiryDate;
+    this.selectedReservationID = data.dialogData.reservationId;
+
+    this.isCarComponentActive = this.componentService.isActive(TenantComponents.CAR);
+    this.isReservationComponentActive = this.componentService.isActive(
+      TenantComponents.RESERVATION
+    );
+
     Utils.registerValidateCloseKeyEvents(
       this.dialogRef,
       this.reserveNow.bind(this),
@@ -87,10 +107,6 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
   public ngOnInit() {
     // Init the form
     this.formGroup = new UntypedFormGroup({
-      // connector: new UntypedFormControl(Utils.getConnectorLetterFromConnectorID(this.connectorId) ?? '',
-      //   Validators.compose([
-      //     Validators.required
-      //   ])),
       user: new UntypedFormControl('', Validators.compose([Validators.required])),
       userID: new UntypedFormControl('', Validators.compose([Validators.required])),
       tag: new UntypedFormControl(
@@ -98,16 +114,16 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
         Validators.compose([Validators.required, this.tagActiveValidator.bind(this)])
       ),
       visualTagID: new UntypedFormControl('', Validators.compose([Validators.required])),
-      // parentIDTag: new UntypedFormControl('',
-      //   Validators.compose([
-      //     Validators.required,
-      //   ])),
+      parentTagID: new UntypedFormControl(''),
+      parentTag: new UntypedFormControl(''),
+      car: new UntypedFormControl(''),
+      carID: new UntypedFormControl(''),
       expiryDate: new UntypedFormControl(
-        this.providedExpiryDate ?? '',
+        this.selectedExpiryDate,
         Validators.compose([Validators.required])
       ),
       reservationID: new UntypedFormControl(
-        this.providedReservationId ?? '',
+        this.selectedReservationID,
         Validators.compose([Validators.required])
       ),
     });
@@ -115,10 +131,13 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
     this.user = this.formGroup.controls['user'];
     this.userID = this.formGroup.controls['userID'];
     this.tag = this.formGroup.controls['tag'];
-    this.visualTagId = this.formGroup.controls['visualTagID'];
-    // this.parentIDTag = this.formGroup.controls['parentIDTag'];
+    this.visualTagID = this.formGroup.controls['visualTagID'];
+    this.parentTagID = this.formGroup.controls['parentTagID'];
+    this.parentTag = this.formGroup.controls['parentTag'];
+    this.carID = this.formGroup.controls['carID'];
+    this.car = this.formGroup.controls['car'];
     this.expiryDate = this.formGroup.controls['expiryDate'];
-    this.reservationId = this.formGroup.controls['reservationID'];
+    this.reservationID = this.formGroup.controls['reservationID'];
     this.user.setValue(Utils.buildUserFullName(this.loggedUser));
     this.userID.setValue(this.loggedUser.id);
     this.loadUserSessionContext();
@@ -128,7 +147,11 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
     if (this.userID.value) {
       this.spinnerService.show();
       this.centralServerService
-        .getUserSessionContext(this.userID.value, this.chargingStationId, this.connectorId)
+        .getUserSessionContext(
+          this.userID.value,
+          this.selectedChargingStation.id,
+          this.selectedConnector.connectorId
+        )
         .subscribe({
           next: (userSessionContext: UserSessionContext) => {
             this.spinnerService.hide();
@@ -137,7 +160,15 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
             this.tag.setValue(
               userSessionContext.tag ? Utils.buildTagName(userSessionContext.tag) : ''
             );
-            this.visualTagId.setValue(userSessionContext.tag?.visualID);
+            this.visualTagID.setValue(userSessionContext.tag?.visualID);
+            // Set Car
+            this.selectedCar = userSessionContext.car;
+            this.car.setValue(
+              userSessionContext.car
+                ? Utils.buildCarName(userSessionContext.car, this.translateService, false)
+                : ''
+            );
+            this.carID.setValue(userSessionContext.car?.id);
             // Update form
             this.formGroup.updateValueAndValidity();
             if (Utils.isEmptyArray(userSessionContext.errorCodes)) {
@@ -190,11 +221,11 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
     const dialogRef = this.dialog.open(UsersDialogComponent, dialogConfig);
     // Register to the answer
     dialogRef.afterClosed().subscribe((result) => {
-      this.selectedUser = result[0].objectRef;
-      this.user.setValue(Utils.buildUserFullName(result[0].objectRef));
-      this.userID.setValue(result[0].key);
-      this.tag.setValue('');
-      this.visualTagId.setValue('');
+      this.selectedUser = result[0].objectRef as User;
+      this.user.setValue(Utils.buildUserFullName(this.selectedUser));
+      this.userID.setValue(this.selectedUser.id);
+      this.tag.reset();
+      this.visualTagID.reset();
       this.loadUserSessionContext();
     });
   }
@@ -216,23 +247,46 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.selectedTag = result[0].objectRef;
-        this.tag.setValue(Utils.buildTagName(result[0].objectRef));
-        this.visualTagId.setValue(result[0].key);
+        this.tag.setValue(Utils.buildTagName(this.selectedTag));
+        this.visualTagID.setValue(this.selectedTag.visualID);
       }
     });
+  }
+
+  public assignCar() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.panelClass = 'transparent-dialog-container';
+    dialogConfig.data = {
+      title: 'reservations.select_car',
+      rowMultipleSelection: false,
+      staticFilter: {
+        UserID: this.userID.value,
+        Issuer: true,
+      },
+    };
+    // Show
+    this.dialog
+      .open(CarsDialogComponent, dialogConfig)
+      .afterClosed()
+      .subscribe((result) => {
+        if (!Utils.isEmptyArray(result) && result[0].objectRef) {
+          this.selectedCar = result[0].objectRef as Car;
+          this.car.setValue(Utils.buildCarName(this.selectedCar, this.translateService));
+          this.carID.setValue(this.selectedCar.id);
+        }
+      });
   }
 
   public reserveNow() {
     if (this.formGroup.valid) {
       const reserveNowRequest: ReserveNow = {
         expiryDate: this.expiryDate.value,
-        connectorId: this.connectorId,
-        idTag: this.selectedTag.id,
-        reservationId: this.reservationId.value,
-        parentIdTag: this.parentTagId === undefined ? '' : this.parentTagId.value,
-        user: this.selectedUser,
+        connectorId: this.selectedConnector.connectorId,
+        visualTagID: this.visualTagID.value,
+        reservationId: this.reservationID.value,
+        parentIdTag: this.selectedParentTag === undefined ? '' : this.selectedParentTag.visualID,
       };
-      this.dialogRef.close(reserveNowRequest);
+      this.dialogRef.close([reserveNowRequest, this.user.value as string]);
     }
   }
 

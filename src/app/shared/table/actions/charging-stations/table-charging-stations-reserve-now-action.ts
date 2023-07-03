@@ -14,10 +14,9 @@ import {
   ChargingStation,
   ChargingStationButtonAction,
   Connector,
-  OCPPGeneralResponse,
 } from 'types/ChargingStation';
 import { ActionResponse } from 'types/DataResult';
-import { ButtonAction, ButtonActionColor } from 'types/GlobalType';
+import { ButtonAction, ButtonActionColor, RestResponse } from 'types/GlobalType';
 import { ReserveNow, ReserveNowDialogData } from 'types/Reservation';
 import { TableActionDef } from 'types/Table';
 import { Utils } from 'utils/Utils';
@@ -108,29 +107,32 @@ export class TableChargingStationsReserveNowAction implements TableAction {
     dialogConfig.data = dialogData;
     // Show
     const dialogRef = dialog.open(chargingStationsReserveNowDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe((reserveNow: ReserveNow) => {
-      if (reserveNow) {
-        this.reserveConnectorNowForUser(
-          chargingStation,
-          connector,
-          reserveNow,
-          Utils.buildUserFullName(reserveNow.user),
-          dialogService,
-          translateService,
-          messageService,
-          centralServerService,
-          router,
-          spinnerService,
-          refresh
-        );
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .subscribe((response: [reserveNowRequest: ReserveNow, userName: string]) => {
+        if (response) {
+          const [reserveNowRequest, userName] = response;
+          this.reserveConnectorNowForUser(
+            chargingStation,
+            connector,
+            reserveNowRequest,
+            userName,
+            dialogService,
+            translateService,
+            messageService,
+            centralServerService,
+            router,
+            spinnerService,
+            refresh
+          );
+        }
+      });
   }
 
   private reserveConnectorNowForUser(
     chargingStation: ChargingStation,
     connector: Connector,
-    reserveNow: ReserveNow,
+    reserveNowRequest: ReserveNow,
     userFullName: string,
     dialogService: DialogService,
     translateService: TranslateService,
@@ -144,18 +146,18 @@ export class TableChargingStationsReserveNowAction implements TableAction {
       .createAndShowYesNoDialog(
         translateService.instant('reservations.dialog.reserve_now.title'),
         translateService.instant('reservations.dialog.reserve_now.confirm', {
-          chargingStationId: chargingStation.id,
-          connectorId: Utils.getConnectorLetterFromConnectorID(connector.connectorId),
+          chargingStationID: chargingStation.id,
+          connectorID: Utils.getConnectorLetterFromConnectorID(connector.connectorId),
           userName: userFullName,
         })
       )
       .subscribe((response) => {
         if (response === ButtonAction.YES) {
           // Check badge
-          if (!reserveNow.idTag) {
+          if (!reserveNowRequest.visualTagID) {
             messageService.showErrorMessage(
               translateService.instant('chargers.start_transaction_missing_active_tag', {
-                chargingStationId: chargingStation.id,
+                chargingStationID: chargingStation.id,
                 userName: userFullName,
               })
             );
@@ -166,19 +168,19 @@ export class TableChargingStationsReserveNowAction implements TableAction {
             .reserveNow(
               chargingStation.id,
               connector.connectorId,
-              reserveNow.expiryDate,
-              reserveNow.idTag,
-              reserveNow.reservationId,
-              reserveNow?.parentIdTag
+              reserveNowRequest.expiryDate,
+              reserveNowRequest.visualTagID,
+              reserveNowRequest.reservationId,
+              reserveNowRequest?.parentIdTag
             )
             .subscribe({
               next: (reserveNowResponse: ActionResponse) => {
                 spinnerService.hide();
-                if (reserveNowResponse.status === OCPPGeneralResponse.ACCEPTED) {
+                if (reserveNowResponse.status === RestResponse.SUCCESS) {
                   messageService.showSuccessMessage(
                     translateService.instant('reservations.dialog.reserve_now.success', {
-                      chargingStationId: chargingStation.id,
-                      connectorId: Utils.getConnectorLetterFromConnectorID(connector.connectorId),
+                      chargingStationID: chargingStation.id,
+                      connectorID: Utils.getConnectorLetterFromConnectorID(connector.connectorId),
                     })
                   );
                   if (refresh) {
@@ -199,7 +201,7 @@ export class TableChargingStationsReserveNowAction implements TableAction {
                   router,
                   messageService,
                   centralServerService,
-                  'reservations.dialog.reserve_now_error'
+                  'reservations.dialog.reserve_now.error'
                 );
               },
             });
