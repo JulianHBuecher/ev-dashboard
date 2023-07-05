@@ -143,6 +143,7 @@ export class ReservationComponent implements OnInit {
   private updateReservation(reservation: Reservation) {
     this.spinnerService.show();
     if (reservation.type === ReservationType.RESERVE_NOW) {
+      reservation.fromDate = moment().toDate();
       reservation.toDate = reservation.expiryDate;
     } else {
       reservation.expiryDate = reservation.toDate;

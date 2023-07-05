@@ -86,41 +86,43 @@ export class TableChargingStationsCancelReservationAction implements TableAction
       .subscribe((response) => {
         if (response === ButtonAction.YES) {
           spinnerService.show();
-          centralServerService.cancelReservation(chargingStation.id, reservation.id).subscribe({
-            next: (cancelReservationResponse: ActionResponse) => {
-              spinnerService.hide();
-              if (cancelReservationResponse.status === RestResponse.SUCCESS) {
-                messageService.showSuccessMessage(
-                  translateService.instant('reservations.dialog.cancel_reservation.success', {
-                    chargingStationID: chargingStation.id,
-                  })
-                );
-                if (refresh) {
-                  refresh().subscribe();
+          centralServerService
+            .cancelReserveNowReservation(chargingStation.id, reservation.id)
+            .subscribe({
+              next: (cancelReservationResponse: ActionResponse) => {
+                spinnerService.hide();
+                if (cancelReservationResponse.status === RestResponse.SUCCESS) {
+                  messageService.showSuccessMessage(
+                    translateService.instant('reservations.dialog.cancel_reservation.success', {
+                      chargingStationID: chargingStation.id,
+                    })
+                  );
+                  if (refresh) {
+                    refresh().subscribe();
+                  }
+                } else {
+                  Utils.handleError(
+                    JSON.stringify(response),
+                    messageService,
+                    translateService.instant('reservations.dialog.cancel_reservation.error', {
+                      chargingStationID: chargingStation.id,
+                    })
+                  );
                 }
-              } else {
-                Utils.handleError(
-                  JSON.stringify(response),
+              },
+              error: (error) => {
+                spinnerService.hide();
+                Utils.handleHttpError(
+                  error,
+                  router,
                   messageService,
+                  centralServerService,
                   translateService.instant('reservations.dialog.cancel_reservation.error', {
                     chargingStationID: chargingStation.id,
                   })
                 );
-              }
-            },
-            error: (error) => {
-              spinnerService.hide();
-              Utils.handleHttpError(
-                error,
-                router,
-                messageService,
-                centralServerService,
-                translateService.instant('reservations.dialog.cancel_reservation.error', {
-                  chargingStationID: chargingStation.id,
-                })
-              );
-            },
-          });
+              },
+            });
         }
       });
   }

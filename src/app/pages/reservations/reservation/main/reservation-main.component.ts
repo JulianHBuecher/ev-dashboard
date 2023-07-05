@@ -242,6 +242,7 @@ export class ReservationMainComponent implements OnInit, OnChanges {
             .includes(status.key)
         );
       }
+      this.status.disable();
       this.type.setValue(this.reservation.type);
       this.selectedCar = this.reservation.car;
       this.car.setValue(Utils.buildCarName(this.selectedCar, this.translateService));
@@ -490,6 +491,9 @@ export class ReservationMainComponent implements OnInit, OnChanges {
   public onReservationTypeChanged(event: MatRadioChange) {
     this.type.setValue(event.value);
     this.status.reset();
+    if (!Utils.isNullOrUndefined(this.reservation?.status)) {
+      this.reservation.status = null;
+    }
     if (this.type.value === ReservationType.RESERVE_NOW) {
       this.fromDate.disable();
       this.toDate.disable();
@@ -512,7 +516,7 @@ export class ReservationMainComponent implements OnInit, OnChanges {
 
   public cancelReservation() {
     this.centralServerService
-      .cancelReservation(this.chargingStationID.value, this.id.value)
+      .cancelReserveNowReservation(this.chargingStationID.value, this.id.value)
       .subscribe({
         next: (response) => {
           if (response.status === RestResponse.SUCCESS) {

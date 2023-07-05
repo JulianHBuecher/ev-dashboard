@@ -3981,7 +3981,10 @@ export class CentralServerService {
       .pipe(catchError(this.handleHttpError));
   }
 
-  public cancelReservation(id: string, reservationId: number): Observable<ActionResponse> {
+  public cancelReserveNowReservation(
+    id: string,
+    reservationId: number
+  ): Observable<ActionResponse> {
     this.checkInit();
     if (!id) {
       return EMPTY;
@@ -4085,6 +4088,25 @@ export class CentralServerService {
       }
     )
       .pipe(catchError(this.handleHttpError));
+  }
+
+  public cancelReservation(reservation: Reservation): Observable<ActionResponse> {
+    this.checkInit();
+    const body = {
+      args: {
+        chargingStationID: reservation.chargingStationID,
+        connectorID: reservation.connectorID,
+      },
+    };
+    return this.httpClient.put<ActionResponse>(
+      this.buildRestEndpointUrl(RESTServerRoute.REST_RESERVATION_CANCEL, {
+        id: reservation.id,
+      }),
+      body,
+      {
+        headers: this.buildHttpHeaders(),
+      }
+    );
   }
 
   public buildImportTagsUsersHttpHeaders(
