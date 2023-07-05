@@ -515,28 +515,23 @@ export class ReservationMainComponent implements OnInit, OnChanges {
   }
 
   public cancelReservation() {
-    this.centralServerService
-      .cancelReserveNowReservation(this.chargingStationID.value, this.id.value)
-      .subscribe({
-        next: (response) => {
-          if (response.status === RestResponse.SUCCESS) {
-            this.messageService.showSuccessMessage(
-              'reservations.dialog.cancel_reservation.success',
-              {
-                reservationID: this.id.value,
-                chargingStationID: this.chargingStationID.value,
-              }
-            );
-            this.dialog.closeAll();
-          }
-        },
-        error: (error) => {
-          this.messageService.showErrorMessage('reservations.dialog.cancel_reservation.error', {
+    this.centralServerService.cancelReservation(this.reservation).subscribe({
+      next: (response) => {
+        if (response.status === RestResponse.SUCCESS) {
+          this.messageService.showSuccessMessage('reservations.dialog.cancel_reservation.success', {
             reservationID: this.id.value,
             chargingStationID: this.chargingStationID.value,
           });
-        },
-      });
+          this.dialog.closeAll();
+        }
+      },
+      error: (error) => {
+        this.messageService.showErrorMessage('reservations.dialog.cancel_reservation.error', {
+          reservationID: this.id.value,
+          chargingStationID: this.chargingStationID.value,
+        });
+      },
+    });
   }
 
   public onDateChanged(event: MatDatepickerInputEvent<Date>, control: string) {
