@@ -1208,7 +1208,7 @@ export class Utils {
   }
 
   public static generateRandomReservationID(): number {
-    return Math.floor(Math.random() * 100 + 1);
+    return Math.floor(Math.random() * 1000000000 + 1);
   }
 
   public static createSortFieldParam(

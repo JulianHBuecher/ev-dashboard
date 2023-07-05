@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatSelectChange } from '@angular/material/select';
@@ -330,8 +331,8 @@ export class ReservationMainComponent implements OnInit, OnChanges {
       staticFilter: {
         WithSiteArea: true,
         Issuer: true,
-        ToDate: this.toDate.value?.toISOString() ?? this.expiryDate.value?.toISOString(),
-        FromDate: this.fromDate.value?.toISOString() ?? moment().toISOString(),
+        ToDate: this.toDate.value ?? this.expiryDate.value,
+        FromDate: this.fromDate.value ?? moment().toISOString(),
       },
     };
     this.dialog
@@ -532,6 +533,15 @@ export class ReservationMainComponent implements OnInit, OnChanges {
           });
         },
       });
+  }
+
+  public onDateChanged(event: MatDatepickerInputEvent<Date>, control: string) {
+    if (!event.target.value) {
+      return;
+    }
+    this.formGroup.controls[control].setValue(event.target.value.toISOString());
+    this.formGroup.controls[control].markAsTouched();
+    this.formGroup.controls[control].markAsDirty();
   }
 
   public cancel() {

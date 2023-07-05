@@ -106,7 +106,7 @@ export class ReservationComponent implements OnInit {
           this.spinnerService.hide();
           switch (error.status) {
             case StatusCodes.NOT_FOUND:
-              this.messageService.showErrorMessage('reservations.action_error.not_found');
+              this.messageService.showErrorMessage('reservations.action_error.general.not_found');
               break;
             default:
               Utils.handleHttpError(
@@ -114,7 +114,7 @@ export class ReservationComponent implements OnInit {
                 this.router,
                 this.messageService,
                 this.centralServerService,
-                'reservations.action_error.not_found'
+                'reservations.action_error.general.not_found'
               );
           }
         },

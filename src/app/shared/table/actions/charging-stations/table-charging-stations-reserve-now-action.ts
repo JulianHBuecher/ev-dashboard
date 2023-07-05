@@ -109,14 +109,15 @@ export class TableChargingStationsReserveNowAction implements TableAction {
     const dialogRef = dialog.open(chargingStationsReserveNowDialogComponent, dialogConfig);
     dialogRef
       .afterClosed()
-      .subscribe((response: [reserveNowRequest: ReserveNow, userName: string]) => {
+      .subscribe((response: [reserveNowRequest: ReserveNow, userName: string, carID: string]) => {
         if (response) {
-          const [reserveNowRequest, userName] = response;
+          const [reserveNowRequest, userName, carID] = response;
           this.reserveConnectorNowForUser(
             chargingStation,
             connector,
             reserveNowRequest,
             userName,
+            carID,
             dialogService,
             translateService,
             messageService,
@@ -134,6 +135,7 @@ export class TableChargingStationsReserveNowAction implements TableAction {
     connector: Connector,
     reserveNowRequest: ReserveNow,
     userFullName: string,
+    carID: string,
     dialogService: DialogService,
     translateService: TranslateService,
     messageService: MessageService,
@@ -171,6 +173,7 @@ export class TableChargingStationsReserveNowAction implements TableAction {
               reserveNowRequest.expiryDate,
               reserveNowRequest.visualTagID,
               reserveNowRequest.reservationId,
+              carID,
               reserveNowRequest?.parentIdTag
             )
             .subscribe({

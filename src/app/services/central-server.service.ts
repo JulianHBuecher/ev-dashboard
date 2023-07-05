@@ -3951,6 +3951,7 @@ export class CentralServerService {
     expiryDate: Date,
     visualTagID: string,
     reservationId: number,
+    carID?: string,
     parentIdTag?: string
   ): Observable<ActionResponse> {
     this.checkInit();
@@ -3962,6 +3963,7 @@ export class CentralServerService {
       "args": {
         "connectorId": ${connectorId},
         "expiryDate": "${expiryDate.toISOString()}",
+        "carID": "${carID}",
         "visualTagID": "${visualTagID}",
         "reservationId": ${reservationId},
         "parentIdTag": "${parentIdTag}",

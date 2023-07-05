@@ -286,7 +286,11 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
         reservationId: this.reservationID.value,
         parentIdTag: this.selectedParentTag === undefined ? '' : this.selectedParentTag.visualID,
       };
-      this.dialogRef.close([reserveNowRequest, this.user.value as string]);
+      this.dialogRef.close([
+        reserveNowRequest,
+        this.user.value as string,
+        this.carID.value as string,
+      ]);
     }
   }
 

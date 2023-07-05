@@ -41,7 +41,7 @@ export class TableChargingStationsCancelReservationAction implements TableAction
     icon: 'key_off',
     color: ButtonActionColor.ACCENT,
     name: 'reservations.dialog.cancel_reservation.title',
-    tooltip: 'reservations.dialog.cancel_reservation.tooltip',
+    tooltip: 'reservations.dialog.cancel_reservation.tooltips',
     action: this.cancelReservation.bind(this),
   };
 

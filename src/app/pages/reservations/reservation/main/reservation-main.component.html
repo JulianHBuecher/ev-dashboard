@@ -38,6 +38,8 @@
             [min]="determineMinDate('expiryDate')"
             autocomplete="false"
             (click)="expiryDatePicker.open()"
+            (dateChange)="onDateChanged($event, 'expiryDate')"
+            (dateInput)="onDateChanged($event, 'expiryDate')"
             [required]="type.value === 'reserve_now'"
           />
           <mat-error *ngIf="expiryDate.errors?.required">
@@ -76,6 +78,8 @@
                 [min]="determineMinDate('fromDate')"
                 autocomplete="false"
                 (click)="fromDatePicker.open()"
+                (dateChange)="onDateChanged($event, 'fromDate')"
+                (dateInput)="onDateChanged($event, 'fromDate')"
                 [required]="type.value === 'planned_reservation'"
               />
               <mat-error *ngIf="fromDate.errors?.required">
@@ -114,6 +118,8 @@
                 [min]="determineMinDate('toDate')"
                 autocomplete="false"
                 (click)="toDatePicker.open()"
+                (dateChange)="onDateChanged($event, 'toDate')"
+                (dateInput)="onDateChanged($event, 'toDate')"
                 [required]="type.value === 'planned_reservation'"
               />
               <mat-error *ngIf="toDate.errors?.required">
@@ -150,7 +156,7 @@
                 mat-icon-button
                 aria-label="Add"
                 [hidden]="readOnly"
-                (click)="clearChargingStation()"
+                (click)="assignChargingStation()"
               >
                 <mat-icon>ev_station</mat-icon>
               </button>
