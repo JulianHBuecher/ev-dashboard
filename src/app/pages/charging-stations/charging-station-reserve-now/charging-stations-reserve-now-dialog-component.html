@@ -96,7 +96,6 @@
           <mat-datetimepicker
             #expiryDatePicker
             type="datetime"
-            [disabled]="false"
             openOnFocus="true"
             timeInterval="5"
             touchUi="true"
@@ -104,6 +103,7 @@
           </mat-datetimepicker>
           <input
             matInput
+            readonly="true"
             [formControl]="expiryDate"
             placeholder="{{'reservations.dialog.general.expiry_date' | translate}}"
             [matDatetimepicker]="expiryDatePicker"
@@ -112,24 +112,6 @@
             (click)="expiryDatePicker.open()"
           />
           <mat-error *ngIf="expiryDate.value">
-            {{"general.mandatory_field" | translate}}
-          </mat-error>
-        </mat-form-field>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="form-group">
-        <mat-form-field>
-          <input
-            matInput
-            type="text"
-            placeholder="Reservation ID"
-            class="form-field-popup"
-            [formControl]="reservationID"
-          />
-          <mat-error *ngIf="reservationID.errors?.required">
             {{"general.mandatory_field" | translate}}
           </mat-error>
         </mat-form-field>

@@ -39,7 +39,7 @@ export class TableChargingStationsCancelReservationAction implements TableAction
     id: ChargingStationButtonAction.CANCEL_RESERVATION,
     type: 'button',
     icon: 'key_off',
-    color: ButtonActionColor.ACCENT,
+    color: ButtonActionColor.WARN,
     name: 'reservations.dialog.cancel_reservation.title',
     tooltip: 'reservations.dialog.cancel_reservation.tooltips',
     action: this.cancelReservation.bind(this),

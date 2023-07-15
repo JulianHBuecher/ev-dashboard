@@ -26,7 +26,7 @@
             [disabled]="readOnly"
             openOnFocus="true"
             timeInterval="5"
-            touchUi="true"
+            mode="portrait"
           >
           </mat-datetimepicker>
           <input
@@ -66,7 +66,7 @@
                 [disabled]="readOnly"
                 openOnFocus="true"
                 timeInterval="5"
-                touchUi="true"
+                mode="portrait"
               >
               </mat-datetimepicker>
               <input
@@ -106,7 +106,7 @@
                 [disabled]="readOnly"
                 openOnFocus="true"
                 timeInterval="5"
-                touchUi="true"
+                mode="portrait"
               >
               </mat-datetimepicker>
               <input
@@ -142,21 +142,21 @@
               <input
                 matInput
                 type="text"
+                readonly="true"
                 placeholder="{{ 'reservations.chargingstation_id' | translate }}"
-                class="form-field-popup"
                 [formControl]="chargingStation"
-                [readOnly]="readOnly"
+                class="form-field-popup"
                 (click)="assignChargingStation()"
                 required
               />
               <button
-                *ngIf="chargingStation.value"
                 mat-button
                 matSuffix
                 mat-icon-button
                 aria-label="Add"
                 [hidden]="readOnly"
                 (click)="assignChargingStation()"
+                [disabled]="!isDateProvided()"
               >
                 <mat-icon>ev_station</mat-icon>
               </button>
@@ -172,11 +172,10 @@
               <input
                 matInput
                 type="text"
+                readonly="true"
                 placeholder="{{ 'reservations.connector_id' | translate }}"
                 class="form-field-popup"
-                [disabled]="isChargingStationAvailable()"
                 [formControl]="connector"
-                [readOnly]="readOnly"
                 (click)="assignConnector()"
               />
               <button
@@ -185,6 +184,7 @@
                 mat-icon-button
                 aria-label="Add"
                 [hidden]="readOnly"
+                [disabled]="isChargingStationAvailable()"
                 (click)="assignConnector()"
               >
                 <mat-icon>power</mat-icon>
@@ -220,7 +220,7 @@
           </mat-error>
         </mat-form-field>
       </div>
-      <div class="form-group" *ngIf="reservationsAuthorizations?.canListTags">
+      <div class="form-group">
         <mat-form-field>
           <input
             matInput
@@ -303,13 +303,7 @@
         </mat-radio-group>
       </div>
       <mat-dialog-actions class="form-group" align="end" *ngIf="reservation">
-        <button
-          mat-raised-button
-          [disabled]="!formGroup.valid"
-          (click)="cancelReservation()"
-          color="error"
-          disabled="false"
-        >
+        <button mat-raised-button (click)="cancelReservation()" color="error" disabled="readOnly">
           {{ 'reservations.dialog.cancel_reservation.title' | translate }}
         </button>
         <button mat-raised-button (click)="cancel()">{{ 'general.cancel' | translate }}</button>

@@ -2791,7 +2791,7 @@
       "create": {
         "title": "Reservierung erstellen",
         "tooltips": "Reservierung erstellen",
-        "confirm": "",
+        "confirm": "Wollen Sie an der Ladestation '{{chargingStationID}}' an Anschluss '{{connectorID}}' eine Reservierung vom Typ '{{reservationType}}' erstellen?",
         "details": "",
         "success": "'{{reservationID}}' wurde erfolgreich erstellt",
         "error": "Beim Erstellen der Reservierung ist ein Fehler aufgetreten"

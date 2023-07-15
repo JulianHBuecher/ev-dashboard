@@ -11,7 +11,6 @@ import { MessageService } from 'services/message.service';
 import { SpinnerService } from 'services/spinner.service';
 import { DialogMode, ReservationsAuthorizations } from 'types/Authorization';
 import { RestResponse } from 'types/GlobalType';
-import { HTTPError } from 'types/HTTPError';
 import { Reservation, ReservationType } from 'types/Reservation';
 import { Utils } from 'utils/Utils';
 import { ComponentService } from 'services/component.service';
@@ -166,36 +165,12 @@ export class ReservationComponent implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         this.spinnerService.hide();
-        switch (error.status) {
-          case HTTPError.RESERVATION_COLLISION_ERROR:
-            this.messageService.showErrorMessage('reservations.action_error.general.collision');
-            break;
-          case HTTPError.RESERVATION_REJECTED_ERROR:
-            this.messageService.showErrorMessage('reservations.action_error.general.rejected');
-            break;
-          case HTTPError.RESERVATION_FAULTED_ERROR:
-            this.messageService.showErrorMessage('reservations.action_error.general.faulted');
-            break;
-          case HTTPError.RESERVATION_OCCUPIED_ERROR:
-            this.messageService.showErrorMessage('reservations.action_error.general.occupied');
-            break;
-          case HTTPError.RESERVATION_UNAVAILABLE_ERROR:
-            this.messageService.showErrorMessage('reservations.action_error.general.unavailable');
-            break;
-          case HTTPError.RESERVATION_MULTIPLE_RESERVE_NOW_ERROR:
-            this.messageService.showErrorMessage(
-              'reservations.action_error.general.multiple_reserve_now'
-            );
-            break;
-          default:
-            Utils.handleHttpError(
-              error,
-              this.router,
-              this.messageService,
-              this.centralServerService,
-              'reservations.dialog.update.error'
-            );
-        }
+        Utils.handleReservationErrorResponse(
+          error,
+          this.messageService,
+          this.router,
+          this.centralServerService
+        );
       },
     });
   }
@@ -230,44 +205,12 @@ export class ReservationComponent implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         this.spinnerService.hide();
-        switch (error.status) {
-          case HTTPError.RESERVATION_ALREADY_EXISTS_ERROR:
-            this.messageService.showErrorMessage(
-              'reservations.action_error.general.already_exists'
-            );
-            break;
-          case HTTPError.RESERVATION_NOT_SUPPORTED_ERROR:
-            this.messageService.showErrorMessage('reservations.action_error.general.not_supported');
-            break;
-          case HTTPError.RESERVATION_REJECTED_ERROR:
-            this.messageService.showErrorMessage('reservations.action_error.general.rejected');
-            break;
-          case HTTPError.RESERVATION_COLLISION_ERROR:
-            this.messageService.showErrorMessage('reservations.action_error.general.collision');
-            break;
-          case HTTPError.RESERVATION_FAULTED_ERROR:
-            this.messageService.showErrorMessage('reservations.action_error.general.faulted');
-            break;
-          case HTTPError.RESERVATION_OCCUPIED_ERROR:
-            this.messageService.showErrorMessage('reservations.action_error.general.occupied');
-            break;
-          case HTTPError.RESERVATION_UNAVAILABLE_ERROR:
-            this.messageService.showErrorMessage('reservations.action_error.general.unavailable');
-            break;
-          case HTTPError.RESERVATION_MULTIPLE_RESERVE_NOW_ERROR:
-            this.messageService.showErrorMessage(
-              'reservations.action_error.general.multiple_reserve_now'
-            );
-            break;
-          default:
-            Utils.handleHttpError(
-              error,
-              this.router,
-              this.messageService,
-              this.centralServerService,
-              'reservations.dialog.create.error'
-            );
-        }
+        Utils.handleReservationErrorResponse(
+          error,
+          this.messageService,
+          this.router,
+          this.centralServerService
+        );
       },
     });
   }

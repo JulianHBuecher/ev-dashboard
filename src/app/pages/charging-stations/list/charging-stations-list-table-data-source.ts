@@ -106,7 +106,6 @@ export class ChargingStationsListTableDataSource extends TableDataSource<Chargin
   private canExport = new TableExportChargingStationsAction().getActionDef();
   private maintainPricingDefinitionsAction = new TableViewPricingDefinitionsAction().getActionDef();
   private navigateToTransactionsAction = new TableNavigateToTransactionsAction().getActionDef();
-  private canReserveAction = new TableChargingStationsReserveNowAction().getActionDef();
 
   private issuerFilter: TableFilterDef;
   private siteFilter: TableFilterDef;

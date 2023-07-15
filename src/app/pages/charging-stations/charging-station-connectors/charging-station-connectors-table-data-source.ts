@@ -5,8 +5,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { TransactionDialogComponent } from 'shared/dialogs/transaction/transaction-dialog.component';
 
-import { Constants } from 'utils/Constants';
-import { ReservationStatus, ReservationType } from 'types/Reservation';
+import { ComponentService } from 'services/component.service';
+import { TenantComponents } from 'types/Tenant';
+import { ReservationButtonAction } from 'types/Reservation';
+import {
+  TableChargingStationsCreateReservationAction,
+  TableChargingStationsCreateReservationActionDef,
+} from 'shared/table/actions/charging-stations/table-charging-stations-create-reservation-action';
 import { AuthorizationService } from '../../../services/authorization.service';
 import { CentralServerService } from '../../../services/central-server.service';
 import { DialogService } from '../../../services/dialog.service';
@@ -45,7 +50,6 @@ import {
 } from '../../../shared/table/actions/transactions/table-view-transaction-action';
 import { TableDataSource } from '../../../shared/table/table-data-source';
 import {
-  ChargePointStatus,
   ChargingStation,
   ChargingStationButtonAction,
   Connector,
@@ -60,6 +64,7 @@ import { ChargingStationsConnectorStatusCellComponent } from '../cell-components
 import { ChargingStationsInstantPowerConnectorProgressBarCellComponent } from '../cell-components/charging-stations-instant-power-connector-progress-bar-cell.component';
 import { ChargingStationsStartTransactionDialogComponent } from '../charging-station-start-transaction/charging-stations-start-transaction-dialog-component';
 import { ChargingStationsReserveNowDialogComponent } from '../charging-station-reserve-now/charging-stations-reserve-now-dialog-component';
+import { ChargingStationCreateReservationDialogComponent } from '../charging-station-create-reservation/charging-station-create-reservation-dialog-component';
 
 @Injectable()
 export class ChargingStationConnectorsTableDataSource extends TableDataSource<Connector> {
@@ -71,6 +76,9 @@ export class ChargingStationConnectorsTableDataSource extends TableDataSource<Co
   public unlockConnectorAction = new TableChargingStationsUnlockConnectorAction().getActionDef();
   public viewTransactionAction = new TableViewTransactionAction().getActionDef();
   public noAction = new TableNoAction().getActionDef();
+  public createReservationAction =
+    new TableChargingStationsCreateReservationAction().getActionDef();
+  private readonly isReservationComponentActive: boolean;
 
   private chargingStation!: ChargingStation;
 
@@ -84,10 +92,14 @@ export class ChargingStationConnectorsTableDataSource extends TableDataSource<Co
     private authorizationService: AuthorizationService,
     private messageService: MessageService,
     private router: Router,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private componentService: ComponentService
   ) {
     super(spinnerService, translateService);
     // Init
+    this.isReservationComponentActive = this.componentService.isActive(
+      TenantComponents.RESERVATION
+    );
     this.initDataSource();
     this.noAction.disabled = true;
   }
@@ -229,7 +241,9 @@ export class ChargingStationConnectorsTableDataSource extends TableDataSource<Co
       if (connector.canUnlockConnector) {
         rowActions.push(this.unlockConnectorAction);
       }
-      if (connector.canReserveNow) {
+      if (this.isReservationComponentActive) {
+        rowActions.push({ ...this.createReservationAction, icon: 'book' });
+      } else if (connector.canReserveNow) {
         rowActions.push(this.reserveNowAction);
       }
       if (connector.canCancelReservation) {
@@ -351,6 +365,23 @@ export class ChargingStationConnectorsTableDataSource extends TableDataSource<Co
             connector,
             { id: connector.reservationID },
             this.dialogService,
+            this.translateService,
+            this.messageService,
+            this.centralServerService,
+            this.spinnerService,
+            this.router,
+            this.refreshData.bind(this)
+          );
+        }
+        break;
+      case ReservationButtonAction.CREATE_RESERVATION:
+        if (actionDef.action) {
+          (actionDef as TableChargingStationsCreateReservationActionDef).action(
+            ChargingStationCreateReservationDialogComponent,
+            this.chargingStation,
+            connector,
+            this.dialogService,
+            this.dialog,
             this.translateService,
             this.messageService,
             this.centralServerService,

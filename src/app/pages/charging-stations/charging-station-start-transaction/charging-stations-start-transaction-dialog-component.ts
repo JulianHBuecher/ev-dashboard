@@ -16,7 +16,6 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ChargingStationsAuthorizations, DialogParamsWithAuth } from 'types/Authorization';
 import { Car } from 'types/Car';
-import { ChargingStation } from 'types/ChargingStation';
 import { Tag } from 'types/Tag';
 
 import { CentralServerService } from '../../../services/central-server.service';

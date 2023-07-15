@@ -74,6 +74,7 @@ import {
 import { ChargingStationsRegistrationTokenComponent } from './registration-tokens/registration-token/charging-stations-registration-token.component';
 import { ChargingStationsRegistrationTokenDialogComponent } from './registration-tokens/registration-token/charging-stations-registration-token.dialog.component';
 import { ChargingStationsReserveNowDialogComponent } from './charging-station-reserve-now/charging-stations-reserve-now-dialog-component';
+import { ChargingStationCreateReservationDialogComponent } from './charging-station-create-reservation/charging-station-create-reservation-dialog-component';
 
 @NgModule({
   imports: [
@@ -136,6 +137,7 @@ import { ChargingStationsReserveNowDialogComponent } from './charging-station-re
     ChargingStationsRegistrationTokenComponent,
     ChargingStationsRegistrationTokenDialogComponent,
     ChargingStationsRegistrationTokensComponent,
+    ChargingStationCreateReservationDialogComponent,
   ],
   providers: [
     ChargingStationsInErrorTableDataSource,

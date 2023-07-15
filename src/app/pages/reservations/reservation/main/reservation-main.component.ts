@@ -108,10 +108,16 @@ export class ReservationMainComponent implements OnInit, OnChanges {
     );
     this.formGroup.addControl(
       'chargingStation',
-      new FormControl('', Validators.compose([Validators.required]))
+      new FormControl(
+        { value: '', disabled: !this.isDateProvided() },
+        Validators.compose([Validators.required])
+      )
     );
     this.formGroup.addControl('connectorID', new FormControl(null));
-    this.formGroup.addControl('connector', new FormControl(null));
+    this.formGroup.addControl(
+      'connector',
+      new FormControl({ value: null, disabled: this.isChargingStationAvailable() })
+    );
     this.formGroup.addControl('userID', new FormControl(null));
     this.formGroup.addControl('user', new FormControl(null));
     this.formGroup.addControl(
@@ -127,14 +133,14 @@ export class ReservationMainComponent implements OnInit, OnChanges {
     this.formGroup.addControl(
       'fromDate',
       new FormControl(
-        null,
+        { value: null, disabled: this.isChargingStationAvailable() },
         Validators.compose([Reservations.validateDate, Reservations.fromDateValidator('toDate')])
       )
     );
     this.formGroup.addControl(
       'toDate',
       new FormControl(
-        null,
+        { value: null, disabled: this.isChargingStationAvailable() },
         Validators.compose([
           Reservations.validateDate,
           Reservations.fromToDateValidator('fromDate', 'toDate'),
@@ -177,9 +183,6 @@ export class ReservationMainComponent implements OnInit, OnChanges {
     this.car = this.formGroup.controls['car'];
     this.status = this.formGroup.controls['status'];
     this.type = this.formGroup.controls['type'];
-    // Default for RESERVE NOW selection
-    this.fromDate.disable();
-    this.toDate.disable();
     if (!this.reservationsAuthorizations.canListUsers) {
       this.user.setValue(Utils.buildUserFullName(this.loggedUser));
       this.userID.setValue(this.loggedUser.id);
@@ -247,29 +250,35 @@ export class ReservationMainComponent implements OnInit, OnChanges {
       this.selectedCar = this.reservation.car;
       this.car.setValue(Utils.buildCarName(this.selectedCar, this.translateService));
       this.carID.setValue(this.selectedCar.id);
+      if (this.isDateProvided()) {
+        this.chargingStation.enable();
+        this.connector.enable();
+      }
       // Site Area Image
-      this.centralServerService
-        .getSiteAreaImage(this.selectedChargingStation.siteAreaID)
-        .subscribe({
-          next: (image) => {
-            this.siteAreaImage = image ?? Constants.NO_IMAGE;
-          },
-          error: (error) => {
-            switch (error.status) {
-              case StatusCodes.NOT_FOUND:
-                this.siteAreaImage = Constants.NO_IMAGE;
-                break;
-              default:
-                Utils.handleHttpError(
-                  error,
-                  this.router,
-                  this.messageService,
-                  this.centralServerService,
-                  'general.unexpected_error_backend'
-                );
-            }
-          },
-        });
+      if (this.selectedChargingStation?.siteAreaID) {
+        this.centralServerService
+          .getSiteAreaImage(this.selectedChargingStation.siteAreaID)
+          .subscribe({
+            next: (image) => {
+              this.siteAreaImage = image ?? Constants.NO_IMAGE;
+            },
+            error: (error) => {
+              switch (error.status) {
+                case StatusCodes.NOT_FOUND:
+                  this.siteAreaImage = Constants.NO_IMAGE;
+                  break;
+                default:
+                  Utils.handleHttpError(
+                    error,
+                    this.router,
+                    this.messageService,
+                    this.centralServerService,
+                    'general.unexpected_error_backend'
+                  );
+              }
+            },
+          });
+      }
     }
   }
 
@@ -344,6 +353,7 @@ export class ReservationMainComponent implements OnInit, OnChanges {
           this.selectedChargingStation = result[0].objectRef as ChargingStation;
           this.chargingStation.setValue(this.selectedChargingStation.id);
           this.chargingStationID.setValue(this.selectedChargingStation.id);
+          this.connector.enable();
           this.centralServerService
             .getSiteAreaImage(this.selectedChargingStation.siteAreaID)
             .subscribe({
@@ -534,6 +544,10 @@ export class ReservationMainComponent implements OnInit, OnChanges {
     });
   }
 
+  public isDateProvided() {
+    return !!this.expiryDate?.value || (!!this.toDate?.value && !!this.fromDate?.value);
+  }
+
   public onDateChanged(event: MatDatepickerInputEvent<Date>, control: string) {
     if (!event.target.value) {
       return;
@@ -541,6 +555,9 @@ export class ReservationMainComponent implements OnInit, OnChanges {
     this.formGroup.controls[control].setValue(event.target.value.toISOString());
     this.formGroup.controls[control].markAsTouched();
     this.formGroup.controls[control].markAsDirty();
+    if (this.isDateProvided()) {
+      this.chargingStation.enable();
+    }
   }
 
   public cancel() {

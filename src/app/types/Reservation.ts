@@ -19,14 +19,14 @@ export interface Reservation
   fromDate?: Date;
   toDate?: Date;
   arrivalTime?: Date;
-  idTag: string;
+  idTag?: string;
   visualTagID?: string;
   tag?: Tag;
   carID?: string;
   car?: Car;
   parentIdTag?: string;
   parentTag?: Tag;
-  status: ReservationStatusEnum;
+  status?: ReservationStatusEnum;
   type?: ReservationType;
 }
 
@@ -82,3 +82,8 @@ export type ReservationStatusTransition = Readonly<{
   from?: ReservationStatusEnum;
   to: ReservationStatusEnum;
 }>;
+
+export interface CreateReservationDialogData extends TableData {
+  chargingStation: ChargingStation;
+  connector: Connector;
+}

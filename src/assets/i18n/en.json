@@ -2789,7 +2789,7 @@
       "create": {
         "title": "Create Reservation",
         "tooltips": "Create Reservation",
-        "confirm": "",
+        "confirm": "Do you really want to create a '{{reservationType}}' reservation at charging station '{{chargingStationID}}' on connector '{{connectorID}}'?",
         "details": "",
         "success": "'{{reservationID}}' has been created successfully",
         "error": "Error occurred while adding the reservation, check the logs"

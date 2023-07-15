@@ -10,6 +10,7 @@ import { Tag } from 'types/Tag';
 import { User, UserToken } from 'types/User';
 
 import { Ordering } from 'types/DataResult';
+import { ReservationType } from 'types/Reservation';
 import { CentralServerService } from '../services/central-server.service';
 import { DialogService } from '../services/dialog.service';
 import { MessageService } from '../services/message.service';
@@ -1221,7 +1222,57 @@ export class Utils {
     return { field: `${field}` };
   }
 
-  public static replaceAll(input: string, pattern: string, replacement: string = '') {
+  public static replaceAll(input: string, pattern: string, replacement: string = ''): string {
     return input.split(pattern).join(replacement);
+  }
+
+  public static handleReservationErrorResponse(
+    error: any,
+    messageService: MessageService,
+    router: Router,
+    centralServerService: CentralServerService
+  ): void {
+    switch (error.status) {
+      case HTTPError.RESERVATION_COLLISION_ERROR:
+        messageService.showErrorMessage('reservations.action_error.general.collision');
+        break;
+      case HTTPError.RESERVATION_REJECTED_ERROR:
+        messageService.showErrorMessage('reservations.action_error.general.rejected');
+        break;
+      case HTTPError.RESERVATION_FAULTED_ERROR:
+        messageService.showErrorMessage('reservations.action_error.general.faulted');
+        break;
+      case HTTPError.RESERVATION_OCCUPIED_ERROR:
+        messageService.showErrorMessage('reservations.action_error.general.occupied');
+        break;
+      case HTTPError.RESERVATION_UNAVAILABLE_ERROR:
+        messageService.showErrorMessage('reservations.action_error.general.unavailable');
+        break;
+      case HTTPError.RESERVATION_MULTIPLE_RESERVE_NOW_ERROR:
+        messageService.showErrorMessage('reservations.action_error.general.multiple_reserve_now');
+        break;
+      default:
+        Utils.handleHttpError(
+          error,
+          router,
+          messageService,
+          centralServerService,
+          'reservations.dialog.update.error'
+        );
+    }
+  }
+
+  public static getReservationType(
+    reservationType: ReservationType,
+    translateService: TranslateService
+  ): string {
+    switch (reservationType) {
+      case ReservationType.RESERVE_NOW:
+        return translateService.instant('reservations.type.reserve_now');
+      case ReservationType.PLANNED_RESERVATION:
+        return translateService.instant('reservations.type.planned_reservation');
+      default:
+        return translateService.instant('reservations.type.unknown');
+    }
   }
 }
