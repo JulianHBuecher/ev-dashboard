@@ -55,6 +55,7 @@ export class ChargingStationCreateReservationDialogComponent implements OnInit {
 
   public loggedUser: UserToken;
   public canListUsers = false;
+  public readonly minDate: Date = moment().toDate();
 
   public formGroup!: UntypedFormGroup;
   public id!: AbstractControl;
@@ -163,6 +164,7 @@ export class ChargingStationCreateReservationDialogComponent implements OnInit {
       this.fromDate.disable();
       this.toDate.disable();
     }
+    this.loadUserSessionContext();
   }
 
   public resetCar() {

@@ -107,7 +107,7 @@
             [formControl]="expiryDate"
             placeholder="{{'reservations.dialog.general.expiry_date' | translate}}"
             [matDatetimepicker]="expiryDatePicker"
-            [min]="expiryDate.value"
+            [min]="minDate"
             autocomplete="false"
             (dateChange)="onDateChanged($event, 'expiryDate')"
             (dateInput)="onDateChanged($event, 'expiryDate')"
