@@ -243,6 +243,7 @@ export class ChargingStationCreateReservationDialogComponent implements OnInit {
           this.visualTagID.reset();
           this.selectedTag = null;
           this.formGroup.markAsDirty();
+          this.loadUserSessionContext();
         }
       });
   }
