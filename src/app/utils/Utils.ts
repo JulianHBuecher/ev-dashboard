@@ -1268,11 +1268,11 @@ export class Utils {
   ): string {
     switch (reservationType) {
       case ReservationType.RESERVE_NOW:
-        return translateService.instant('reservations.type.reserve_now');
+        return translateService.instant('reservations.types.reserve_now');
       case ReservationType.PLANNED_RESERVATION:
-        return translateService.instant('reservations.type.planned_reservation');
+        return translateService.instant('reservations.types.planned_reservation');
       default:
-        return translateService.instant('reservations.type.unknown');
+        return translateService.instant('reservations.types.unknown');
     }
   }
 }
