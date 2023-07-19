@@ -434,6 +434,7 @@ export class ReservationMainComponent implements OnInit, OnChanges {
           this.visualTagID.reset();
           this.selectedTag = null;
           this.formGroup.markAsDirty();
+          this.loadUserSessionContext();
         }
       });
   }

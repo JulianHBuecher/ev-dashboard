@@ -72,7 +72,7 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
   private issuerFilter: TableFilterDef;
   private siteFilter: TableFilterDef;
   private siteAreaFilter: TableFilterDef;
-  private companyFilter: TableFilterDef;
+  // private companyFilter: TableFilterDef;
   private userFilter: TableFilterDef;
   private dateRangeFilter: TableFilterDef;
 
@@ -126,7 +126,7 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
             };
             this.siteFilter.visible = this.reservationsAuthorizations.canListSites;
             this.siteAreaFilter.visible = this.reservationsAuthorizations.canListSiteAreas;
-            this.companyFilter.visible = this.reservationsAuthorizations.canListCompanies;
+            // this.companyFilter.visible = this.reservationsAuthorizations.canListCompanies;
             this.userFilter.visible = this.reservationsAuthorizations.canListUsers;
             this.dateRangeFilter.visible = true;
 
@@ -350,7 +350,7 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
       this.issuerFilter,
       this.siteFilter,
     ]).getFilterDef();
-    this.companyFilter = new CompanyTableFilter([this.issuerFilter]).getFilterDef();
+    // this.companyFilter = new CompanyTableFilter([this.issuerFilter]).getFilterDef();
     this.dateRangeFilter = new DateRangeTableFilter({
       translateService: this.translateService,
     }).getFilterDef();
@@ -358,7 +358,7 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
     const filters: TableFilterDef[] = [
       this.siteFilter,
       this.siteAreaFilter,
-      this.companyFilter,
+      // this.companyFilter,
       this.dateRangeFilter,
       this.userFilter,
     ];

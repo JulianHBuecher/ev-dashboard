@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { WindowService } from 'services/window.service';
 import { ReservationsListTableDataSource } from './reservations-list-table-data-source';
 
 @Component({
   selector: 'app-reservations-list',
-  template: `<app-table [dataSource]="reservationsListTableDataSource"></app-table>w`,
+  template: `<app-table [dataSource]="reservationsListTableDataSource"></app-table>`,
   providers: [ReservationsListTableDataSource],
 })
 export class ReservationsListComponent {
