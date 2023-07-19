@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'services/message.service';
 import { Router } from '@angular/router';
 import { CentralServerService } from 'services/central-server.service';
-import { Observable, filter, map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { DataResult } from 'types/DataResult';
 import { TableColumnDef } from 'types/Table';
 import { Utils } from 'utils/Utils';
@@ -32,7 +32,7 @@ export class ChargingStationConnectorsDialogTableDataSource extends DialogTableD
         .pipe(
           map<ChargingStation, Connector[]>((chargingStation) =>
             chargingStation.connectors.filter(
-              (connector) => connector.status === ChargePointStatus.AVAILABLE
+              (connector) => connector.status !== ChargePointStatus.UNAVAILABLE
             )
           )
         )
@@ -52,13 +52,25 @@ export class ChargingStationConnectorsDialogTableDataSource extends DialogTableD
     return [
       {
         id: 'connectorId',
-        name: 'reservations.connector_id',
+        name: 'chargers.connector',
         class: 'text-left',
         formatter: (connectorID: number) => Utils.getConnectorLetterFromConnectorID(connectorID),
       },
       {
+        id: 'type',
+        name: 'chargers.connector_type',
+        class: 'text-left',
+        formatter: (connectorType: string) =>
+          Utils.getConnectorType(this.translateService, connectorType),
+      },
+      {
         id: 'status',
         name: 'reservations.connector_status',
+        class: 'text-left',
+      },
+      {
+        id: 'amperage',
+        name: 'chargers.amperage',
         class: 'text-left',
       },
     ];

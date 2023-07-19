@@ -191,6 +191,7 @@ export enum ConnectorType {
   TYPE_1_CCS = 'T1CCS',
   DOMESTIC = 'D',
   UNKNOWN = 'U',
+  TYPE_3_C = 'T3C',
 }
 
 export enum SiteAreaLimitSource {

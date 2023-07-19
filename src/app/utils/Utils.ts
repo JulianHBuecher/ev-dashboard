@@ -22,6 +22,7 @@ import {
   ChargingStation,
   ChargingStationPowers,
   Connector,
+  ConnectorType,
   CurrentType,
   StaticLimitAmps,
   Voltage,
@@ -1273,6 +1274,30 @@ export class Utils {
         return translateService.instant('reservations.types.planned_reservation');
       default:
         return translateService.instant('reservations.types.unknown');
+    }
+  }
+
+  public static getConnectorType(
+    translateService: TranslateService,
+    connectorType: string
+  ): string {
+    switch (connectorType) {
+      case ConnectorType.CHADEMO:
+        return translateService.instant('chargers.connector_type_chademo');
+      case ConnectorType.COMBO_CCS:
+        return translateService.instant('chargers.connector_type_combo');
+      case ConnectorType.DOMESTIC:
+        return translateService.instant('chargers.connector_type_domestic');
+      case ConnectorType.TYPE_1:
+        return translateService.instant('chargers.connector_type_type1');
+      case ConnectorType.TYPE_1_CCS:
+        return translateService.instant('chargers.connector_type_type1ccs');
+      case ConnectorType.TYPE_2:
+        return translateService.instant('chargers.connector_type_type2');
+      case ConnectorType.TYPE_3_C:
+        return translateService.instant('chargers.connector_type_type3c');
+      case ConnectorType.UNKNOWN:
+        return translateService.instant('chargers.connector_type_unknown');
     }
   }
 }
