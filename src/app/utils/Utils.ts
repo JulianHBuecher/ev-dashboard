@@ -1300,4 +1300,8 @@ export class Utils {
         return translateService.instant('chargers.connector_type_unknown');
     }
   }
+
+  public static buildTimeObject(hour: number, minute: number, date?: Date) {
+    return moment({ hour, minute }).toDate();
+  }
 }

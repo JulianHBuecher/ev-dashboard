@@ -20,7 +20,6 @@ import { TenantComponents } from 'types/Tenant';
 import { IssuerFilter } from 'shared/table/filters/issuer-filter';
 import { SiteTableFilter } from 'shared/table/filters/site-table-filter';
 import { SiteAreaTableFilter } from 'shared/table/filters/site-area-table-filter';
-import { CompanyTableFilter } from 'shared/table/filters/company-table-filter';
 import { ReservationsAuthorizations } from 'types/Authorization';
 import {
   TableEditReservationAction,
@@ -51,6 +50,10 @@ import { DateRangeTableFilter } from 'shared/table/filters/date-range-table-filt
 import { Constants } from 'utils/Constants';
 import { User } from 'types/User';
 import { UserTableFilter } from 'shared/table/filters/user-table-filter';
+import {
+  TableDeleteReservationsAction,
+  TableDeleteReservationsActionDef,
+} from 'shared/table/actions/reservations/table-delete-reservations-action';
 import { Utils } from '../../../utils/Utils';
 import { ReservationDialogComponent } from '../reservation/reservation-dialog.component';
 import { ReservationsConnectorsCellComponent } from '../cell-components/reservations-connectors-cell.component';
@@ -65,6 +68,7 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
   private viewAction = new TableViewReservationAction().getActionDef();
   private cancelAction = new TableCancelReservationAction().getActionDef();
   private deleteAction = new TableDeleteReservationAction().getActionDef();
+  private deleteManyAction = new TableDeleteReservationsAction().getActionDef();
 
   private canExport = new TableExportReservationsAction().getActionDef();
   private canCreate = new TableCreateReservationAction().getActionDef();
@@ -121,6 +125,7 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
               canListUsers: Utils.convertToBoolean(reservations.canListUsers),
               canExport: Utils.convertToBoolean(reservations.canExport),
               canCreate: Utils.convertToBoolean(reservations.canCreate),
+              canDelete: Utils.convertToBoolean(reservations.canDelete),
               canListTags: Utils.convertToBoolean(reservations.canListTags),
               metadata: reservations.metadata,
             };
@@ -132,6 +137,7 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
 
             this.canExport.visible = this.reservationsAuthorizations.canExport;
             this.canCreate.visible = this.reservationsAuthorizations.canCreate;
+            this.deleteManyAction.visible = this.reservationsAuthorizations.canDelete;
 
             const tableDef = this.getTableDef();
             tableDef.rowDetails.additionalParameters = {
@@ -160,8 +166,8 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
         enabled: true,
       },
       rowSelection: {
-        enabled: false,
-        multiple: false,
+        enabled: true,
+        multiple: true,
       },
       rowDetails: {
         enabled: false,
@@ -200,6 +206,22 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
         headerClass: 'col-15p',
         class: 'col-15p',
         formatter: (toDate: Date) => this.datePipe.transform(toDate, Constants.CUSTOM_DATE_FORMAT),
+      },
+      {
+        id: 'arrivalTime',
+        name: 'reservations.arrival_time',
+        headerClass: 'col-10p',
+        class: 'col-10p',
+        formatter: (arrivalTime: Date) =>
+          arrivalTime ? this.datePipe.transform(arrivalTime, 'HH:mm') : '-',
+      },
+      {
+        id: 'departureTime',
+        name: 'reservations.departure_time',
+        headerClass: 'col-10p',
+        class: 'col-10p',
+        formatter: (departureTime: Date) =>
+          departureTime ? this.datePipe.transform(departureTime, 'HH:mm') : '-',
       },
       {
         id: 'tag.user.name',
@@ -257,7 +279,7 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
 
   public buildTableActionsDef(): TableActionDef[] {
     const tableActionsDef = super.buildTableActionsDef();
-    return [this.canCreate, this.canExport, ...tableActionsDef];
+    return [this.canCreate, this.canExport, this.deleteManyAction, ...tableActionsDef];
   }
 
   public actionTriggered(actionDef: TableActionDef) {
@@ -282,6 +304,21 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
             this.centralServerService,
             this.router,
             this.spinnerService
+          );
+        }
+        break;
+      case ReservationButtonAction.DELETE_RESERVATIONS:
+        if (actionDef.action) {
+          (actionDef as TableDeleteReservationsActionDef).action(
+            this.getSelectedRows(),
+            this.dialogService,
+            this.translateService,
+            this.messageService,
+            this.centralServerService,
+            this.spinnerService,
+            this.router,
+            this.clearSelectedRows.bind(this),
+            this.refreshData.bind(this)
           );
         }
         break;
@@ -382,6 +419,7 @@ export class ReservationsListTableDataSource extends TableDataSource<Reservation
   private isActiveReservation(reservation: Reservation): boolean {
     return ![
       ReservationStatus.DONE,
+      ReservationStatus.UNMET,
       ReservationStatus.EXPIRED,
       ReservationStatus.CANCELLED,
     ].includes(reservation.status);

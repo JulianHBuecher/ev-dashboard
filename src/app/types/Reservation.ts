@@ -18,7 +18,8 @@ export interface Reservation
   expiryDate: Date;
   fromDate?: Date;
   toDate?: Date;
-  arrivalTime?: Date;
+  arrivalTime?: Date | TimeObject;
+  departureTime?: Date | TimeObject;
   idTag?: string;
   visualTagID?: string;
   tag?: Tag;
@@ -46,6 +47,7 @@ export enum ReservationButtonAction {
   CANCEL_RESERVATION = 'cancel_reservation',
   EXPORT_RESERVATIONS = 'export_reservations',
   DELETE_RESERVATION = 'delete_reservation',
+  DELETE_RESERVATIONS = 'delete_reservations',
 }
 
 export interface ReserveNowDialogData extends TableData {
@@ -68,6 +70,7 @@ export enum ReservationStatus {
   CANCELLED = 'reservation_cancelled',
   INACTIVE = 'reservation_inactive',
   EXPIRED = 'reservation_expired',
+  UNMET = 'reservation_unmet',
 }
 
 export enum ReservationType {
@@ -86,4 +89,9 @@ export type ReservationStatusTransition = Readonly<{
 export interface CreateReservationDialogData extends TableData {
   chargingStation: ChargingStation;
   connector: Connector;
+}
+
+export interface TimeObject {
+  hour: number;
+  minute: number;
 }

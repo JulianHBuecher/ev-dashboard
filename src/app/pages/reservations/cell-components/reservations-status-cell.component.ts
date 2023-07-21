@@ -51,6 +51,9 @@ export class AppReservationsFormatStatusPipe implements PipeTransform {
       case ReservationStatus.IN_PROGRESS:
         classNames += Utils.replaceAll(ReservationStatus.IN_PROGRESS, '_', '-');
         break;
+      case ReservationStatus.UNMET:
+        classNames += Utils.replaceAll(ReservationStatus.UNMET, '_', '-');
+        break;
       default:
         classNames += ChipType.DEFAULT;
     }

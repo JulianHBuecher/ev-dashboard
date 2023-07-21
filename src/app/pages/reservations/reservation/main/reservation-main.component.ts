@@ -61,6 +61,7 @@ export class ReservationMainComponent implements OnInit, OnChanges {
   public fromDate!: AbstractControl;
   public toDate!: AbstractControl;
   public arrivalTime!: AbstractControl;
+  public departureTime!: AbstractControl;
   public expiryDate!: AbstractControl;
   public carID!: AbstractControl;
   public car!: AbstractControl;
@@ -134,17 +135,14 @@ export class ReservationMainComponent implements OnInit, OnChanges {
       'fromDate',
       new FormControl(
         { value: null, disabled: this.isChargingStationAvailable() },
-        Validators.compose([Reservations.validateDate, Reservations.fromDateValidator('toDate')])
+        Validators.compose([Reservations.validateDate])
       )
     );
     this.formGroup.addControl(
       'toDate',
       new FormControl(
         { value: null, disabled: this.isChargingStationAvailable() },
-        Validators.compose([
-          Reservations.validateDate,
-          Reservations.fromToDateValidator('fromDate', 'toDate'),
-        ])
+        Validators.compose([Reservations.validateDate])
       )
     );
     this.formGroup.addControl(
@@ -152,6 +150,20 @@ export class ReservationMainComponent implements OnInit, OnChanges {
       new FormControl(
         null,
         Validators.compose([Reservations.validateDate, Reservations.expiryDateValidator])
+      )
+    );
+    this.formGroup.addControl(
+      'arrivalTime',
+      new FormControl(
+        { value: null },
+        Validators.compose([Validators.required, Reservations.validateDate])
+      )
+    );
+    this.formGroup.addControl(
+      'departureTime',
+      new FormControl(
+        { value: null, disabled: this.arrivalTime?.value },
+        Validators.compose([Validators.required, Reservations.validateDate])
       )
     );
     this.formGroup.addControl('carID', new FormControl(null));
@@ -172,6 +184,8 @@ export class ReservationMainComponent implements OnInit, OnChanges {
     this.connector = this.formGroup.controls['connector'];
     this.expiryDate = this.formGroup.controls['expiryDate'];
     this.fromDate = this.formGroup.controls['fromDate'];
+    this.arrivalTime = this.formGroup.controls['arrivalTime'];
+    this.departureTime = this.formGroup.controls['departureTime'];
     this.toDate = this.formGroup.controls['toDate'];
     this.userID = this.formGroup.controls['userID'];
     this.user = this.formGroup.controls['user'];
@@ -198,9 +212,12 @@ export class ReservationMainComponent implements OnInit, OnChanges {
   public loadReservation() {
     if (this.initialized && this.reservation) {
       if (
-        [ReservationStatus.CANCELLED, ReservationStatus.EXPIRED, ReservationStatus.DONE].includes(
-          this.reservation?.status
-        )
+        [
+          ReservationStatus.CANCELLED,
+          ReservationStatus.UNMET,
+          ReservationStatus.EXPIRED,
+          ReservationStatus.DONE,
+        ].includes(this.reservation?.status)
       ) {
         this.formGroup.disable();
       }
@@ -219,10 +236,14 @@ export class ReservationMainComponent implements OnInit, OnChanges {
       if (this.reservation.type === ReservationType.PLANNED_RESERVATION) {
         this.fromDate.enable();
         this.toDate.enable();
+        this.arrivalTime.enable();
+        this.departureTime.enable();
       }
       this.fromDate.setValue(this.reservation.fromDate);
       this.toDate.setValue(this.reservation.toDate);
       this.expiryDate.setValue(this.reservation.expiryDate);
+      this.arrivalTime.setValue(this.reservation.arrivalTime);
+      this.departureTime.setValue(this.reservation.departureTime);
       this.userID.setValue(this.reservation.tag.userID);
       this.selectedUser = this.reservation.tag.user;
       this.user.setValue(Utils.buildUserFullName(this.selectedUser));
@@ -232,9 +253,12 @@ export class ReservationMainComponent implements OnInit, OnChanges {
       this.parentIdTag.setValue(this.reservation.parentIdTag);
       this.status.setValue(this.reservation.status);
       if (
-        ![ReservationStatus.CANCELLED, ReservationStatus.DONE, ReservationStatus.EXPIRED].includes(
-          this.reservation.status
-        )
+        ![
+          ReservationStatus.CANCELLED,
+          ReservationStatus.UNMET,
+          ReservationStatus.DONE,
+          ReservationStatus.EXPIRED,
+        ].includes(this.reservation.status)
       ) {
         this.reservationStatuses = RESERVATION_STATUSES.filter((status) =>
           Constants.ReservationStatusTransitions.filter(
@@ -334,6 +358,10 @@ export class ReservationMainComponent implements OnInit, OnChanges {
 
   public assignChargingStation() {
     const dialogConfig = new MatDialogConfig();
+    const fromDate = this.fromDate.value ?? moment().toISOString();
+    const arrivalTime = moment(this.arrivalTime.value);
+    const toDate = this.toDate.value ?? this.expiryDate.value;
+    const departureTime = moment(this.departureTime.value);
     dialogConfig.data = {
       title: 'reservations.select_charger',
       rowMultipleSelection: false,
@@ -341,8 +369,14 @@ export class ReservationMainComponent implements OnInit, OnChanges {
       staticFilter: {
         WithSiteArea: true,
         Issuer: true,
-        ToDate: this.toDate.value ?? this.expiryDate.value,
-        FromDate: this.fromDate.value ?? moment().toISOString(),
+        FromDate: moment(fromDate)
+          .hour(arrivalTime.hours())
+          .minutes(arrivalTime.minutes())
+          .toISOString(),
+        ToDate: moment(toDate)
+          .hour(departureTime.hours())
+          .minutes(departureTime.minutes())
+          .toISOString(),
       },
     };
     this.dialog
@@ -508,10 +542,12 @@ export class ReservationMainComponent implements OnInit, OnChanges {
     if (this.type.value === ReservationType.RESERVE_NOW) {
       this.fromDate.disable();
       this.toDate.disable();
+      this.arrivalTime.disable();
       this.expiryDate.enable();
     } else {
       this.fromDate.enable();
       this.toDate.enable();
+      this.arrivalTime.enable();
       this.expiryDate.disable();
     }
   }
@@ -546,14 +582,20 @@ export class ReservationMainComponent implements OnInit, OnChanges {
   }
 
   public isDateProvided() {
-    return !!this.expiryDate?.value || (!!this.toDate?.value && !!this.fromDate?.value);
+    return (
+      !!this.expiryDate?.value ||
+      (!!this.toDate?.value &&
+        !!this.fromDate?.value &&
+        !!this.arrivalTime?.value &&
+        !!this.departureTime?.value)
+    );
   }
 
   public onDateChanged(event: MatDatepickerInputEvent<Date>, control: string) {
-    if (!event.target.value) {
+    if (!event.target?.value) {
       return;
     }
-    this.formGroup.controls[control].setValue(event.target.value.toISOString());
+    this.formGroup.controls[control].setValue(event.target.value);
     this.formGroup.controls[control].markAsTouched();
     this.formGroup.controls[control].markAsDirty();
     if (this.isDateProvided()) {

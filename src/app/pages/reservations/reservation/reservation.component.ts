@@ -182,6 +182,8 @@ export class ReservationComponent implements OnInit {
     if (!reservation.fromDate && !reservation.toDate) {
       reservation.fromDate = moment().toDate();
       reservation.toDate = reservation.expiryDate;
+      reservation.arrivalTime = reservation.fromDate;
+      reservation.departureTime = reservation.expiryDate;
     }
     if (!reservation.expiryDate) {
       reservation.expiryDate = reservation.toDate;

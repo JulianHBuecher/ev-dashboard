@@ -7,6 +7,7 @@ export const RESERVATION_STATUSES = [
   { key: ReservationStatus.CANCELLED, value: 'reservations.state.cancelled' },
   { key: ReservationStatus.EXPIRED, value: 'reservations.state.expired' },
   { key: ReservationStatus.IN_PROGRESS, value: 'reservations.state.in_progress' },
+  { key: ReservationStatus.UNMET, value: 'reservations.state.unmet' },
 ];
 
 export const RESERVATION_TYPES = [

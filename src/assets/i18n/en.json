@@ -2758,6 +2758,8 @@
     "expiry_date": "Expiration Date",
     "from_date": "Valid From",
     "to_date": "Valid To",
+    "arrival_time": "Arrival Time",
+    "departure_time": "Departure Time",
     "tag_id": "Tag",
     "status": "Status",
     "type": "Reservation Type",
@@ -2814,6 +2816,15 @@
         "title": "Export reservations",
         "confirm": "Do you really want to export all the reservations matching the filters?",
         "error": "Error occurred while trying to export the reservations, check the logs"
+      },
+      "delete_reservations": {
+        "title": "Delete Reservation(s)",
+        "confirm": "Do you really want to delete '{{quantity}}' reservations?",
+        "success": "{{inSuccess}} reservations have been deleted successfully",
+        "partial": "{{inSuccess}} reservations have been deleted successfully and {{inError}} reservations have encountered an error, check the logs",
+        "error": "{{inError}} failed to be deleted, check the logs",
+        "unexpected_error": "Unexpected error occurred while deleting the reservations, check the logs",
+        "reject_deletion_ongoing_reservations": "You cannot delete a reservation, which is in progress"
       }
     },
     "action_error": {
@@ -2848,7 +2859,8 @@
       "in_progress": "In Progress",
       "inactive": "Inactive",
       "cancelled": "Cancelled",
-      "expired": "Expired"
+      "expired": "Expired",
+      "unmet": "Unmet"
     },
     "types": {
       "reserve_now": "Reserve Now",
@@ -2859,6 +2871,7 @@
     "select_connector": "Select Connector",
     "select_car": "Select Car",
     "select_tag": "Select Tag",
-    "select_user": "Select User"
+    "select_user": "Select User",
+    "select_date_range": "Select Date Range"
   }
 }

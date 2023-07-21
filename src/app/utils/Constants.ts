@@ -80,7 +80,7 @@ export class Constants {
     desc: Constants.DESCENDING_ORDER,
   };
   /* Reusable Date Format for List Data Sources */
-  public static readonly CUSTOM_DATE_FORMAT = 'E, d  MMMM y, HH:mm';
+  public static readonly CUSTOM_DATE_FORMAT = 'E, d  MMMM y';
   /* Permitted State Transitions between Reservation Statuses */
   public static readonly ReservationStatusTransitions: Readonly<ReservationStatusTransition[]> =
     Object.freeze([
@@ -91,6 +91,7 @@ export class Constants {
       { from: ReservationStatus.SCHEDULED, to: ReservationStatus.EXPIRED },
       { from: ReservationStatus.IN_PROGRESS, to: ReservationStatus.CANCELLED },
       { from: ReservationStatus.IN_PROGRESS, to: ReservationStatus.EXPIRED },
+      { from: ReservationStatus.IN_PROGRESS, to: ReservationStatus.UNMET },
       { from: ReservationStatus.IN_PROGRESS, to: ReservationStatus.DONE },
     ]);
 }

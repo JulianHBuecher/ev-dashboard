@@ -4073,6 +4073,19 @@ export class CentralServerService {
       .pipe(catchError(this.handleHttpError));
   }
 
+  public deleteReservations(reservationIDs: number[]): Observable<ActionResponse> {
+    // Verify init
+    this.checkInit();
+    const options = {
+      headers: this.buildHttpHeaders(),
+      body: { reservationIDs },
+    };
+    // Execute the REST service
+    return this.httpClient
+      .delete<ActionResponse>(this.buildRestEndpointUrl(RESTServerRoute.REST_RESERVATIONS), options)
+      .pipe(catchError(this.handleHttpError));
+  }
+
   public updateReservation(reservation: Reservation): Observable<ActionResponse> {
     // Verify init
     this.checkInit();

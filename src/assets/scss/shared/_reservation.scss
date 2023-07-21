@@ -10,7 +10,7 @@
   @include chip($brand-indigo);
 }
 
-.reservation-inactive {
+.reservation-unmet {
   @include chip($brand-disabled);
 }
 

@@ -2758,6 +2758,8 @@
     "expiry_date": "Ablaufdatum",
     "from_date": "Gültig ab",
     "to_date": "Gültig bis",
+    "arrival_time": "Ankunftszeit",
+    "departure_time": "Abfahrtszeit",
     "tag_id": "Tag ID",
     "status": "Status",
     "type": "Reservierungs-Typ",
@@ -2819,6 +2821,15 @@
         "tooltips": "",
         "details": "",
         "success": ""
+      },
+      "delete_reservations": {
+        "title": "Lösche Reservierungen",
+        "confirm": "Wollen Sie wirlich '{{quantity}}' Reservierung(en) löschen?",
+        "success": "{{inSuccess}} Reservierungen wurden erfolgreich gelöscht",
+        "partial": "{{inSuccess}} Reservierungen wurden erfolgreich gelöscht und {{inError}} Reservierungen haben einen Fehler ausgelöst",
+        "error": "{{inError}} Reservierungen konnten nicht gelöscht werden, bitte überprüfen Sie die Logs",
+        "unexpected_error": "Beim Löschen der Reservierungen ist ein unerwarteter Fehler ist aufgetreten, bitte überprüfen Sie die Logs",
+        "reject_deletion_ongoing_reservations": "Sie können keine laufenden Reservierungen löschen."
       }
     },
     "action_error": {
@@ -2853,7 +2864,8 @@
       "in_progress": "Aktiv",
       "inactive": "Inaktiv",
       "cancelled": "Storniert",
-      "expired": "Abgelaufen"
+      "expired": "Abgelaufen",
+      "unmet": "Unerfüllt"
     },
     "types": {
       "reserve_now": "Direkt",
@@ -2864,6 +2876,7 @@
     "select_connector": "Anschluss auswählen",
     "select_car": "Fahrzeug auswählen",
     "select_tag": "Badge auswählen",
-    "select_user": "Nutzer auswählen"
+    "select_user": "Nutzer auswählen",
+    "select_date_range": "Zeitraum auswählen"
   }
 }

@@ -51,7 +51,7 @@ export class TableDeleteReservationAction extends TableDeleteAction {
         reservationID: reservation.id,
       }),
       'reservations.dialog.delete.error',
-      centralServerService.deleteReservation.bind(centralServerService),
+      centralServerService.deleteReservations.bind(centralServerService),
       dialogService,
       translateService,
       messageService,

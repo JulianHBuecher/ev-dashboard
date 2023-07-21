@@ -53,17 +53,54 @@
           </mat-error>
         </mat-form-field>
       </div>
+      <div class="form-group" *ngIf="type.value === 'planned_reservation'">
+        <div>
+          <mat-form-field>
+            <mat-label>{{ 'reservations.select_date_range' | translate }}</mat-label>
+            <mat-date-range-input
+              [rangePicker]="fromDateToDatePicker"
+              (click)="fromDateToDatePicker.open()"
+              [min]="determineMinDate('fromDate')"
+              [required]="type.value === 'planned_reservation'"
+            >
+              <input
+                matStartDate
+                formControlName="fromDate"
+                placeholder="{{ 'reservations.from_date' | translate }}"
+                readonly
+              />
+              <input
+                matEndDate
+                formControlName="toDate"
+                placeholder="{{ 'reservations.to_date' | translate }}"
+                readonly
+              />
+            </mat-date-range-input>
+            <mat-hint *ngIf="!fromDate.value || !toDate.value">MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="fromDateToDatePicker" [disabled]="readOnly">
+            </mat-datepicker-toggle>
+            <mat-date-range-picker
+              #fromDateToDatePicker
+              [disabled]="readOnly"
+              openOnFocus="true"
+            ></mat-date-range-picker>
+            <mat-error *ngIf="fromDate.error?.invalidDate || fromDate.error?.invalidDate">
+              {{ 'reservations.error.invalid_date' | translate }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
       <div class="row" *ngIf="type.value === 'planned_reservation'">
         <div class="col-md-6">
-          <div class="form-group">
+          <div>
             <mat-form-field>
-              <mat-hint *ngIf="!fromDate.value">MM/DD/YYYY --:--</mat-hint>
-              <mat-datetimepicker-toggle matSuffix [for]="fromDatePicker" [disabled]="readOnly">
+              <mat-hint *ngIf="!arrivalTime.value">--:--</mat-hint>
+              <mat-datetimepicker-toggle matSuffix [for]="arrivalTimePicker" [disabled]="readOnly">
               </mat-datetimepicker-toggle>
               <mat-datetimepicker
-                #fromDatePicker
-                type="datetime"
-                [disabled]="readOnly"
+                #arrivalTimePicker
+                type="time"
+                [disabled]="readonly"
                 openOnFocus="true"
                 timeInterval="5"
                 mode="portrait"
@@ -71,25 +108,19 @@
               </mat-datetimepicker>
               <input
                 matInput
-                [formControl]="fromDate"
-                placeholder="{{ 'reservations.from_date' | translate }}"
-                [matDatetimepicker]="fromDatePicker"
-                [disabled]="readOnly"
-                [min]="determineMinDate('fromDate')"
+                readonly="true"
+                [formControl]="arrivalTime"
+                placeholder="{{ 'reservations.arrival_time' | translate }}"
+                [matDatetimepicker]="arrivalTimePicker"
+                [min]="determineMinDate('arrivalTime')"
                 autocomplete="false"
-                (click)="fromDatePicker.open()"
-                (dateChange)="onDateChanged($event, 'fromDate')"
-                (dateInput)="onDateChanged($event, 'fromDate')"
-                [required]="type.value === 'planned_reservation'"
+                (click)="arrivalTimePicker.open()"
+                (dateChange)="onDateChanged($event, 'arrivalTime')"
+                (dateInput)="onDateChanged($event, 'arrivalTime')"
+                [disabled]="readonly"
               />
-              <mat-error *ngIf="fromDate.errors?.required">
-                {{ 'general.mandatory_field' | translate }}
-              </mat-error>
-              <mat-error *ngIf="fromDate.errors?.invalidDate">
+              <mat-error *ngIf="expiryDate.errors?.invalidDate">
                 {{ 'reservations.error.invalid_date' | translate }}
-              </mat-error>
-              <mat-error *ngIf="fromDate.errors?.invalidDateRange">
-                {{ 'reservations.error.invalid_date_range' | translate }}
               </mat-error>
             </mat-form-field>
           </div>
@@ -97,13 +128,17 @@
         <div class="col-md-6">
           <div>
             <mat-form-field>
-              <mat-hint *ngIf="!toDate.value">MM/DD/YYYY --:--</mat-hint>
-              <mat-datetimepicker-toggle matSuffix [for]="toDatePicker" [disabled]="readOnly">
+              <mat-hint *ngIf="!departureTime.value">--:--</mat-hint>
+              <mat-datetimepicker-toggle
+                matSuffix
+                [for]="departureTimePicker"
+                [disabled]="readOnly"
+              >
               </mat-datetimepicker-toggle>
               <mat-datetimepicker
-                #toDatePicker
-                type="datetime"
-                [disabled]="readOnly"
+                #departureTimePicker
+                type="time"
+                [disabled]="readonly"
                 openOnFocus="true"
                 timeInterval="5"
                 mode="portrait"
@@ -111,25 +146,19 @@
               </mat-datetimepicker>
               <input
                 matInput
-                [formControl]="toDate"
-                placeholder="{{ 'reservations.to_date' | translate }}"
-                [matDatetimepicker]="toDatePicker"
-                [disabled]="readOnly"
-                [min]="determineMinDate('toDate')"
+                readonly="true"
+                [formControl]="departureTime"
+                placeholder="{{ 'reservations.departure_time' | translate }}"
+                [matDatetimepicker]="departureTimePicker"
+                [min]="arrivalTime.value ?? determineMinDate('departureTime')"
                 autocomplete="false"
-                (click)="toDatePicker.open()"
-                (dateChange)="onDateChanged($event, 'toDate')"
-                (dateInput)="onDateChanged($event, 'toDate')"
-                [required]="type.value === 'planned_reservation'"
+                (click)="departureTimePicker.open()"
+                (dateChange)="onDateChanged($event, 'departureTime')"
+                (dateInput)="onDateChanged($event, 'departureTime')"
+                [disabled]="readonly"
               />
-              <mat-error *ngIf="toDate.errors?.required">
-                {{ 'general.mandatory_field' | translate }}
-              </mat-error>
-              <mat-error *ngIf="toDate.errors?.invalidDate">
+              <mat-error *ngIf="expiryDate.errors?.invalidDate">
                 {{ 'reservations.error.invalid_date' | translate }}
-              </mat-error>
-              <mat-error *ngIf="toDate.errors?.invalidDateRange">
-                {{ 'reservations.error.invalid_date_range' | translate }}
               </mat-error>
             </mat-form-field>
           </div>
@@ -273,7 +302,7 @@
           </button>
         </mat-form-field>
       </div>
-      <div class="form-group mt-4" *ngIf="status.value">
+      <!-- <div class="form-group mt-4" *ngIf="status.value">
         <mat-form-field>
           <mat-label for="reservationStatus">{{ 'reservations.status' | translate }}</mat-label>
           <mat-select
@@ -289,7 +318,7 @@
             'general.mandatory_field' | translate
           }}</mat-error>
         </mat-form-field>
-      </div>
+      </div> -->
       <div class="form-group mt-4">
         <mat-radio-group [formControl]="type">
           <div *ngFor="let type of reservationTypes" class="mt-2">
