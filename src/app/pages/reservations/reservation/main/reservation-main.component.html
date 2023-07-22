@@ -112,7 +112,7 @@
                 [formControl]="arrivalTime"
                 placeholder="{{ 'reservations.arrival_time' | translate }}"
                 [matDatetimepicker]="arrivalTimePicker"
-                [min]="determineMinDate('arrivalTime')"
+                [min]="fromDate.value ?? determineMinDate('arrivalTime')"
                 autocomplete="false"
                 (click)="arrivalTimePicker.open()"
                 (dateChange)="onDateChanged($event, 'arrivalTime')"

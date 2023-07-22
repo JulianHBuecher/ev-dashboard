@@ -68,8 +68,9 @@ export class ChargingStationCreateReservationDialogComponent implements OnInit {
   public parentTag!: AbstractControl;
   public fromDate!: AbstractControl;
   public toDate!: AbstractControl;
-  public arrivalTime!: AbstractControl;
   public expiryDate!: AbstractControl;
+  public arrivalTime!: AbstractControl;
+  public departureTime!: AbstractControl;
   public carID!: AbstractControl;
   public car!: AbstractControl;
   public type!: AbstractControl;
@@ -104,10 +105,7 @@ export class ChargingStationCreateReservationDialogComponent implements OnInit {
 
   public ngOnInit(): void {
     this.formGroup = new UntypedFormGroup({
-      id: new UntypedFormControl(
-        Utils.generateRandomReservationID(),
-        Validators.compose([Validators.required])
-      ),
+      id: new UntypedFormControl(null),
       userID: new UntypedFormControl(null, Validators.compose([Validators.required])),
       user: new UntypedFormControl(null, Validators.compose([Validators.required])),
       visualTagID: new UntypedFormControl(null, Validators.compose([Validators.required])),
@@ -132,6 +130,14 @@ export class ChargingStationCreateReservationDialogComponent implements OnInit {
         null,
         Validators.compose([Reservations.validateDate, Reservations.expiryDateValidator])
       ),
+      arrivalTime: new UntypedFormControl(
+        null,
+        Validators.compose([Validators.required, Reservations.validateDate])
+      ),
+      departureTime: new UntypedFormControl(
+        { value: null, disabled: this.arrivalTime?.value },
+        Validators.compose([Validators.required, Reservations.validateDate])
+      ),
       carID: new UntypedFormControl(null),
       car: new UntypedFormControl(null),
       type: new FormControl<ReservationType>(
@@ -143,6 +149,8 @@ export class ChargingStationCreateReservationDialogComponent implements OnInit {
     this.expiryDate = this.formGroup.controls['expiryDate'];
     this.fromDate = this.formGroup.controls['fromDate'];
     this.toDate = this.formGroup.controls['toDate'];
+    this.arrivalTime = this.formGroup.controls['arrivalTime'];
+    this.departureTime = this.formGroup.controls['departureTime'];
     this.userID = this.formGroup.controls['userID'];
     this.user = this.formGroup.controls['user'];
     this.visualTagID = this.formGroup.controls['visualTagID'];
@@ -163,6 +171,8 @@ export class ChargingStationCreateReservationDialogComponent implements OnInit {
     if (this.type.value === ReservationType.RESERVE_NOW) {
       this.fromDate.disable();
       this.toDate.disable();
+      this.arrivalTime.disable();
+      this.departureTime.disable();
     }
     this.loadUserSessionContext();
   }
@@ -323,14 +333,20 @@ export class ChargingStationCreateReservationDialogComponent implements OnInit {
   }
 
   public isDateProvided() {
-    return !!this.expiryDate?.value || (!!this.toDate?.value && !!this.fromDate?.value);
+    return (
+      !!this.expiryDate?.value ||
+      (!!this.toDate?.value &&
+        !!this.fromDate?.value &&
+        !!this.arrivalTime?.value &&
+        !!this.departureTime?.value)
+    );
   }
 
   public onDateChanged(event: MatDatepickerInputEvent<Date>, control: string) {
-    if (!event.target.value) {
+    if (!event.target?.value) {
       return;
     }
-    this.formGroup.controls[control].setValue(event.target.value.toISOString());
+    this.formGroup.controls[control].setValue(event.target.value);
     this.formGroup.controls[control].markAsTouched();
     this.formGroup.controls[control].markAsDirty();
   }

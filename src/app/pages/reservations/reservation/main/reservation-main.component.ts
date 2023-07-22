@@ -96,13 +96,7 @@ export class ReservationMainComponent implements OnInit, OnChanges {
   }
 
   public ngOnInit(): void {
-    this.formGroup.addControl(
-      'id',
-      new FormControl(
-        Utils.generateRandomReservationID(),
-        Validators.compose([Validators.required, Validators.min(0)])
-      )
-    );
+    this.formGroup.addControl('id', new FormControl(null));
     this.formGroup.addControl(
       'chargingStationID',
       new FormControl('', Validators.compose([Validators.required]))
@@ -152,20 +146,6 @@ export class ReservationMainComponent implements OnInit, OnChanges {
         Validators.compose([Reservations.validateDate, Reservations.expiryDateValidator])
       )
     );
-    this.formGroup.addControl(
-      'arrivalTime',
-      new FormControl(
-        { value: null },
-        Validators.compose([Validators.required, Reservations.validateDate])
-      )
-    );
-    this.formGroup.addControl(
-      'departureTime',
-      new FormControl(
-        { value: null, disabled: this.arrivalTime?.value },
-        Validators.compose([Validators.required, Reservations.validateDate])
-      )
-    );
     this.formGroup.addControl('carID', new FormControl(null));
     this.formGroup.addControl('car', new FormControl(null));
     this.formGroup.addControl('status', new FormControl(null));
@@ -174,6 +154,20 @@ export class ReservationMainComponent implements OnInit, OnChanges {
       new FormControl<ReservationType>(
         ReservationType.RESERVE_NOW,
         Validators.compose([Validators.required])
+      )
+    );
+    this.formGroup.addControl(
+      'arrivalTime',
+      new FormControl(
+        { value: null, disabled: !this.expiryDate?.value },
+        Validators.compose([Validators.required, Reservations.validateDate])
+      )
+    );
+    this.formGroup.addControl(
+      'departureTime',
+      new FormControl(
+        { value: null, disabled: !this.arrivalTime?.value },
+        Validators.compose([Validators.required, Reservations.validateDate])
       )
     );
     // Form
@@ -358,10 +352,10 @@ export class ReservationMainComponent implements OnInit, OnChanges {
 
   public assignChargingStation() {
     const dialogConfig = new MatDialogConfig();
-    const fromDate = this.fromDate.value ?? moment().toISOString();
-    const arrivalTime = moment(this.arrivalTime.value);
-    const toDate = this.toDate.value ?? this.expiryDate.value;
-    const departureTime = moment(this.departureTime.value);
+    const fromDate = moment(this.fromDate?.value ?? new Date());
+    const arrivalTime = moment(this.arrivalTime?.value ?? new Date());
+    const toDate = moment(this.toDate?.value ?? this.expiryDate.value);
+    const departureTime = moment(this.departureTime?.value ?? this.expiryDate.value);
     dialogConfig.data = {
       title: 'reservations.select_charger',
       rowMultipleSelection: false,
@@ -369,14 +363,10 @@ export class ReservationMainComponent implements OnInit, OnChanges {
       staticFilter: {
         WithSiteArea: true,
         Issuer: true,
-        FromDate: moment(fromDate)
-          .hour(arrivalTime.hours())
-          .minutes(arrivalTime.minutes())
-          .toISOString(),
-        ToDate: moment(toDate)
-          .hour(departureTime.hours())
-          .minutes(departureTime.minutes())
-          .toISOString(),
+        FromDate: fromDate.toISOString(),
+        ToDate: toDate.toISOString(),
+        ArrivalTime: arrivalTime.toISOString(),
+        DepartureTime: departureTime.toISOString(),
       },
     };
     this.dialog
@@ -548,6 +538,7 @@ export class ReservationMainComponent implements OnInit, OnChanges {
       this.fromDate.enable();
       this.toDate.enable();
       this.arrivalTime.enable();
+      this.departureTime.enable();
       this.expiryDate.disable();
     }
   }

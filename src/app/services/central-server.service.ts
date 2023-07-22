@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { StatusCodes } from 'http-status-codes';
 import { BehaviorSubject, EMPTY, Observable, Observer, TimeoutError, of, throwError } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 
 import { Reservation, ReservationType } from 'types/Reservation';
 import { Asset, AssetConsumption } from '../types/Asset';
@@ -4038,14 +4038,6 @@ export class CentralServerService {
       headers: this.buildHttpHeaders(),
       params,
     })
-      .pipe(
-        map((reservations) => {
-          reservations.result.forEach((reservation) => {
-            reservation.expiryDate = new Date(reservation.expiryDate);
-          });
-          return reservations;
-        })
-      )
       .pipe(catchError(this.handleHttpError));
   }
 

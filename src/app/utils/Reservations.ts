@@ -64,38 +64,4 @@ export class Reservations {
     }
     return null;
   }
-
-  public static provideAvailableSlots(
-    centralServerService: CentralServerService,
-    fromDateControl: string,
-    toDateControl: string
-  ): AsyncValidatorFn {
-    return async (control: AbstractControl): Promise<ValidationErrors> => {
-      if (
-        control.parent.controls[fromDateControl]?.enabled &&
-        control.parent.controls[toDateControl]?.enabled
-      ) {
-        const fromDate = moment(control.parent.controls[fromDateControl]?.value);
-        const toDate = moment(control.parent.controls[toDateControl]?.value);
-        const reservations = await firstValueFrom(
-          centralServerService.getReservations({
-            StartDateTime: fromDate.toISOString(),
-            EndDateTime: toDate.toISOString(),
-          })
-        );
-        if (reservations.count > 0) {
-          let minDate = fromDate;
-          let maxDate = toDate;
-          for (const reservation of reservations.result) {
-            minDate = minDate.isBefore(reservation.fromDate)
-              ? moment(reservation.fromDate)
-              : minDate;
-            maxDate = maxDate.isBefore(reservation.toDate) ? moment(reservation.toDate) : maxDate;
-          }
-          return { reservasionCollision: true, availability: { from: minDate, to: maxDate } };
-        }
-        return null;
-      }
-    };
-  }
 }
