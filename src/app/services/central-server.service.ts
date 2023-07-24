@@ -3950,7 +3950,7 @@ export class CentralServerService {
     connectorId: number,
     expiryDate: Date,
     visualTagID: string,
-    reservationId: number,
+    reservationId?: number,
     carID?: string,
     parentIdTag?: string
   ): Observable<ActionResponse> {
@@ -3958,18 +3958,17 @@ export class CentralServerService {
     if (!id) {
       return EMPTY;
     }
-    // TODO: Add carID for smart charging
-    const body = `{
-      "args": {
-        "connectorId": ${connectorId},
-        "expiryDate": "${expiryDate.toISOString()}",
-        "carID": "${carID}",
-        "visualTagID": "${visualTagID}",
-        "reservationId": ${reservationId},
-        "parentIdTag": "${parentIdTag}",
-        "type": "${ReservationType.RESERVE_NOW}"
-      }
-    }`;
+    const body = {
+      args: {
+        connectorId,
+        expiryDate: expiryDate.toISOString(),
+        carID,
+        visualTagID,
+        reservationId,
+        parentIdTag,
+        type: ReservationType.RESERVE_NOW,
+      },
+    };
     return this.httpClient
       .put<ActionResponse>(
       this.buildRestEndpointUrl(RESTServerRoute.REST_CHARGING_STATIONS_RESERVE_NOW, { id }),
@@ -3989,11 +3988,11 @@ export class CentralServerService {
     if (!id) {
       return EMPTY;
     }
-    const body = `{
-      "args": {
-        "reservationId": ${reservationId}
-      }
-    }`;
+    const body = {
+      args: {
+        reservationId,
+      },
+    };
     return this.httpClient
       .put<ActionResponse>(
       this.buildRestEndpointUrl(RESTServerRoute.REST_CHARGING_STATIONS_CANCEL_RESERVATION, {

@@ -157,7 +157,8 @@ export class TableChargingStationsCreateReservationAction implements TableAction
               if (createReservationResponse.status === RestResponse.SUCCESS) {
                 messageService.showSuccessMessage(
                   translateService.instant('reservations.dialog.create.success', {
-                    reservationID: reservation.id,
+                    chargingStationID: reservation.chargingStationID,
+                    connectorID: Utils.getConnectorLetterFromConnectorID(reservation.connectorID),
                   })
                 );
                 if (refresh) {

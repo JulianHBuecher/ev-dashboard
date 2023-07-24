@@ -145,14 +145,18 @@ export class ReservationComponent implements OnInit {
       reservation.fromDate = moment().toDate();
       reservation.toDate = reservation.expiryDate;
     } else {
-      reservation.expiryDate = reservation.toDate;
+      reservation.expiryDate = Utils.buildDateTimeObject(
+        reservation.toDate,
+        reservation.departureTime
+      );
     }
     this.centralServerService.updateReservation(reservation).subscribe({
       next: (response: ActionResponse) => {
         this.spinnerService.hide();
         if (response.status === RestResponse.SUCCESS) {
           this.messageService.showSuccessMessage('reservations.dialog.update.success', {
-            reservationID: reservation.id,
+            chargingStationID: reservation.chargingStationID,
+            connectorID: Utils.getConnectorLetterFromConnectorID(reservation.connectorID),
           });
           this.closeDialog(true);
         } else {
@@ -186,7 +190,10 @@ export class ReservationComponent implements OnInit {
       reservation.departureTime = reservation.expiryDate;
     }
     if (!reservation.expiryDate) {
-      reservation.expiryDate = reservation.toDate;
+      reservation.expiryDate = Utils.buildDateTimeObject(
+        reservation.toDate,
+        reservation.departureTime
+      );
     }
     this.spinnerService.show();
     this.centralServerService.createReservation(reservation).subscribe({
@@ -194,7 +201,8 @@ export class ReservationComponent implements OnInit {
         this.spinnerService.hide();
         if (response.status === RestResponse.SUCCESS) {
           this.messageService.showSuccessMessage('reservations.dialog.create.success', {
-            reservationID: reservation.id,
+            chargingStationID: reservation.chargingStationID,
+            connectorID: Utils.getConnectorLetterFromConnectorID(reservation.connectorID),
           });
           this.closeDialog(true);
         } else {

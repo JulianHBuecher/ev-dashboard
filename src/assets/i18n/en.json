@@ -2793,7 +2793,7 @@
         "tooltips": "Create Reservation",
         "confirm": "Do you really want to create a '{{reservationType}}' reservation at charging station '{{chargingStationID}}' on connector '{{connectorID}}'?",
         "details": "",
-        "success": "'{{reservationID}}' has been created successfully",
+        "success": "The reservation at '{{chargingStationID}}' on connector '{{connectorID}}' has been created successfully",
         "error": "Error occurred while adding the reservation, check the logs"
       },
       "update": {
@@ -2801,15 +2801,15 @@
         "tooltips": "Update Reservation",
         "confirm": "",
         "details": "",
-        "success": "The reservation '{{reservationID}}' has been saved successfully",
+        "success": "The reservation at '{{chargingStationID}}' on connector '{{connectorID}}' has been saved successfully",
         "error": "Cannot change the reservation details, check the logs"
       },
       "delete": {
         "title": "Delete Reservation",
         "tooltips": "Delete Reservation",
-        "confirm": "Do you really want to delete the reservation '{{reservationID}}'?",
+        "confirm": "Do you really want to delete the reservation?",
         "details": "",
-        "success": "The reservation '{{reservationID}}' is successfully deleted",
+        "success": "The reservation at '{{chargingStationID}}' on connector '{{connectorID}}' is successfully deleted",
         "error": "An error occured during the deletion of the reservation, check the logs"
       },
       "export": {
@@ -2845,7 +2845,7 @@
       },
       "cancel_reservation": {
         "title": "Error during cancelation of reservation with ID '{{reservationId}}'",
-        "not_available": "Connector is not available, reservation could not be canceled"
+        "not_available": "Connector is not available, reservation could not be cancelled"
       }
     },
     "error": {

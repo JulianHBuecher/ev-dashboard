@@ -5,8 +5,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { WindowService } from 'services/window.service';
 
-import { TableChargingStationsReserveNowAction } from 'shared/table/actions/charging-stations/table-charging-stations-reserve-now-action';
-import { TableChargingStationsCancelReservationAction } from 'shared/table/actions/charging-stations/table-charging-stations-cancel-reservation-action';
 import { CentralServerService } from '../../../services/central-server.service';
 import { ComponentService } from '../../../services/component.service';
 import { DialogService } from '../../../services/dialog.service';
@@ -73,11 +71,7 @@ import { SiteAreaTableFilter } from '../../../shared/table/filters/site-area-tab
 import { SiteTableFilter } from '../../../shared/table/filters/site-table-filter';
 import { TableDataSource } from '../../../shared/table/table-data-source';
 import { ChargingStationsAuthorizations } from '../../../types/Authorization';
-import {
-  ChargePointStatus,
-  ChargingStation,
-  ChargingStationButtonAction,
-} from '../../../types/ChargingStation';
+import { ChargingStation, ChargingStationButtonAction } from '../../../types/ChargingStation';
 import { ChargingStationDataResult } from '../../../types/DataResult';
 import { ButtonAction } from '../../../types/GlobalType';
 import { PricingButtonAction, PricingEntity } from '../../../types/Pricing';

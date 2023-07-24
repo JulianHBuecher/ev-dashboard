@@ -20,6 +20,7 @@ import { ButtonAction, ButtonActionColor, RestResponse } from 'types/GlobalType'
 import { ReserveNow, ReserveNowDialogData } from 'types/Reservation';
 import { TableActionDef } from 'types/Table';
 import { Utils } from 'utils/Utils';
+import moment from 'moment';
 import { TableAction } from '../table-action';
 
 export interface TableChargingStationsReserveNowActionDef extends TableActionDef {
@@ -100,8 +101,7 @@ export class TableChargingStationsReserveNowAction implements TableAction {
         id: chargingStation.id,
         chargingStation,
         connector,
-        expiryDate: Utils.generateDateWithDelay(0, 1, 0, 0), // Provide a default expiration-date within 1 hour
-        reservationId: Utils.generateRandomReservationID(),
+        expiryDate: moment().add(1, 'hour').toDate(), // Provide a default expiration-date within 1 hour
       },
     };
     dialogConfig.data = dialogData;
@@ -172,7 +172,7 @@ export class TableChargingStationsReserveNowAction implements TableAction {
               connector.connectorId,
               reserveNowRequest.expiryDate,
               reserveNowRequest.visualTagID,
-              reserveNowRequest.reservationId,
+              reserveNowRequest.reservationId ?? null,
               carID,
               reserveNowRequest?.parentIdTag
             )

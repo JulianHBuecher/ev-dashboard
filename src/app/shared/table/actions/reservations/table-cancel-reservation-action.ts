@@ -67,7 +67,6 @@ export class TableCancelReservationAction implements TableAction {
               if (response.status === RestResponse.SUCCESS) {
                 messageService.showSuccessMessage(
                   translateService.instant('reservations.dialog.cancel_reservation.success', {
-                    reservationID: reservation.id,
                     chargingStationID: reservation.chargingStationID,
                   })
                 );
@@ -79,7 +78,6 @@ export class TableCancelReservationAction implements TableAction {
                   JSON.stringify(response),
                   messageService,
                   translateService.instant('reservations.dialog.cancel_reservation.error', {
-                    reservationID: reservation.id,
                     chargingStationID: reservation.chargingStationID,
                   })
                 );
@@ -93,7 +91,6 @@ export class TableCancelReservationAction implements TableAction {
                 messageService,
                 centralServerService,
                 translateService.instant('reservations.dialog.cancel_reservation.error', {
-                  reservationID: reservation.id,
                   chargingStationID: reservation.chargingStationID,
                 })
               );

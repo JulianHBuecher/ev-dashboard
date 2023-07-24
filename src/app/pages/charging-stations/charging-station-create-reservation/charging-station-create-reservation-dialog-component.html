@@ -107,7 +107,7 @@
             [formControl]="expiryDate"
             placeholder="{{'reservations.dialog.general.expiry_date' | translate}}"
             [matDatetimepicker]="expiryDatePicker"
-            [min]="minDate"
+            [min]="determineMinDate('expiryDate')"
             autocomplete="false"
             (dateChange)="onDateChanged($event, 'expiryDate')"
             (dateInput)="onDateChanged($event, 'expiryDate')"
@@ -133,13 +133,13 @@
         >
           <input
             matStartDate
-            formControlName="fromDate"
+            [formControl]="fromDate"
             placeholder="{{ 'reservations.from_date' | translate }}"
             readonly
           />
           <input
             matEndDate
-            formControlName="toDate"
+            [formControl]="toDate"
             placeholder="{{ 'reservations.to_date' | translate }}"
             readonly
           />

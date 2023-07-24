@@ -45,7 +45,6 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
   public selectedParentTag!: Tag;
   public selectedCar!: Car;
   public selectedExpiryDate!: Date;
-  public selectedReservationID!: number;
 
   public formGroup!: UntypedFormGroup;
 
@@ -56,7 +55,6 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
   public parentTag!: AbstractControl;
   public parentTagID!: AbstractControl;
   public expiryDate!: AbstractControl;
-  public reservationID!: AbstractControl;
   public car!: AbstractControl;
   public carID!: AbstractControl;
 
@@ -90,7 +88,6 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
     this.loggedUser = this.centralServerService.getLoggedUser();
     this.canListUsers = this.selectedChargingStation.canListUsers;
     this.selectedExpiryDate = data.dialogData.expiryDate;
-    this.selectedReservationID = data.dialogData.reservationId;
 
     this.isCarComponentActive = this.componentService.isActive(TenantComponents.CAR);
     this.isReservationComponentActive = this.componentService.isActive(
@@ -122,10 +119,6 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
         this.selectedExpiryDate,
         Validators.compose([Validators.required])
       ),
-      reservationID: new UntypedFormControl(
-        this.selectedReservationID,
-        Validators.compose([Validators.required])
-      ),
     });
     // Form
     this.user = this.formGroup.controls['user'];
@@ -137,7 +130,6 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
     this.carID = this.formGroup.controls['carID'];
     this.car = this.formGroup.controls['car'];
     this.expiryDate = this.formGroup.controls['expiryDate'];
-    this.reservationID = this.formGroup.controls['reservationID'];
     this.user.setValue(Utils.buildUserFullName(this.loggedUser));
     this.userID.setValue(this.loggedUser.id);
     this.loadUserSessionContext();
@@ -283,7 +275,6 @@ export class ChargingStationsReserveNowDialogComponent implements OnInit {
         expiryDate: this.expiryDate.value,
         connectorId: this.selectedConnector.connectorId,
         visualTagID: this.visualTagID.value,
-        reservationId: this.reservationID.value,
         parentIdTag: this.selectedParentTag === undefined ? '' : this.selectedParentTag.visualID,
       };
       this.dialogRef.close([

@@ -129,14 +129,14 @@ export class ReservationMainComponent implements OnInit, OnChanges {
       'fromDate',
       new FormControl(
         { value: null, disabled: this.isChargingStationAvailable() },
-        Validators.compose([Reservations.validateDate])
+        Validators.compose([Reservations.validateDate, Validators.required])
       )
     );
     this.formGroup.addControl(
       'toDate',
       new FormControl(
         { value: null, disabled: this.isChargingStationAvailable() },
-        Validators.compose([Reservations.validateDate])
+        Validators.compose([Reservations.validateDate, Validators.required])
       )
     );
     this.formGroup.addControl(

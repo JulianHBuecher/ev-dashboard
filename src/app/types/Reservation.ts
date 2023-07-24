@@ -18,8 +18,8 @@ export interface Reservation
   expiryDate: Date;
   fromDate?: Date;
   toDate?: Date;
-  arrivalTime?: Date | TimeObject;
-  departureTime?: Date | TimeObject;
+  arrivalTime?: Date;
+  departureTime?: Date;
   idTag?: string;
   visualTagID?: string;
   tag?: Tag;
@@ -32,7 +32,7 @@ export interface Reservation
 }
 
 export interface ReserveNow {
-  reservationId: number;
+  reservationId?: number;
   connectorId: number;
   expiryDate: Date;
   idTag?: string;
@@ -54,7 +54,7 @@ export interface ReserveNowDialogData extends TableData {
   chargingStation: ChargingStation;
   connector: Connector;
   expiryDate: Date;
-  reservationId: number;
+  reservationId?: number;
 }
 
 export interface CancelReservationDialogData extends TableData {
@@ -89,9 +89,4 @@ export type ReservationStatusTransition = Readonly<{
 export interface CreateReservationDialogData extends TableData {
   chargingStation: ChargingStation;
   connector: Connector;
-}
-
-export interface TimeObject {
-  hour: number;
-  minute: number;
 }

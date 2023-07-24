@@ -2795,7 +2795,7 @@
         "tooltips": "Reservierung erstellen",
         "confirm": "Wollen Sie an der Ladestation '{{chargingStationID}}' an Anschluss '{{connectorID}}' eine Reservierung vom Typ '{{reservationType}}' erstellen?",
         "details": "",
-        "success": "'{{reservationID}}' wurde erfolgreich erstellt",
+        "success": "Die Reservierung an der Ladestation '{{chargingStationID}}' an Anschluss '{{connectorID}}' wurde erfolgreich erstellt",
         "error": "Beim Erstellen der Reservierung ist ein Fehler aufgetreten"
       },
       "update": {
@@ -2803,15 +2803,15 @@
         "tooltips": "Reservierung aktualisieren",
         "confirm": "",
         "details": "",
-        "success": "Die Reservierung '{{reservationID}}' wurde erfolgreich gespeichert",
+        "success": "Die Reservierung für die Ladestation '{{chargingStationID}}' an Anschluss '{{connectorID}}' wurde erfolgreich gespeichert",
         "error": "Die Reservierung kann nicht verändert werden, siehe Log-Nachrichten für Details"
       },
       "delete": {
         "title": "Reservierung löschen",
         "tooltips": "Reservierung löschen",
-        "confirm": "Sind Sie sich sicher, dass Sie die Reservierung '{{reservationID}}' löschen wollen?",
+        "confirm": "Sind Sie sich sicher, dass Sie die Reservierung wirklich löschen wollen?",
         "details": "",
-        "success": "Die Reservierung '{{reservationID}}' wurde erfolgreich gelöscht",
+        "success": "Die Reservierung an der Ladestation '{{chargingStationID}}' an Anschluss '{{connectorID}}' wurde erfolgreich gelöscht",
         "error": "Beim Löschen der Reservierung ist ein Fehler aufgetreten"
       },
       "export": {

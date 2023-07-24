@@ -1209,10 +1209,6 @@ export class Utils {
     );
   }
 
-  public static generateRandomReservationID(): number {
-    return Math.floor(Math.random() * 1000000000 + 1);
-  }
-
   public static createSortFieldParam(
     field: string,
     order: string = Constants.ORDERING.asc
@@ -1301,7 +1297,13 @@ export class Utils {
     }
   }
 
-  public static buildTimeObject(hour: number, minute: number, date?: Date) {
-    return moment({ hour, minute }).toDate();
+  public static buildDateTimeObject(
+    date: Date,
+    dateTime: Date,
+    hours?: number,
+    minutes?: number
+  ): Date {
+    const parsedDateTime = dateTime ? moment(dateTime) : moment({ hours, minutes });
+    return moment(date).hours(parsedDateTime.hours()).minutes(parsedDateTime.minutes()).toDate();
   }
 }

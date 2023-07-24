@@ -65,13 +65,13 @@
             >
               <input
                 matStartDate
-                formControlName="fromDate"
+                [formControl]="fromDate"
                 placeholder="{{ 'reservations.from_date' | translate }}"
                 readonly
               />
               <input
                 matEndDate
-                formControlName="toDate"
+                [formControl]="toDate"
                 placeholder="{{ 'reservations.to_date' | translate }}"
                 readonly
               />
@@ -112,7 +112,7 @@
                 [formControl]="arrivalTime"
                 placeholder="{{ 'reservations.arrival_time' | translate }}"
                 [matDatetimepicker]="arrivalTimePicker"
-                [min]="fromDate.value ?? determineMinDate('arrivalTime')"
+                [min]="determineMinDate('arrivalTime')"
                 autocomplete="false"
                 (click)="arrivalTimePicker.open()"
                 (dateChange)="onDateChanged($event, 'arrivalTime')"

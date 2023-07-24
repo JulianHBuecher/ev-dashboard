@@ -7,6 +7,7 @@ import { MessageService } from 'services/message.service';
 import { CentralServerService } from 'services/central-server.service';
 import { SpinnerService } from 'services/spinner.service';
 import { Router } from '@angular/router';
+import { Utils } from 'utils/Utils';
 import { TableDeleteAction } from '../table-delete-action';
 
 export interface TableDeleteReservationActionDef extends TableActionDef {
@@ -44,14 +45,13 @@ export class TableDeleteReservationAction extends TableDeleteAction {
     super.delete(
       reservation,
       'reservations.dialog.delete.title',
-      translateService.instant('reservations.dialog.delete.confirm', {
-        reservationID: reservation.id,
-      }),
+      translateService.instant('reservations.dialog.delete.confirm'),
       translateService.instant('reservations.dialog.delete.success', {
-        reservationID: reservation.id,
+        chargingStationID: reservation.chargingStationID,
+        connectorID: Utils.getConnectorLetterFromConnectorID(reservation.connectorID),
       }),
       'reservations.dialog.delete.error',
-      centralServerService.deleteReservations.bind(centralServerService),
+      centralServerService.deleteReservation.bind(centralServerService),
       dialogService,
       translateService,
       messageService,

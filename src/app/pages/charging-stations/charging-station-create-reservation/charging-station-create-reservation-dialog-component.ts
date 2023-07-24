@@ -55,10 +55,8 @@ export class ChargingStationCreateReservationDialogComponent implements OnInit {
 
   public loggedUser: UserToken;
   public canListUsers = false;
-  public readonly minDate: Date = moment().toDate();
 
   public formGroup!: UntypedFormGroup;
-  public id!: AbstractControl;
   public userID!: AbstractControl;
   public user!: AbstractControl;
   public idTag!: AbstractControl;
@@ -105,7 +103,6 @@ export class ChargingStationCreateReservationDialogComponent implements OnInit {
 
   public ngOnInit(): void {
     this.formGroup = new UntypedFormGroup({
-      id: new UntypedFormControl(null),
       userID: new UntypedFormControl(null, Validators.compose([Validators.required])),
       user: new UntypedFormControl(null, Validators.compose([Validators.required])),
       visualTagID: new UntypedFormControl(null, Validators.compose([Validators.required])),
@@ -117,21 +114,18 @@ export class ChargingStationCreateReservationDialogComponent implements OnInit {
       parentTag: new UntypedFormControl(null),
       fromDate: new UntypedFormControl(
         null,
-        Validators.compose([Reservations.validateDate, Reservations.fromDateValidator('toDate')])
+        Validators.compose([Reservations.validateDate, Validators.required])
       ),
       toDate: new UntypedFormControl(
         null,
-        Validators.compose([
-          Reservations.validateDate,
-          Reservations.fromToDateValidator('fromDate', 'toDate'),
-        ])
+        Validators.compose([Reservations.validateDate, Validators.required])
       ),
       expiryDate: new UntypedFormControl(
         null,
         Validators.compose([Reservations.validateDate, Reservations.expiryDateValidator])
       ),
       arrivalTime: new UntypedFormControl(
-        null,
+        { value: null, disabled: !this.expiryDate?.value },
         Validators.compose([Validators.required, Reservations.validateDate])
       ),
       departureTime: new UntypedFormControl(
@@ -145,7 +139,6 @@ export class ChargingStationCreateReservationDialogComponent implements OnInit {
         Validators.compose([Validators.required])
       ),
     });
-    this.id = this.formGroup.controls['id'];
     this.expiryDate = this.formGroup.controls['expiryDate'];
     this.fromDate = this.formGroup.controls['fromDate'];
     this.toDate = this.formGroup.controls['toDate'];
@@ -315,10 +308,13 @@ export class ChargingStationCreateReservationDialogComponent implements OnInit {
     if (this.type.value === ReservationType.RESERVE_NOW) {
       this.fromDate.disable();
       this.toDate.disable();
+      this.arrivalTime.disable();
       this.expiryDate.enable();
     } else {
       this.fromDate.enable();
       this.toDate.enable();
+      this.arrivalTime.enable();
+      this.departureTime.enable();
       this.expiryDate.disable();
     }
   }
@@ -354,12 +350,14 @@ export class ChargingStationCreateReservationDialogComponent implements OnInit {
   public createReservation() {
     if (this.formGroup.valid) {
       const reservation: Reservation = {
-        id: this.id.value,
+        id: null,
         chargingStationID: this.chargingStationID,
         connectorID: this.connectorID,
         expiryDate: this.expiryDate.value ?? this.toDate.value,
         fromDate: this.fromDate.value ?? moment().toDate(),
         toDate: this.toDate.value ?? this.expiryDate.value,
+        arrivalTime: this.arrivalTime.value ?? moment().toDate(),
+        departureTime: this.departureTime.value ?? this.expiryDate.value,
         visualTagID: this.visualTagID.value,
         carID: this.carID.value,
         parentIdTag: this.parentIdTag.value,
