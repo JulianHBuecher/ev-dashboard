@@ -2785,7 +2785,7 @@
         "tooltips": "Cancel Reservation",
         "confirm": "Do you really want to cancel the reservation at charging station '{{chargingStationID}}'?",
         "details": "",
-        "success": "The reservation at charging station '{{chargingStationID}}' is successfully canceled",
+        "success": "The reservation at charging station '{{chargingStationID}}' is successfully cancelled",
         "error": "Error occured while trying to cancel the reservation at charging station '{{chargingStationID}}'"
       },
       "create": {
