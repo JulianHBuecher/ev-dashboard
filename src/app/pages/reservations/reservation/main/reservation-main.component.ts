@@ -195,6 +195,13 @@ export class ReservationMainComponent implements OnInit, OnChanges {
       this.user.setValue(Utils.buildUserFullName(this.loggedUser));
       this.userID.setValue(this.loggedUser.id);
     }
+    // Per default
+    if (this.type.value === ReservationType.RESERVE_NOW) {
+      this.fromDate.disable();
+      this.toDate.disable();
+      this.arrivalTime.disable();
+      this.departureTime.disable();
+    }
     this.initialized = true;
     this.loadReservation();
   }
@@ -533,6 +540,7 @@ export class ReservationMainComponent implements OnInit, OnChanges {
       this.fromDate.disable();
       this.toDate.disable();
       this.arrivalTime.disable();
+      this.departureTime.disable();
       this.expiryDate.enable();
     } else {
       this.fromDate.enable();

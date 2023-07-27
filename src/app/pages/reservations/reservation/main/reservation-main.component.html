@@ -332,7 +332,7 @@
         </mat-radio-group>
       </div>
       <mat-dialog-actions class="form-group" align="end" *ngIf="reservation">
-        <button mat-raised-button (click)="cancelReservation()" color="error" disabled="readOnly">
+        <button mat-raised-button (click)="cancelReservation()" color="error" [disabled]="readOnly">
           {{ 'reservations.dialog.cancel_reservation.title' | translate }}
         </button>
         <button mat-raised-button (click)="cancel()">{{ 'general.cancel' | translate }}</button>
